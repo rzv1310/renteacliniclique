@@ -17,7 +17,7 @@ const Header = () => {
 
   const navLinks = [
     { name: "Despre Noi", href: "/#despre" },
-    { name: "Galerie", href: "/#galerie" },
+    { name: "Galerie", href: "/galerie" },
     { name: "Tipuri de Implanturi", href: "/implanturi" },
     { name: "Prețuri", href: "/preturi" },
     { name: "Resurse", href: "/#resurse" },
