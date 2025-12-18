@@ -111,10 +111,12 @@ const GallerySection = () => {
 
         {/* CTA */}
         <div className="text-center">
-          <Button variant="hero" size="xl" className="group">
-            Explorează Galeria Completă
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+          <a href="/galerie">
+            <Button variant="hero" size="xl" className="group">
+              Explorează Galeria Completă
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </a>
           <p className="text-sm text-muted-foreground mt-4">
             Filtrează după înălțime, greutate și tip de implant
           </p>
