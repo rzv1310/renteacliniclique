@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import GalleryLightbox from "@/components/GalleryLightbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
@@ -11,31 +12,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Filter, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
+import { Filter, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 
-// Mock gallery data - in production this would come from a database
+// Import gallery images
+import case1Before from "@/assets/gallery/case-1-before.jpg";
+import case1After from "@/assets/gallery/case-1-after.jpg";
+import case2Before from "@/assets/gallery/case-2-before.jpg";
+import case2After from "@/assets/gallery/case-2-after.jpg";
+import case3Before from "@/assets/gallery/case-3-before.jpg";
+import case3After from "@/assets/gallery/case-3-after.jpg";
+
+// Gallery data with real images
 const galleryData = [
-  { id: 1, height: 160, weight: 52, size: 300, type: "rotund", style: "natural", beforeImg: "gallery-1-before", afterImg: "gallery-1-after" },
-  { id: 2, height: 165, weight: 55, size: 350, type: "anatomic", style: "natural", beforeImg: "gallery-2-before", afterImg: "gallery-2-after" },
-  { id: 3, height: 170, weight: 60, size: 400, type: "ergonomic", style: "voluptuous", beforeImg: "gallery-3-before", afterImg: "gallery-3-after" },
-  { id: 4, height: 158, weight: 48, size: 275, type: "rotund", style: "sporty", beforeImg: "gallery-4-before", afterImg: "gallery-4-after" },
-  { id: 5, height: 172, weight: 65, size: 450, type: "anatomic", style: "voluptuous", beforeImg: "gallery-5-before", afterImg: "gallery-5-after" },
-  { id: 6, height: 163, weight: 54, size: 325, type: "ergonomic", style: "natural", beforeImg: "gallery-6-before", afterImg: "gallery-6-after" },
-  { id: 7, height: 168, weight: 58, size: 375, type: "rotund", style: "voluptuous", beforeImg: "gallery-7-before", afterImg: "gallery-7-after" },
-  { id: 8, height: 155, weight: 50, size: 250, type: "anatomic", style: "sporty", beforeImg: "gallery-8-before", afterImg: "gallery-8-after" },
-  { id: 9, height: 175, weight: 68, size: 500, type: "ergonomic", style: "voluptuous", beforeImg: "gallery-9-before", afterImg: "gallery-9-after" },
-  { id: 10, height: 162, weight: 56, size: 350, type: "rotund", style: "natural", beforeImg: "gallery-10-before", afterImg: "gallery-10-after" },
-  { id: 11, height: 167, weight: 62, size: 400, type: "anatomic", style: "natural", beforeImg: "gallery-11-before", afterImg: "gallery-11-after" },
-  { id: 12, height: 159, weight: 51, size: 300, type: "ergonomic", style: "sporty", beforeImg: "gallery-12-before", afterImg: "gallery-12-after" },
+  { id: 1, height: 160, weight: 52, size: 300, type: "rotund", style: "natural", beforeImg: case1Before, afterImg: case1After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 7 },
+  { id: 2, height: 165, weight: 55, size: 350, type: "anatomic", style: "natural", beforeImg: case2Before, afterImg: case2After, technique: "Subglandular", implantBrand: "Mentor", recoveryDays: 10 },
+  { id: 3, height: 170, weight: 60, size: 400, type: "ergonomic", style: "voluptuous", beforeImg: case3Before, afterImg: case3After, technique: "Dual Plane", implantBrand: "Motiva Ergonomix", recoveryDays: 8 },
+  { id: 4, height: 158, weight: 48, size: 275, type: "rotund", style: "sporty", beforeImg: case1Before, afterImg: case1After, technique: "Submuscular", implantBrand: "Mentor", recoveryDays: 9 },
+  { id: 5, height: 172, weight: 65, size: 450, type: "anatomic", style: "voluptuous", beforeImg: case2Before, afterImg: case2After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 10 },
+  { id: 6, height: 163, weight: 54, size: 325, type: "ergonomic", style: "natural", beforeImg: case3Before, afterImg: case3After, technique: "Subglandular", implantBrand: "Motiva Ergonomix", recoveryDays: 7 },
+  { id: 7, height: 168, weight: 58, size: 375, type: "rotund", style: "voluptuous", beforeImg: case1Before, afterImg: case1After, technique: "Dual Plane", implantBrand: "Mentor", recoveryDays: 8 },
+  { id: 8, height: 155, weight: 50, size: 250, type: "anatomic", style: "sporty", beforeImg: case2Before, afterImg: case2After, technique: "Submuscular", implantBrand: "Motiva", recoveryDays: 9 },
+  { id: 9, height: 175, weight: 68, size: 500, type: "ergonomic", style: "voluptuous", beforeImg: case3Before, afterImg: case3After, technique: "Dual Plane", implantBrand: "Motiva Ergonomix", recoveryDays: 10 },
+  { id: 10, height: 162, weight: 56, size: 350, type: "rotund", style: "natural", beforeImg: case1Before, afterImg: case1After, technique: "Subglandular", implantBrand: "Mentor", recoveryDays: 7 },
+  { id: 11, height: 167, weight: 62, size: 400, type: "anatomic", style: "natural", beforeImg: case2Before, afterImg: case2After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 8 },
+  { id: 12, height: 159, weight: 51, size: 300, type: "ergonomic", style: "sporty", beforeImg: case3Before, afterImg: case3After, technique: "Submuscular", implantBrand: "Motiva Ergonomix", recoveryDays: 9 },
 ];
 
 interface BeforeAfterSliderProps {
-  beforeLabel?: string;
-  afterLabel?: string;
   caseData: typeof galleryData[0];
+  onClick: () => void;
 }
 
-const BeforeAfterSlider = ({ beforeLabel = "Înainte", afterLabel = "După", caseData }: BeforeAfterSliderProps) => {
+const BeforeAfterSlider = ({ caseData, onClick }: BeforeAfterSliderProps) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -48,7 +56,8 @@ const BeforeAfterSlider = ({ beforeLabel = "Înainte", afterLabel = "După", cas
     setSliderPosition(Math.min(Math.max(percentage, 0), 100));
   };
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
     isDragging.current = true;
   };
 
@@ -76,31 +85,23 @@ const BeforeAfterSlider = ({ beforeLabel = "Înainte", afterLabel = "După", cas
       onMouseMove={handleMouseMove}
       onTouchMove={handleTouchMove}
     >
-      {/* Before Image (Placeholder) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-muted to-secondary">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center p-4">
-            <div className="w-24 h-32 mx-auto mb-3 rounded-lg bg-champagne/30 flex items-center justify-center">
-              <Eye className="w-8 h-8 text-soft-brown/50" />
-            </div>
-            <span className="text-soft-brown/70 text-sm font-medium">{beforeLabel}</span>
-          </div>
-        </div>
-      </div>
+      {/* Before Image */}
+      <img
+        src={caseData.beforeImg}
+        alt="Înainte"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-      {/* After Image (Placeholder) */}
+      {/* After Image with Clip */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-champagne-light to-champagne"
+        className="absolute inset-0"
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center p-4">
-            <div className="w-24 h-32 mx-auto mb-3 rounded-lg bg-rose-gold/20 flex items-center justify-center">
-              <Eye className="w-8 h-8 text-rose-gold/70" />
-            </div>
-            <span className="text-deep-brown/70 text-sm font-medium">{afterLabel}</span>
-          </div>
-        </div>
+        <img
+          src={caseData.afterImg}
+          alt="După"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       </div>
 
       {/* Slider Line */}
@@ -117,14 +118,28 @@ const BeforeAfterSlider = ({ beforeLabel = "Înainte", afterLabel = "După", cas
       {/* Labels */}
       <div className="absolute top-3 left-3 z-20">
         <Badge variant="secondary" className="bg-white/90 text-deep-brown text-xs">
-          {beforeLabel}
+          Înainte
         </Badge>
       </div>
       <div className="absolute top-3 right-3 z-20">
         <Badge variant="secondary" className="bg-white/90 text-deep-brown text-xs">
-          {afterLabel}
+          După
         </Badge>
       </div>
+
+      {/* View Details Button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+        className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <Badge className="bg-white/95 text-deep-brown hover:bg-white cursor-pointer flex items-center gap-1.5 py-1.5 px-3">
+          <ZoomIn className="w-3.5 h-3.5" />
+          Vezi Detalii
+        </Badge>
+      </button>
 
       {/* Case Info Overlay */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 z-20">
@@ -132,7 +147,7 @@ const BeforeAfterSlider = ({ beforeLabel = "Înainte", afterLabel = "După", cas
           <Badge className="bg-rose-gold/90 text-white text-xs">
             {caseData.size}cc
           </Badge>
-          <Badge variant="outline" className="bg-white/20 border-white/30 text-white text-xs">
+          <Badge variant="outline" className="bg-white/20 border-white/30 text-white text-xs capitalize">
             {caseData.type}
           </Badge>
         </div>
@@ -150,6 +165,8 @@ const GalleryPage = () => {
     style: "all",
   });
   const [showFilters, setShowFilters] = useState(true);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [selectedCaseIndex, setSelectedCaseIndex] = useState<number | null>(null);
 
   const filteredGallery = galleryData.filter((item) => {
     const heightMatch = item.height >= filters.heightRange[0] && item.height <= filters.heightRange[1];
@@ -180,6 +197,23 @@ const GalleryPage = () => {
     filters.type !== "all" || 
     filters.style !== "all";
 
+  const openLightbox = (index: number) => {
+    setSelectedCaseIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const handleNext = () => {
+    if (selectedCaseIndex !== null && selectedCaseIndex < filteredGallery.length - 1) {
+      setSelectedCaseIndex(selectedCaseIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (selectedCaseIndex !== null && selectedCaseIndex > 0) {
+      setSelectedCaseIndex(selectedCaseIndex - 1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -204,7 +238,7 @@ const GalleryPage = () => {
                 {filteredGallery.length} cazuri afișate
               </span>
               <span className="text-border">|</span>
-              <span>Trage slider-ul pentru comparație</span>
+              <span>Click pentru detalii complete</span>
             </div>
           </div>
         </div>
@@ -389,9 +423,12 @@ const GalleryPage = () => {
           {/* Gallery Grid */}
           {filteredGallery.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredGallery.map((item) => (
+              {filteredGallery.map((item, index) => (
                 <div key={item.id} className="group">
-                  <BeforeAfterSlider caseData={item} />
+                  <BeforeAfterSlider 
+                    caseData={item} 
+                    onClick={() => openLightbox(index)}
+                  />
                   <div className="mt-3 px-1">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-soft-brown">
@@ -454,6 +491,17 @@ const GalleryPage = () => {
       </section>
 
       <Footer />
+
+      {/* Lightbox Modal */}
+      <GalleryLightbox
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        caseData={selectedCaseIndex !== null ? filteredGallery[selectedCaseIndex] : null}
+        onNext={handleNext}
+        onPrev={handlePrev}
+        hasNext={selectedCaseIndex !== null && selectedCaseIndex < filteredGallery.length - 1}
+        hasPrev={selectedCaseIndex !== null && selectedCaseIndex > 0}
+      />
     </div>
   );
 };
