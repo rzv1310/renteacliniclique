@@ -21,21 +21,31 @@ import case2Before from "@/assets/gallery/case-2-before.jpg";
 import case2After from "@/assets/gallery/case-2-after.jpg";
 import case3Before from "@/assets/gallery/case-3-before.jpg";
 import case3After from "@/assets/gallery/case-3-after.jpg";
+import case4Before from "@/assets/gallery/case-4-before.jpg";
+import case4After from "@/assets/gallery/case-4-after.jpg";
+import case5Before from "@/assets/gallery/case-5-before.jpg";
+import case5After from "@/assets/gallery/case-5-after.jpg";
+import case6Before from "@/assets/gallery/case-6-before.jpg";
+import case6After from "@/assets/gallery/case-6-after.jpg";
 
-// Gallery data with real images
+// Gallery data with real images - varied styles
 const galleryData = [
   { id: 1, height: 160, weight: 52, size: 300, type: "rotund", style: "natural", beforeImg: case1Before, afterImg: case1After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 7 },
   { id: 2, height: 165, weight: 55, size: 350, type: "anatomic", style: "natural", beforeImg: case2Before, afterImg: case2After, technique: "Subglandular", implantBrand: "Mentor", recoveryDays: 10 },
   { id: 3, height: 170, weight: 60, size: 400, type: "ergonomic", style: "voluptuous", beforeImg: case3Before, afterImg: case3After, technique: "Dual Plane", implantBrand: "Motiva Ergonomix", recoveryDays: 8 },
-  { id: 4, height: 158, weight: 48, size: 275, type: "rotund", style: "sporty", beforeImg: case1Before, afterImg: case1After, technique: "Submuscular", implantBrand: "Mentor", recoveryDays: 9 },
-  { id: 5, height: 172, weight: 65, size: 450, type: "anatomic", style: "voluptuous", beforeImg: case2Before, afterImg: case2After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 10 },
-  { id: 6, height: 163, weight: 54, size: 325, type: "ergonomic", style: "natural", beforeImg: case3Before, afterImg: case3After, technique: "Subglandular", implantBrand: "Motiva Ergonomix", recoveryDays: 7 },
+  { id: 4, height: 158, weight: 48, size: 275, type: "rotund", style: "sporty", beforeImg: case4Before, afterImg: case4After, technique: "Submuscular", implantBrand: "Mentor", recoveryDays: 9 },
+  { id: 5, height: 172, weight: 65, size: 450, type: "anatomic", style: "voluptuous", beforeImg: case5Before, afterImg: case5After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 10 },
+  { id: 6, height: 163, weight: 54, size: 325, type: "ergonomic", style: "natural", beforeImg: case6Before, afterImg: case6After, technique: "Subglandular", implantBrand: "Motiva Ergonomix", recoveryDays: 7 },
   { id: 7, height: 168, weight: 58, size: 375, type: "rotund", style: "voluptuous", beforeImg: case1Before, afterImg: case1After, technique: "Dual Plane", implantBrand: "Mentor", recoveryDays: 8 },
-  { id: 8, height: 155, weight: 50, size: 250, type: "anatomic", style: "sporty", beforeImg: case2Before, afterImg: case2After, technique: "Submuscular", implantBrand: "Motiva", recoveryDays: 9 },
-  { id: 9, height: 175, weight: 68, size: 500, type: "ergonomic", style: "voluptuous", beforeImg: case3Before, afterImg: case3After, technique: "Dual Plane", implantBrand: "Motiva Ergonomix", recoveryDays: 10 },
-  { id: 10, height: 162, weight: 56, size: 350, type: "rotund", style: "natural", beforeImg: case1Before, afterImg: case1After, technique: "Subglandular", implantBrand: "Mentor", recoveryDays: 7 },
-  { id: 11, height: 167, weight: 62, size: 400, type: "anatomic", style: "natural", beforeImg: case2Before, afterImg: case2After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 8 },
+  { id: 8, height: 155, weight: 50, size: 250, type: "anatomic", style: "sporty", beforeImg: case4Before, afterImg: case4After, technique: "Submuscular", implantBrand: "Motiva", recoveryDays: 9 },
+  { id: 9, height: 175, weight: 68, size: 500, type: "ergonomic", style: "voluptuous", beforeImg: case5Before, afterImg: case5After, technique: "Dual Plane", implantBrand: "Motiva Ergonomix", recoveryDays: 10 },
+  { id: 10, height: 162, weight: 56, size: 350, type: "rotund", style: "natural", beforeImg: case2Before, afterImg: case2After, technique: "Subglandular", implantBrand: "Mentor", recoveryDays: 7 },
+  { id: 11, height: 167, weight: 62, size: 400, type: "anatomic", style: "natural", beforeImg: case6Before, afterImg: case6After, technique: "Dual Plane", implantBrand: "Motiva", recoveryDays: 8 },
   { id: 12, height: 159, weight: 51, size: 300, type: "ergonomic", style: "sporty", beforeImg: case3Before, afterImg: case3After, technique: "Submuscular", implantBrand: "Motiva Ergonomix", recoveryDays: 9 },
+  { id: 13, height: 164, weight: 53, size: 320, type: "rotund", style: "natural", beforeImg: case4Before, afterImg: case4After, technique: "Dual Plane", implantBrand: "Mentor", recoveryDays: 7 },
+  { id: 14, height: 171, weight: 63, size: 425, type: "anatomic", style: "voluptuous", beforeImg: case5Before, afterImg: case5After, technique: "Subglandular", implantBrand: "Motiva", recoveryDays: 9 },
+  { id: 15, height: 156, weight: 49, size: 280, type: "ergonomic", style: "sporty", beforeImg: case6Before, afterImg: case6After, technique: "Submuscular", implantBrand: "Motiva Ergonomix", recoveryDays: 8 },
+  { id: 16, height: 169, weight: 59, size: 380, type: "rotund", style: "voluptuous", beforeImg: case3Before, afterImg: case3After, technique: "Dual Plane", implantBrand: "Mentor", recoveryDays: 10 },
 ];
 
 interface BeforeAfterSliderProps {
