@@ -49,12 +49,13 @@ const Header = () => {
     { name: "Galerie", href: "/galerie" },
     { name: "Simulator 3D", href: "/simulator-3d" },
     { name: "Tarife", href: "/tarife-finantare" },
+    { name: "Despre Noi", href: "/despre-noi" },
+  ];
+
+  const utileLinks = [
     { name: "Finanțare Rate", href: "/implant-mamar-in-rate" },
     { name: "Paciente din Provincie", href: "/turism-medical-intern" },
     { name: "Ghid Recuperare", href: "/ghid-recuperare" },
-    { name: "Despre Noi", href: "/despre-noi" },
-    { name: "Blog", href: "/blog" },
-    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -113,20 +114,34 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
+
+              {/* Utile Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide">
+                  Utile
+                  <ChevronDown className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56 bg-card border-border">
+                  {utileLinks.map((link) => (
+                    <DropdownMenuItem key={link.href} asChild>
+                      <Link to={link.href} className="w-full cursor-pointer">
+                        {link.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </nav>
 
             {/* CTA Button */}
-            <div className="hidden xl:flex items-center gap-4">
+            <div className="hidden xl:flex items-center">
               <a
                 href="tel:+40721000000"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-rose-gold transition-colors"
+                className="btn-primary-rose-gold text-sm px-6 h-10 flex items-center gap-2"
               >
                 <Phone className="w-4 h-4" />
-                <span>+40 721 000 000</span>
+                Sună pentru Transformare
               </a>
-              <button className="btn-primary-rose-gold text-sm px-6 h-10">
-                Programează Consultația
-              </button>
             </div>
 
             {/* Mobile Menu Toggle */}
