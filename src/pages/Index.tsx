@@ -1,8 +1,7 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import WhyUsSection from "@/components/WhyUsSection";
 import DoctorSection from "@/components/DoctorSection";
-import SimulatorSection from "@/components/SimulatorSection";
+import WhyUsSection from "@/components/WhyUsSection";
 import GallerySection from "@/components/GallerySection";
 import JourneySection from "@/components/JourneySection";
 import ResourcesSection from "@/components/ResourcesSection";
@@ -15,9 +14,8 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <WhyUsSection />
         <DoctorSection />
-        <SimulatorSection />
+        <WhyUsSection />
         <GallerySection />
         <JourneySection />
         <ResourcesSection />

@@ -3,39 +3,36 @@ import { ArrowRight } from "lucide-react";
 const ResourcesSection = () => {
   const resources = [
     {
-      image: "gradient-1",
       category: "Ghid",
-      title: "Implant Rotund vs. Anatomic",
-      description: "Care ți se potrivește? Descoperă diferențele vizuale și tactile.",
-      link: "#",
+      title: "Implant Rotund vs. Anatomic: Care ți se potrivește?",
+      link: "/blog/implant-rotund-vs-anatomic",
     },
     {
-      image: "gradient-2",
       category: "Prețuri",
       title: "Cât costă un implant mamar în București?",
-      description: "Transparență totală asupra costurilor și ce include pachetul nostru.",
-      link: "#",
+      link: "/preturi",
     },
     {
-      image: "gradient-3",
       category: "Recuperare",
-      title: "Recuperarea după operație",
-      description: "Când poți conduce? Când poți merge la sală? Tot ce trebuie să știi.",
-      link: "#",
+      title: "Recuperarea după operație: Când poți merge la sală?",
+      link: "/blog/sport-dupa-augmentare-mamara",
     },
   ];
 
   return (
-    <section id="resurse" className="py-24 lg:py-32 bg-gradient-soft">
+    <section id="resurse" className="py-24 lg:py-32 bg-card">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-            Centrul de Resurse
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-label mb-4 block">
+            Cunoștințe Aprofundate
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold text-deep-brown mb-6">
+          <h2 className="h2-section text-foreground mb-6">
             Tot ce trebuie să știi despre Augmentarea Mamară
           </h2>
+          <p className="text-body leading-relaxed">
+            Navigați prin informații esențiale și ghiduri detaliate, create pentru a vă oferi claritate și încredere în decizia dumneavoastră.
+          </p>
         </div>
 
         {/* Resources Grid */}
@@ -44,35 +41,21 @@ const ResourcesSection = () => {
             <a
               key={resource.title}
               href={resource.link}
-              className="group bg-card rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-500 hover:-translate-y-2"
+              className="group bg-background rounded-2xl overflow-hidden border border-border hover:border-rose-gold/50 transition-all duration-500"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              {/* Image Placeholder */}
-              <div
-                className={`aspect-[16/10] ${
-                  index === 0
-                    ? "bg-gradient-to-br from-rose-gold/20 to-champagne/40"
-                    : index === 1
-                    ? "bg-gradient-to-br from-champagne/30 to-rose-gold/20"
-                    : "bg-gradient-to-br from-secondary to-champagne-light"
-                } flex items-center justify-center`}
-              >
-                <span className="text-rose-gold/50 font-serif text-4xl">✦</span>
+              {/* Gradient Header */}
+              <div className="aspect-[16/9] bg-gradient-to-br from-rose-gold/20 to-muted flex items-center justify-center">
+                <span className="text-rose-gold/30 font-display text-6xl">✦</span>
               </div>
 
               {/* Content */}
               <div className="p-6">
-                <span className="text-xs uppercase tracking-wider text-rose-gold font-medium">
-                  {resource.category}
-                </span>
-                <h3 className="font-serif text-xl font-semibold text-deep-brown mt-2 mb-3 group-hover:text-rose-gold transition-colors">
+                <h3 className="font-display text-xl font-medium text-foreground mb-4 group-hover:text-rose-gold transition-colors leading-tight">
                   {resource.title}
                 </h3>
-                <p className="text-soft-brown text-sm leading-relaxed mb-4">
-                  {resource.description}
-                </p>
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-rose-gold group-hover:gap-3 transition-all">
-                  Citește mai mult
+                <span className="inline-flex items-center gap-2 text-sm font-sans font-medium text-rose-gold group-hover:gap-3 transition-all">
+                  Citește Ghidul
                   <ArrowRight className="w-4 h-4" />
                 </span>
               </div>
