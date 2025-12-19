@@ -1,6 +1,8 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type ImplantType = "rotund" | "anatomic" | "ergonomic";
 type ImplantSize = 200 | 275 | 350 | 425 | 500;
@@ -33,6 +35,8 @@ const SimulatorSection = () => {
   const [showComparison, setShowComparison] = useState(false);
   const [comparisonPosition, setComparisonPosition] = useState(50);
   const [zoom, setZoom] = useState(1);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +46,7 @@ const SimulatorSection = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
+        setGeneratedImage(null); // Reset generated image when new photo is uploaded
       };
       reader.readAsDataURL(file);
     }
@@ -71,6 +76,49 @@ const SimulatorSection = () => {
     setSelectedSize(350);
     setShowComparison(false);
     setZoom(1);
+    setGeneratedImage(null);
+  };
+
+  const generateAIVisualization = async () => {
+    if (!uploadedImage) {
+      toast.error("Încarcă o fotografie pentru a genera vizualizarea AI");
+      return;
+    }
+
+    setIsGenerating(true);
+    toast.info("Se generează vizualizarea AI...", { duration: 10000 });
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-implant-visualization', {
+        body: {
+          imageBase64: uploadedImage,
+          implantType: selectedType,
+          implantSize: selectedSize,
+        }
+      });
+
+      if (error) {
+        console.error('Edge function error:', error);
+        throw new Error(error.message || 'Eroare la generarea vizualizării');
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      if (data?.generatedImage) {
+        setGeneratedImage(data.generatedImage);
+        setShowComparison(true);
+        toast.success("Vizualizare AI generată cu succes!");
+      } else {
+        throw new Error('Nu s-a putut genera imaginea');
+      }
+    } catch (error) {
+      console.error('Error generating AI visualization:', error);
+      toast.error(error instanceof Error ? error.message : 'Eroare la generarea vizualizării AI');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   // Calculate visual transformation based on implant selection
@@ -97,13 +145,13 @@ const SimulatorSection = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block px-4 py-2 rounded-full bg-rose-gold/10 text-rose-gold text-sm font-medium mb-6">
-            Simulator 3D Interactiv
+            Simulator 3D Interactiv cu AI
           </span>
           <h2 className="font-serif text-4xl md:text-5xl font-semibold text-deep-brown mb-6">
             Vizualizează-ți <span className="text-gradient-gold">Transformarea</span>
           </h2>
           <p className="text-soft-brown text-lg">
-            Încarcă o poză sau alege un avatar pentru a vedea cum ar arăta diferite tipuri și mărimi de implanturi.
+            Încarcă o poză și folosește AI pentru a vedea rezultate realiste cu diferite tipuri și mărimi de implanturi.
           </p>
         </div>
 
@@ -134,6 +182,12 @@ const SimulatorSection = () => {
                 Încarcă Fotografie
               </Button>
 
+              {uploadedImage && (
+                <p className="text-sm text-green-600 text-center mb-4">
+                  ✓ Fotografie încărcată - gata pentru generare AI
+                </p>
+              )}
+
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border/50" />
@@ -150,6 +204,7 @@ const SimulatorSection = () => {
                     onClick={() => {
                       setUploadedImage(null);
                       setSelectedAvatar(avatar.id);
+                      setGeneratedImage(null);
                     }}
                     className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-300 ${
                       !uploadedImage && selectedAvatar === avatar.id
@@ -190,19 +245,19 @@ const SimulatorSection = () => {
                         <p className="font-semibold text-deep-brown">{implant.name}</p>
                         <p className="text-sm text-muted-foreground">{implant.description}</p>
                       </div>
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
                         selectedType === implant.type ? "bg-rose-gold" : "bg-champagne"
                       }`}>
                         {implant.type === "rotund" && (
-                          <div className="w-6 h-6 rounded-full bg-current opacity-60" 
+                          <div className="w-6 h-6 rounded-full bg-current opacity-60 transition-all duration-300" 
                                style={{ backgroundColor: selectedType === implant.type ? "white" : "var(--rose-gold)" }} />
                         )}
                         {implant.type === "anatomic" && (
-                          <div className="w-6 h-7 rounded-t-full rounded-b-[70%] bg-current opacity-60"
+                          <div className="w-6 h-7 rounded-t-full rounded-b-[70%] bg-current opacity-60 transition-all duration-300"
                                style={{ backgroundColor: selectedType === implant.type ? "white" : "var(--rose-gold)" }} />
                         )}
                         {implant.type === "ergonomic" && (
-                          <div className="w-6 h-6 rounded-full bg-current opacity-60 transform rotate-12"
+                          <div className="w-6 h-6 rounded-full bg-current opacity-60 transform rotate-12 transition-all duration-300"
                                style={{ 
                                  backgroundColor: selectedType === implant.type ? "white" : "var(--rose-gold)",
                                  borderRadius: "50% 50% 40% 40%"
@@ -249,7 +304,7 @@ const SimulatorSection = () => {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`py-2 rounded-lg text-sm font-medium transition-all ${
+                      className={`py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                         selectedSize === size
                           ? "bg-rose-gold text-white"
                           : "bg-champagne-light text-soft-brown hover:bg-champagne"
@@ -261,6 +316,29 @@ const SimulatorSection = () => {
                 </div>
               </div>
             </div>
+
+            {/* AI Generate Button */}
+            {uploadedImage && (
+              <Button
+                variant="hero"
+                size="xl"
+                className="w-full"
+                onClick={generateAIVisualization}
+                disabled={isGenerating}
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Se generează...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Generează Vizualizare AI
+                  </>
+                )}
+              </Button>
+            )}
           </div>
 
           {/* Right Panel - Visualization */}
@@ -292,6 +370,7 @@ const SimulatorSection = () => {
                   variant={showComparison ? "default" : "outline"}
                   size="sm"
                   onClick={() => setShowComparison(!showComparison)}
+                  disabled={!generatedImage && !uploadedImage}
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <ChevronRight className="w-4 h-4 -ml-2" />
@@ -310,6 +389,15 @@ const SimulatorSection = () => {
                 onMouseMove={showComparison ? handleComparisonMove : undefined}
                 onTouchMove={showComparison ? handleComparisonMove : undefined}
               >
+                {/* Loading Overlay */}
+                {isGenerating && (
+                  <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
+                    <Loader2 className="w-12 h-12 text-rose-gold animate-spin mb-4" />
+                    <p className="text-deep-brown font-medium">Se generează vizualizarea AI...</p>
+                    <p className="text-sm text-muted-foreground mt-2">Acest proces poate dura câteva secunde</p>
+                  </div>
+                )}
+
                 {/* Before View (Left) */}
                 <div 
                   className="absolute inset-0 flex items-center justify-center"
@@ -361,7 +449,13 @@ const SimulatorSection = () => {
                     transition: "transform 0.2s ease"
                   }}
                 >
-                  {uploadedImage ? (
+                  {generatedImage ? (
+                    <img 
+                      src={generatedImage} 
+                      alt="După - AI Generated" 
+                      className="max-w-full max-h-full object-contain transition-opacity duration-500"
+                    />
+                  ) : uploadedImage ? (
                     <div className="relative">
                       <img 
                         src={uploadedImage} 
@@ -470,7 +564,7 @@ const SimulatorSection = () => {
                       Înainte
                     </div>
                     <div className="absolute top-4 right-4 px-3 py-1 bg-rose-gold/80 backdrop-blur-sm rounded-full text-sm font-medium text-white">
-                      După
+                      {generatedImage ? "După (AI)" : "După"}
                     </div>
                   </>
                 )}
@@ -490,6 +584,14 @@ const SimulatorSection = () => {
                     <span className="ml-2 font-semibold text-rose-gold transition-all duration-300">{selectedSize}cc</span>
                   </div>
                 </div>
+                {generatedImage && (
+                  <div className="mt-2 pt-2 border-t border-border/30">
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" />
+                      Vizualizare generată cu AI
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
