@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Clock } from "lucide-react";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Clock, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
@@ -172,6 +172,27 @@ const Simulator3DPage = () => {
     setShowComparison(false);
     setZoom(1);
     setGeneratedImage(null);
+  };
+
+  const downloadGeneratedImage = () => {
+    if (!generatedImage) {
+      toast.error("Nu există imagine de descărcat");
+      return;
+    }
+
+    try {
+      // Create a link element and trigger download
+      const link = document.createElement('a');
+      link.href = generatedImage;
+      link.download = `simulare-implant-${selectedType}-${selectedSize}cc-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("Imaginea a fost descărcată!");
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      toast.error("Eroare la descărcarea imaginii");
+    }
   };
 
   const generateAIVisualization = async () => {
@@ -544,10 +565,23 @@ const Simulator3DPage = () => {
                     <ChevronRight className="w-4 h-4 -ml-2" />
                     <span className="ml-1">Comparare</span>
                   </Button>
-                  
-                  <Button variant="ghost" size="sm" onClick={resetSimulator} className="text-muted-foreground hover:text-foreground">
-                    <RotateCcw className="w-4 h-4" />
-                  </Button>
+
+                  <div className="flex items-center gap-1">
+                    {generatedImage && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={downloadGeneratedImage} 
+                        className="text-rose-gold hover:text-rose-gold/80 hover:bg-rose-gold/10"
+                        title="Descarcă imaginea"
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="sm" onClick={resetSimulator} className="text-muted-foreground hover:text-foreground">
+                      <RotateCcw className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Visualization Area */}
