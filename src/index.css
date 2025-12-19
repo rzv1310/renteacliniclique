@@ -316,3 +316,34 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--rose-gold) / 0.8);
 }
+
+/* Silk shimmer animation */
+@keyframes silk-shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.silk-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.silk-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%,
+    transparent 100%
+  );
+  animation: silk-shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+}
