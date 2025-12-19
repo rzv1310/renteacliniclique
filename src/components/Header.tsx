@@ -79,7 +79,7 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-6">
+            <nav className="hidden xl:flex items-center gap-6">
               {/* Proceduri Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide">
@@ -116,7 +116,7 @@ const Header = () => {
             </nav>
 
             {/* CTA Button */}
-            <div className="hidden lg:flex items-center gap-4">
+            <div className="hidden xl:flex items-center gap-4">
               <a
                 href="tel:+40721000000"
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-rose-gold transition-colors"
@@ -131,7 +131,7 @@ const Header = () => {
 
             {/* Mobile Menu Toggle */}
             <button
-              className="lg:hidden p-2 text-foreground z-50"
+              className="xl:hidden p-2 text-foreground z-50"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -143,7 +143,7 @@ const Header = () => {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 z-40"
+          className="xl:hidden fixed inset-0 z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         >
           {/* Backdrop */}
