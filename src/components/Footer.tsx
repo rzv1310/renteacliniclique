@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Instagram, Facebook, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -62,14 +63,21 @@ const Footer = () => {
               Linkuri Rapide
             </h4>
             <ul className="space-y-3">
-              {["Despre Noi", "Galerie", "Prețuri", "Blog", "Contact"].map((link) => (
-                <li key={link}>
-                  <a
-                    href="#"
+              {[
+                { label: "Despre Noi", href: "/despre-noi" },
+                { label: "Galerie", href: "/galerie" },
+                { label: "Tarife", href: "/tarife-finantare" },
+                { label: "Ghid Recuperare", href: "/ghid-recuperare" },
+                { label: "Blog", href: "/blog" },
+                { label: "Contact", href: "/contact" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    to={link.href}
                     className="text-ivory/70 hover:text-rose-gold transition-colors duration-300 text-sm"
                   >
-                    {link}
-                  </a>
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -77,21 +85,23 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider mb-6">Servicii</h4>
+            <h4 className="font-medium text-sm uppercase tracking-wider mb-6">Proceduri</h4>
             <ul className="space-y-3">
               {[
-                "Implanturi Anatomice",
-                "Implanturi Rotunde",
-                "Augmentare cu Mastopexie",
-                "Revizie Implant",
+                { label: "Augmentare Mamară", href: "/proceduri/augmentare-mamara" },
+                { label: "Implanturi Rotunde", href: "/proceduri/augmentare-mamara/implanturi-mamare-rotunde" },
+                { label: "Implanturi Anatomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-anatomice" },
+                { label: "Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
+                { label: "Augmentare cu Mastopexie", href: "/proceduri/augmentare-mamara-cu-mastopexie" },
+                { label: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
               ].map((service) => (
-                <li key={service}>
-                  <a
-                    href="#"
+                <li key={service.href}>
+                  <Link
+                    to={service.href}
                     className="text-ivory/70 hover:text-rose-gold transition-colors duration-300 text-sm"
                   >
-                    {service}
-                  </a>
+                    {service.label}
+                  </Link>
                 </li>
               ))}
             </ul>
