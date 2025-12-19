@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,12 +22,23 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const proceduriLinks = [
+    { name: "Toate Procedurile", href: "/proceduri" },
+    { name: "Augmentare Mamară", href: "/proceduri/augmentare-mamara" },
+    { name: "— Implanturi Rotunde", href: "/proceduri/augmentare-mamara/implanturi-mamare-rotunde" },
+    { name: "— Implanturi Anatomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-anatomice" },
+    { name: "— Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
+    { name: "Mastopexie (Ridicare)", href: "/proceduri/augmentare-mamara-cu-mastopexie" },
+    { name: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
+  ];
+
   const navLinks = [
-    { name: "Despre Noi", href: "/#despre" },
     { name: "Galerie", href: "/galerie" },
-    { name: "Tipuri de Implanturi", href: "/implanturi" },
-    { name: "Prețuri", href: "/preturi" },
-    { name: "Resurse", href: "/#resurse" },
+    { name: "Tarife", href: "/tarife-finantare" },
+    { name: "Ghid Recuperare", href: "/ghid-recuperare" },
+    { name: "Despre Noi", href: "/despre-noi" },
+    { name: "Blog", href: "/blog" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -44,15 +62,39 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-6">
+            {/* Proceduri Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-soft-brown hover:text-rose-gold transition-colors duration-300 tracking-wide">
+                Proceduri
+                <ChevronDown className="w-4 h-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 bg-card border-border">
+                {proceduriLinks.map((link, index) => (
+                  <span key={link.href}>
+                    {index === 1 && <DropdownMenuSeparator />}
+                    {index === 5 && <DropdownMenuSeparator />}
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to={link.href}
+                        className={`w-full cursor-pointer ${link.name.startsWith("—") ? "pl-6 text-muted-foreground" : ""}`}
+                      >
+                        {link.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  </span>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-sm font-medium text-soft-brown hover:text-rose-gold transition-colors duration-300 tracking-wide"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -82,16 +124,28 @@ const Header = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden mt-4 pb-4 animate-fade-in">
-            <nav className="flex flex-col gap-4">
+            <nav className="flex flex-col gap-2">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mt-2 mb-1">Proceduri</p>
+              {proceduriLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={`text-base font-medium text-soft-brown hover:text-rose-gold transition-colors py-2 ${link.name.startsWith("—") ? "pl-4 text-sm" : ""}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <div className="border-t border-border my-2" />
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-base font-medium text-soft-brown hover:text-rose-gold transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
               <Button variant="hero" size="lg" className="mt-4">
                 Programează Consultația
