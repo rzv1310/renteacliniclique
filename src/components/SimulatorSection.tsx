@@ -1,0 +1,516 @@
+import { useState, useRef, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from "lucide-react";
+
+type ImplantType = "rotund" | "anatomic" | "ergonomic";
+type ImplantSize = 200 | 275 | 350 | 425 | 500;
+
+interface ImplantOption {
+  type: ImplantType;
+  name: string;
+  description: string;
+}
+
+const implantTypes: ImplantOption[] = [
+  { type: "rotund", name: "Rotund", description: "Volum uniform, aspect plin" },
+  { type: "anatomic", name: "Anatomic", description: "Formă naturală de lacrimă" },
+  { type: "ergonomic", name: "Ergonomic", description: "Adaptabil la mișcare" },
+];
+
+const implantSizes: ImplantSize[] = [200, 275, 350, 425, 500];
+
+const avatars = [
+  { id: 1, name: "Model A", silhouette: "athletic" },
+  { id: 2, name: "Model B", silhouette: "slim" },
+  { id: 3, name: "Model C", silhouette: "curvy" },
+];
+
+const SimulatorSection = () => {
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<number>(1);
+  const [selectedType, setSelectedType] = useState<ImplantType>("anatomic");
+  const [selectedSize, setSelectedSize] = useState<ImplantSize>(350);
+  const [showComparison, setShowComparison] = useState(false);
+  const [comparisonPosition, setComparisonPosition] = useState(50);
+  const [zoom, setZoom] = useState(1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const comparisonRef = useRef<HTMLDivElement>(null);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUploadedImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleComparisonMove = useCallback((e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (!comparisonRef.current) return;
+    
+    const rect = comparisonRef.current.getBoundingClientRect();
+    let clientX: number;
+    
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+    } else {
+      clientX = e.clientX;
+    }
+    
+    const x = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    setComparisonPosition(percentage);
+  }, []);
+
+  const resetSimulator = () => {
+    setUploadedImage(null);
+    setSelectedAvatar(1);
+    setSelectedType("anatomic");
+    setSelectedSize(350);
+    setShowComparison(false);
+    setZoom(1);
+  };
+
+  // Calculate visual transformation based on implant selection
+  const getImplantTransform = () => {
+    const sizeMultiplier = (selectedSize - 200) / 300; // 0 to 1
+    const baseScale = 1 + sizeMultiplier * 0.15;
+    
+    let shapeModifier = 0;
+    if (selectedType === "rotund") shapeModifier = 0.05;
+    if (selectedType === "anatomic") shapeModifier = 0.02;
+    if (selectedType === "ergonomic") shapeModifier = 0.03;
+    
+    return {
+      scale: baseScale + shapeModifier,
+      projection: selectedType === "rotund" ? "fuller" : selectedType === "anatomic" ? "natural" : "adaptive",
+    };
+  };
+
+  const transform = getImplantTransform();
+
+  return (
+    <section id="simulator" className="py-24 bg-gradient-to-b from-champagne-light to-background">
+      <div className="container mx-auto px-4 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="inline-block px-4 py-2 rounded-full bg-rose-gold/10 text-rose-gold text-sm font-medium mb-6">
+            Simulator 3D Interactiv
+          </span>
+          <h2 className="font-serif text-4xl md:text-5xl font-semibold text-deep-brown mb-6">
+            Vizualizează-ți <span className="text-gradient-gold">Transformarea</span>
+          </h2>
+          <p className="text-soft-brown text-lg">
+            Încarcă o poză sau alege un avatar pentru a vedea cum ar arăta diferite tipuri și mărimi de implanturi.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left Panel - Controls */}
+          <div className="space-y-8">
+            {/* Image Upload Section */}
+            <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/50">
+              <h3 className="font-serif text-xl font-semibold text-deep-brown mb-4">
+                1. Încarcă Poza sau Alege Avatar
+              </h3>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              
+              <Button
+                variant="elegant"
+                size="lg"
+                className="w-full mb-4"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-5 h-5 mr-2" />
+                Încarcă Fotografie
+              </Button>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/50" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-card px-4 text-sm text-muted-foreground">sau alege avatar</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 mt-4">
+                {avatars.map((avatar) => (
+                  <button
+                    key={avatar.id}
+                    onClick={() => {
+                      setUploadedImage(null);
+                      setSelectedAvatar(avatar.id);
+                    }}
+                    className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                      !uploadedImage && selectedAvatar === avatar.id
+                        ? "border-rose-gold shadow-glow"
+                        : "border-border/50 hover:border-rose-gold/50"
+                    }`}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-champagne/30 to-champagne-light flex items-center justify-center">
+                      <User className="w-12 h-12 text-rose-gold/60" />
+                    </div>
+                    <span className="absolute bottom-2 left-0 right-0 text-center text-xs font-medium text-soft-brown">
+                      {avatar.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Implant Type Selection */}
+            <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/50">
+              <h3 className="font-serif text-xl font-semibold text-deep-brown mb-4">
+                2. Alege Tipul de Implant
+              </h3>
+              
+              <div className="space-y-3">
+                {implantTypes.map((implant) => (
+                  <button
+                    key={implant.type}
+                    onClick={() => setSelectedType(implant.type)}
+                    className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-300 ${
+                      selectedType === implant.type
+                        ? "border-rose-gold bg-rose-gold/5 shadow-md"
+                        : "border-border/50 hover:border-rose-gold/50 hover:bg-champagne-light/50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-deep-brown">{implant.name}</p>
+                        <p className="text-sm text-muted-foreground">{implant.description}</p>
+                      </div>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        selectedType === implant.type ? "bg-rose-gold" : "bg-champagne"
+                      }`}>
+                        {implant.type === "rotund" && (
+                          <div className="w-6 h-6 rounded-full bg-current opacity-60" 
+                               style={{ backgroundColor: selectedType === implant.type ? "white" : "var(--rose-gold)" }} />
+                        )}
+                        {implant.type === "anatomic" && (
+                          <div className="w-6 h-7 rounded-t-full rounded-b-[70%] bg-current opacity-60"
+                               style={{ backgroundColor: selectedType === implant.type ? "white" : "var(--rose-gold)" }} />
+                        )}
+                        {implant.type === "ergonomic" && (
+                          <div className="w-6 h-6 rounded-full bg-current opacity-60 transform rotate-12"
+                               style={{ 
+                                 backgroundColor: selectedType === implant.type ? "white" : "var(--rose-gold)",
+                                 borderRadius: "50% 50% 40% 40%"
+                               }} />
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Implant Size Selection */}
+            <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/50">
+              <h3 className="font-serif text-xl font-semibold text-deep-brown mb-4">
+                3. Selectează Mărimea
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                  <span>200cc</span>
+                  <span>500cc</span>
+                </div>
+                
+                <input
+                  type="range"
+                  min={200}
+                  max={500}
+                  step={25}
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(Number(e.target.value) as ImplantSize)}
+                  className="w-full h-2 bg-champagne rounded-lg appearance-none cursor-pointer accent-rose-gold"
+                />
+                
+                <div className="flex justify-center">
+                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-rose-gold/10 rounded-full">
+                    <span className="text-2xl font-serif font-semibold text-rose-gold">{selectedSize}</span>
+                    <span className="text-soft-brown">cc</span>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-5 gap-2 mt-4">
+                  {implantSizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`py-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedSize === size
+                          ? "bg-rose-gold text-white"
+                          : "bg-champagne-light text-soft-brown hover:bg-champagne"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - Visualization */}
+          <div className="lg:sticky lg:top-24">
+            <div className="bg-card rounded-2xl overflow-hidden shadow-elegant border border-border/50">
+              {/* Toolbar */}
+              <div className="flex items-center justify-between p-4 border-b border-border/50">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
+                  >
+                    <ZoomOut className="w-4 h-4" />
+                  </Button>
+                  <span className="text-sm text-muted-foreground w-16 text-center">
+                    {Math.round(zoom * 100)}%
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setZoom(Math.min(2, zoom + 0.1))}
+                  >
+                    <ZoomIn className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                <Button
+                  variant={showComparison ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShowComparison(!showComparison)}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 -ml-2" />
+                  <span className="ml-1">Comparare</span>
+                </Button>
+                
+                <Button variant="ghost" size="sm" onClick={resetSimulator}>
+                  <RotateCcw className="w-4 h-4" />
+                </Button>
+              </div>
+
+              {/* Visualization Area */}
+              <div 
+                ref={comparisonRef}
+                className="relative aspect-[3/4] bg-gradient-to-b from-champagne-light to-champagne overflow-hidden cursor-ew-resize"
+                onMouseMove={showComparison ? handleComparisonMove : undefined}
+                onTouchMove={showComparison ? handleComparisonMove : undefined}
+              >
+                {/* Before View (Left) */}
+                <div 
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{ 
+                    clipPath: showComparison ? `inset(0 ${100 - comparisonPosition}% 0 0)` : "none",
+                    transform: `scale(${zoom})`,
+                    transition: "transform 0.2s ease"
+                  }}
+                >
+                  {uploadedImage ? (
+                    <img 
+                      src={uploadedImage} 
+                      alt="Înainte" 
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  ) : (
+                    <div className="relative">
+                      {/* Avatar Silhouette - Before */}
+                      <svg viewBox="0 0 200 300" className="w-48 h-72">
+                        <defs>
+                          <linearGradient id="skinGradientBefore" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="hsl(var(--rose-gold))" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="hsl(var(--champagne))" stopOpacity="0.5" />
+                          </linearGradient>
+                        </defs>
+                        {/* Body outline */}
+                        <ellipse cx="100" cy="60" rx="35" ry="45" fill="url(#skinGradientBefore)" />
+                        <path 
+                          d="M 60 100 Q 50 120 45 160 Q 40 200 50 250 L 80 300 L 120 300 L 150 250 Q 160 200 155 160 Q 150 120 140 100 Z" 
+                          fill="url(#skinGradientBefore)"
+                        />
+                        {/* Natural chest area */}
+                        <ellipse cx="75" cy="140" rx="18" ry="15" fill="hsl(var(--rose-gold))" opacity="0.2" />
+                        <ellipse cx="125" cy="140" rx="18" ry="15" fill="hsl(var(--rose-gold))" opacity="0.2" />
+                      </svg>
+                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-soft-brown whitespace-nowrap">
+                        Înainte
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* After View (Right / Full when not comparing) */}
+                <div 
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{ 
+                    clipPath: showComparison ? `inset(0 0 0 ${comparisonPosition}%)` : "none",
+                    transform: `scale(${zoom})`,
+                    transition: "transform 0.2s ease"
+                  }}
+                >
+                  {uploadedImage ? (
+                    <div className="relative">
+                      <img 
+                        src={uploadedImage} 
+                        alt="După" 
+                        className="max-w-full max-h-full object-contain"
+                      />
+                      {/* Overlay effect for implant visualization */}
+                      <div 
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: `radial-gradient(ellipse 40% 30% at 35% 45%, hsla(var(--rose-gold), 0.15) 0%, transparent 70%),
+                                       radial-gradient(ellipse 40% 30% at 65% 45%, hsla(var(--rose-gold), 0.15) 0%, transparent 70%)`,
+                          transform: `scaleY(${transform.scale})`,
+                          transformOrigin: "center 45%"
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      {/* Avatar Silhouette - After with implants */}
+                      <svg viewBox="0 0 200 300" className="w-48 h-72">
+                        <defs>
+                          <linearGradient id="skinGradientAfter" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="hsl(var(--rose-gold))" stopOpacity="0.4" />
+                            <stop offset="100%" stopColor="hsl(var(--champagne))" stopOpacity="0.6" />
+                          </linearGradient>
+                          <filter id="glow">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                            <feMerge>
+                              <feMergeNode in="coloredBlur"/>
+                              <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                          </filter>
+                        </defs>
+                        {/* Body outline */}
+                        <ellipse cx="100" cy="60" rx="35" ry="45" fill="url(#skinGradientAfter)" />
+                        <path 
+                          d="M 60 100 Q 50 120 45 160 Q 40 200 50 250 L 80 300 L 120 300 L 150 250 Q 160 200 155 160 Q 150 120 140 100 Z" 
+                          fill="url(#skinGradientAfter)"
+                        />
+                        {/* Enhanced chest with implants */}
+                        <ellipse 
+                          cx="75" 
+                          cy="140" 
+                          rx={18 + (selectedSize - 200) / 25} 
+                          ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : 0)} 
+                          fill="hsl(var(--rose-gold))" 
+                          opacity="0.35"
+                          filter="url(#glow)"
+                          style={{
+                            transform: selectedType === "anatomic" ? "translateY(3px)" : "none",
+                            transformOrigin: "center"
+                          }}
+                        />
+                        <ellipse 
+                          cx="125" 
+                          cy="140" 
+                          rx={18 + (selectedSize - 200) / 25} 
+                          ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : 0)} 
+                          fill="hsl(var(--rose-gold))" 
+                          opacity="0.35"
+                          filter="url(#glow)"
+                          style={{
+                            transform: selectedType === "anatomic" ? "translateY(3px)" : "none",
+                            transformOrigin: "center"
+                          }}
+                        />
+                        {/* Highlight effect */}
+                        <ellipse 
+                          cx="70" 
+                          cy="135" 
+                          rx={8 + (selectedSize - 200) / 50} 
+                          ry={6 + (selectedSize - 200) / 60} 
+                          fill="white" 
+                          opacity="0.3"
+                        />
+                        <ellipse 
+                          cx="120" 
+                          cy="135" 
+                          rx={8 + (selectedSize - 200) / 50} 
+                          ry={6 + (selectedSize - 200) / 60} 
+                          fill="white" 
+                          opacity="0.3"
+                        />
+                      </svg>
+                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-rose-gold whitespace-nowrap">
+                        După - {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} {selectedSize}cc
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Comparison Slider Line */}
+                {showComparison && (
+                  <div 
+                    className="absolute top-0 bottom-0 w-1 bg-white shadow-lg cursor-ew-resize z-10"
+                    style={{ left: `${comparisonPosition}%`, transform: "translateX(-50%)" }}
+                  >
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center">
+                      <ChevronLeft className="w-4 h-4 text-rose-gold" />
+                      <ChevronRight className="w-4 h-4 text-rose-gold -ml-1" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Labels when comparing */}
+                {showComparison && (
+                  <>
+                    <div className="absolute top-4 left-4 px-3 py-1 bg-white/80 backdrop-blur-sm rounded-full text-sm font-medium text-deep-brown">
+                      Înainte
+                    </div>
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-rose-gold/80 backdrop-blur-sm rounded-full text-sm font-medium text-white">
+                      După
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Info Panel */}
+              <div className="p-4 bg-champagne-light/50 border-t border-border/50">
+                <div className="flex items-center justify-between text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Tip selectat:</span>
+                    <span className="ml-2 font-semibold text-deep-brown">
+                      {implantTypes.find(t => t.type === selectedType)?.name}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Mărime:</span>
+                    <span className="ml-2 font-semibold text-rose-gold">{selectedSize}cc</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="mt-6 text-center">
+              <Button variant="hero" size="xl" className="w-full sm:w-auto">
+                Programează Consultație pentru Simulare 3D Profesională
+              </Button>
+              <p className="text-sm text-muted-foreground mt-3">
+                Simularea finală se realizează în cabinet cu echipament profesional
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default SimulatorSection;
