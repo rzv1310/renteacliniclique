@@ -546,7 +546,21 @@ const AugmentareMamaraPage = () => {
                   {/* Connector line with animated glow dot */}
                   {index < recoverySteps.length - 1 && (
                     <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-border/50 overflow-hidden">
-                      {/* Animated glowing dot */}
+                      {/* Trail elements */}
+                      {[0.15, 0.3, 0.45].map((delay, i) => (
+                        <div 
+                          key={i}
+                          className="absolute top-1/2 -translate-y-1/2 rounded-full animate-glow-travel-horizontal"
+                          style={{ 
+                            animationDelay: `${index * 0.5 + delay}s`,
+                            width: `${8 - i * 2}px`,
+                            height: `${8 - i * 2}px`,
+                            background: `rgba(212, 175, 155, ${0.3 - i * 0.1})`,
+                            boxShadow: `0 0 ${6 - i * 2}px ${3 - i}px rgba(212, 175, 155, ${0.4 - i * 0.1})`
+                          }}
+                        />
+                      ))}
+                      {/* Main glowing dot */}
                       <div 
                         className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full animate-glow-travel-horizontal"
                         style={{ 
@@ -559,7 +573,12 @@ const AugmentareMamaraPage = () => {
                   )}
                   
                   <div className="relative z-10 text-center">
-                    <div className="w-16 h-16 rounded-full bg-card border border-border/50 flex items-center justify-center mx-auto mb-4">
+                    <div 
+                      className="w-16 h-16 rounded-full bg-card border border-border/50 flex items-center justify-center mx-auto mb-4 transition-all duration-300"
+                      style={{
+                        animation: `circle-pulse 0.6s ease-out ${index * 3 + 2.7}s infinite`
+                      }}
+                    >
                       <span className="text-2xl font-light text-foreground">{index + 1}</span>
                     </div>
                     <h4 className="font-medium text-foreground mb-2">{step.day}</h4>
