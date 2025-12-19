@@ -1,20 +1,56 @@
+import { useEffect, useRef, useState } from "react";
 import { Phone, Mail, MapPin, Instagram, Facebook, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const parallaxRef = useRef<HTMLDivElement>(null);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!parallaxRef.current) return;
+      
+      const rect = parallaxRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Only apply parallax when section is in view
+      if (rect.top < windowHeight && rect.bottom > 0) {
+        const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+        setParallaxOffset(scrollProgress * 50 - 25); // -25 to 25 range
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial call
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <footer className="bg-card text-foreground border-t border-border">
-      {/* CTA Section - Silk Black Background */}
-      <div className="relative overflow-hidden silk-shimmer">
-        {/* Silk gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/30 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-rose-gold/5 via-transparent to-transparent" />
+      {/* CTA Section - Silk Black Background with Parallax */}
+      <div ref={parallaxRef} className="relative overflow-hidden silk-shimmer">
+        {/* Parallax background layers */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-black transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${parallaxOffset * 0.5}px)` }}
+        />
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/30 via-transparent to-transparent transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${parallaxOffset * 0.3}px)` }}
+        />
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-rose-gold/5 via-transparent to-transparent transition-transform duration-100 ease-out"
+          style={{ transform: `translateY(${parallaxOffset * 0.7}px)` }}
+        />
         {/* Static subtle shine */}
         <div className="absolute inset-0 opacity-20 bg-[linear-gradient(110deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%)]" />
         
         <div className="container mx-auto px-4 lg:px-8 py-20 lg:py-28 relative z-10">
-          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
+          <div 
+            className="max-w-3xl mx-auto text-center flex flex-col items-center transition-transform duration-100 ease-out"
+            style={{ transform: `translateY(${parallaxOffset * -0.2}px)` }}
+          >
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-white">
               O investiție în încrederea ta pe care o vei purta în fiecare zi.
             </h2>
