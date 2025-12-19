@@ -21,6 +21,8 @@ import ReviziePage from "./pages/proceduri/ReviziePage";
 import DespreNoiPage from "./pages/DespreNoiPage";
 import GhidRecuperarePage from "./pages/GhidRecuperarePage";
 import ContactPage from "./pages/ContactPage";
+import TurismMedicalPage from "./pages/TurismMedicalPage";
+import FinantarePage from "./pages/FinantarePage";
 
 // Blog
 import BlogIndex from "./pages/blog/BlogIndex";
@@ -54,6 +56,8 @@ const App = () => (
           <Route path="/ghid-recuperare" element={<GhidRecuperarePage />} />
           <Route path="/despre-noi" element={<DespreNoiPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/turism-medical-intern" element={<TurismMedicalPage />} />
+          <Route path="/implant-mamar-in-rate" element={<FinantarePage />} />
           
           {/* Blog */}
           <Route path="/blog" element={<BlogIndex />} />
