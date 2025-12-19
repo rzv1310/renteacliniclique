@@ -84,6 +84,7 @@ const Simulator3DPage = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [rateLimits, setRateLimits] = useState<RateLimits | null>(null);
   const [isLoadingLimits, setIsLoadingLimits] = useState(true);
+  const [resetTimer, setResetTimer] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
 
@@ -109,6 +110,30 @@ const Simulator3DPage = () => {
   useEffect(() => {
     fetchRateLimits();
   }, [fetchRateLimits]);
+
+  // Timer effect for minute reset countdown
+  useEffect(() => {
+    if (rateLimits && rateLimits.limits.minute.remaining === 0) {
+      // Start 60 second countdown
+      setResetTimer(60);
+    }
+  }, [rateLimits]);
+
+  useEffect(() => {
+    if (resetTimer > 0) {
+      const interval = setInterval(() => {
+        setResetTimer(prev => {
+          if (prev <= 1) {
+            // Timer finished, refresh limits
+            fetchRateLimits();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [resetTimer, fetchRateLimits]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -432,11 +457,30 @@ const Simulator3DPage = () => {
                 )}
                 
                 {rateLimits && !rateLimits.canGenerate && (
-                  <p className="text-xs text-red-500 text-center mt-2">
-                    {rateLimits.limitType === 'minute' && 'Așteptați câteva secunde pentru a încerca din nou.'}
-                    {rateLimits.limitType === 'hour' && 'Ați atins limita pe oră. Încercați mai târziu.'}
-                    {rateLimits.limitType === 'day' && 'Ați atins limita zilnică. Reveniți mâine.'}
-                  </p>
+                  <div className="mt-3 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                    <p className="text-xs text-red-500 text-center">
+                      {rateLimits.limitType === 'minute' && (
+                        <>
+                          Limită de minut atinsă. 
+                          {resetTimer > 0 && (
+                            <span className="font-semibold ml-1">
+                              Se resetează în {resetTimer}s
+                            </span>
+                          )}
+                        </>
+                      )}
+                      {rateLimits.limitType === 'hour' && 'Ați atins limita pe oră. Încercați mai târziu.'}
+                      {rateLimits.limitType === 'day' && 'Ați atins limita zilnică. Reveniți mâine.'}
+                    </p>
+                    {resetTimer > 0 && rateLimits.limitType === 'minute' && (
+                      <div className="mt-2 w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                        <div 
+                          className="h-full bg-rose-gold transition-all duration-1000 ease-linear"
+                          style={{ width: `${((60 - resetTimer) / 60) * 100}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
 
