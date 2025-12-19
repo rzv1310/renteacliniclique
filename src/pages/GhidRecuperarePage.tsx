@@ -94,15 +94,30 @@ const GhidRecuperarePage = () => {
           <div className="max-w-4xl mx-auto">
             <div className="space-y-8">
               {timeline.map((item, index) => (
-              <div key={item.period} className="relative">
+                <div key={item.period} className="relative">
                   {/* Connector line with animated glow dot */}
                   {index < timeline.length - 1 && (
-                    <div className="absolute left-6 top-16 w-0.5 h-full bg-border -z-10">
-                      {/* Animated glowing dot */}
+                    <div className="absolute left-6 top-16 w-0.5 h-full bg-border -z-10 overflow-hidden">
+                      {/* Trail elements */}
+                      {[0.15, 0.3, 0.45].map((trailDelay, i) => (
+                        <div
+                          key={i}
+                          className="absolute left-1/2 -translate-x-1/2 rounded-full"
+                          style={{
+                            animation: `glow-travel-vert-${Math.min(index, 2)} 9s ease-in-out infinite`,
+                            animationDelay: `${trailDelay}s`,
+                            width: `${6 - i * 1.5}px`,
+                            height: `${6 - i * 1.5}px`,
+                            background: `rgba(212, 175, 155, ${0.28 - i * 0.08})`,
+                            boxShadow: `0 0 ${5 - i * 1.5}px ${2 - i * 0.5}px rgba(212, 175, 155, ${0.38 - i * 0.08})`,
+                          }}
+                        />
+                      ))}
+                      {/* Main glowing dot */}
                       <div 
-                        className="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full animate-glow-travel"
+                        className="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full"
                         style={{ 
-                          animationDelay: `${index * 0.5}s`,
+                          animation: `glow-travel-vert-${Math.min(index, 2)} 9s ease-in-out infinite`,
                           background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
                           boxShadow: "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)"
                         }}
@@ -113,7 +128,12 @@ const GhidRecuperarePage = () => {
                   <div className="flex gap-6">
                     {/* Timeline dot */}
                     <div className="w-12 h-12 rounded-full bg-rose-gold flex items-center justify-center shrink-0">
-                      <Clock className="w-5 h-5 text-primary-foreground" />
+                      <div
+                        className="w-full h-full rounded-full flex items-center justify-center"
+                        style={{ animation: `pulse-step-${Math.min(index, 3)} 9s ease-in-out infinite` }}
+                      >
+                        <Clock className="w-5 h-5 text-primary-foreground" />
+                      </div>
                     </div>
 
                     {/* Content */}
