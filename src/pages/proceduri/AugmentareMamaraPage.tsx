@@ -543,9 +543,19 @@ const AugmentareMamaraPage = () => {
             <div className="grid md:grid-cols-4 gap-6">
               {recoverySteps.map((step, index) => (
                 <div key={index} className="relative">
-                  {/* Connector line */}
+                  {/* Connector line with animated glow dot */}
                   {index < recoverySteps.length - 1 && (
-                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-border/50" />
+                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-border/50 overflow-hidden">
+                      {/* Animated glowing dot */}
+                      <div 
+                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full animate-glow-travel-horizontal"
+                        style={{ 
+                          animationDelay: `${index * 0.5}s`,
+                          background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
+                          boxShadow: "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)"
+                        }}
+                      />
+                    </div>
                   )}
                   
                   <div className="relative z-10 text-center">
