@@ -1,13 +1,19 @@
 import { ArrowRight } from "lucide-react";
 import doctorImage from "@/assets/doctor-portrait.jpg";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const DoctorSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   return (
-    <section className="py-24 lg:py-32 overflow-hidden bg-background">
+    <section 
+      className="py-24 lg:py-32 overflow-hidden bg-background"
+      ref={ref as React.RefObject<HTMLElement>}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image Side */}
-          <div className="relative">
+          <div className={`relative transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <div className="relative z-10">
               <img
                 src={doctorImage}
@@ -23,7 +29,7 @@ const DoctorSection = () => {
           </div>
 
           {/* Content Side */}
-          <div className="lg:pl-8">
+          <div className={`lg:pl-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <span className="text-label mb-4 block">
               Artizan al Frumuseții
             </span>

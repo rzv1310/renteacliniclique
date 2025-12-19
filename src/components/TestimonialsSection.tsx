@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const TestimonialsSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   const testimonials = [
     {
       quote:
@@ -29,10 +32,13 @@ const TestimonialsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="py-24 lg:py-32 overflow-hidden bg-background">
+    <section 
+      className="py-24 lg:py-32 overflow-hidden bg-background"
+      ref={ref as React.RefObject<HTMLElement>}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
             Experiențe Veridice
           </span>
@@ -42,7 +48,7 @@ const TestimonialsSection = () => {
         </div>
 
         {/* Testimonial Card */}
-        <div className="max-w-4xl mx-auto">
+        <div className={`max-w-4xl mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="bg-card rounded-3xl p-8 md:p-12 border border-border relative overflow-hidden">
             {/* Decorative Quote */}
             <div className="absolute top-4 left-8 text-rose-gold/10 font-display text-[150px] leading-none select-none">

@@ -1,6 +1,9 @@
 import { ArrowRight } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const ResourcesSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   const resources = [
     {
       category: "Ghid",
@@ -20,10 +23,14 @@ const ResourcesSection = () => {
   ];
 
   return (
-    <section id="resurse" className="py-24 lg:py-32 bg-card">
+    <section 
+      id="resurse" 
+      className="py-24 lg:py-32 bg-card"
+      ref={ref as React.RefObject<HTMLElement>}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
             Cunoștințe Aprofundate
           </span>
@@ -41,8 +48,8 @@ const ResourcesSection = () => {
             <a
               key={resource.title}
               href={resource.link}
-              className="group bg-background rounded-2xl overflow-hidden border border-border hover:border-rose-gold/50 transition-all duration-500"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className={`group bg-background rounded-2xl overflow-hidden border border-border hover:border-rose-gold/50 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Gradient Header */}
               <div className="aspect-[16/9] bg-gradient-to-br from-rose-gold/20 to-muted flex items-center justify-center">
