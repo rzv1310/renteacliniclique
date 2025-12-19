@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useEffect } from "react";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,10 +58,10 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="font-serif text-2xl lg:text-3xl font-semibold tracking-tight text-deep-brown">
+            <span className="font-display text-2xl lg:text-3xl font-semibold tracking-tight text-foreground">
               Rentéa
             </span>
-            <span className="hidden sm:block text-xs uppercase tracking-[0.3em] text-soft-brown font-sans">
+            <span className="hidden sm:block text-xs uppercase tracking-[0.3em] text-muted-foreground font-sans">
               Aesthetic Clinique
             </span>
           </Link>
@@ -69,7 +70,7 @@ const Header = () => {
           <nav className="hidden lg:flex items-center gap-6">
             {/* Proceduri Dropdown */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-soft-brown hover:text-rose-gold transition-colors duration-300 tracking-wide">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide">
                 Proceduri
                 <ChevronDown className="w-4 h-4" />
               </DropdownMenuTrigger>
@@ -95,7 +96,7 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm font-medium text-soft-brown hover:text-rose-gold transition-colors duration-300 tracking-wide"
+                className="text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide"
               >
                 {link.name}
               </Link>
@@ -106,19 +107,19 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-4">
             <a
               href="tel:+40721000000"
-              className="flex items-center gap-2 text-sm text-soft-brown hover:text-rose-gold transition-colors"
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-rose-gold transition-colors"
             >
               <Phone className="w-4 h-4" />
               <span>+40 721 000 000</span>
             </a>
-            <Button variant="hero" size="lg">
+            <button className="btn-primary-rose-gold text-sm px-6 h-10">
               Programează Consultația
-            </Button>
+            </button>
           </div>
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden p-2 text-deep-brown"
+            className="lg:hidden p-2 text-foreground"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -127,14 +128,14 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 animate-fade-in">
+          <div className="lg:hidden mt-4 pb-4 animate-fade-in bg-card rounded-xl p-4 border border-border">
             <nav className="flex flex-col gap-2">
               <p className="text-xs uppercase tracking-wider text-muted-foreground mt-2 mb-1">Proceduri</p>
               {proceduriLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className={`text-base font-medium text-soft-brown hover:text-rose-gold transition-colors py-2 ${link.name.startsWith("—") ? "pl-4 text-sm" : ""}`}
+                  className={`text-base font-medium text-muted-foreground hover:text-rose-gold transition-colors py-2 ${link.name.startsWith("—") ? "pl-4 text-sm" : ""}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
@@ -145,15 +146,15 @@ const Header = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-base font-medium text-soft-brown hover:text-rose-gold transition-colors py-2"
+                  className="text-base font-medium text-muted-foreground hover:text-rose-gold transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
-              <Button variant="hero" size="lg" className="mt-4">
+              <button className="btn-primary-rose-gold mt-4">
                 Programează Consultația
-              </Button>
+              </button>
             </nav>
           </div>
         )}

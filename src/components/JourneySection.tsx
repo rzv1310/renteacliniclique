@@ -1,4 +1,8 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+
 const JourneySection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   const steps = [
     {
       step: "1",
@@ -27,10 +31,13 @@ const JourneySection = () => {
   ];
 
   return (
-    <section className="py-24 lg:py-32 bg-background">
+    <section 
+      className="py-24 lg:py-32 bg-background"
+      ref={ref as React.RefObject<HTMLElement>}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
             Parcurs Personalizat
           </span>
@@ -47,8 +54,8 @@ const JourneySection = () => {
           {steps.map((step, index) => (
             <div
               key={step.step}
-              className="relative group"
-              style={{ animationDelay: `${index * 150}ms` }}
+              className={`relative group transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Step Number */}
               <div className="mb-6">

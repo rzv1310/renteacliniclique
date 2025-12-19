@@ -1,9 +1,17 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import case1Before from "@/assets/gallery/case-1-before.jpg";
+import case1After from "@/assets/gallery/case-1-after.jpg";
+import case2Before from "@/assets/gallery/case-2-before.jpg";
+import case2After from "@/assets/gallery/case-2-after.jpg";
+import case3Before from "@/assets/gallery/case-3-before.jpg";
+import case3After from "@/assets/gallery/case-3-after.jpg";
 
 const GallerySection = () => {
   const [activeFilter, setActiveFilter] = useState("natural");
   const [sliderPosition, setSliderPosition] = useState(50);
+  const [activeCase, setActiveCase] = useState(0);
 
   const filters = [
     { id: "natural", label: "Natural Look" },
@@ -11,9 +19,22 @@ const GallerySection = () => {
     { id: "sporty", label: "Sporty Look" },
   ];
 
+  const cases = [
+    { before: case1Before, after: case1After, label: "Caz #1 - Natural 350cc" },
+    { before: case2Before, after: case2After, label: "Caz #2 - Voluptuous 400cc" },
+    { before: case3Before, after: case3After, label: "Caz #3 - Sporty 300cc" },
+  ];
+
   const handleSliderMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
+    const percentage = (x / rect.width) * 100;
+    setSliderPosition(Math.min(Math.max(percentage, 0), 100));
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.touches[0].clientX - rect.left;
     const percentage = (x / rect.width) * 100;
     setSliderPosition(Math.min(Math.max(percentage, 0), 100));
   };
@@ -52,26 +73,37 @@ const GallerySection = () => {
         </div>
 
         {/* Before/After Comparison Slider */}
-        <div className="max-w-4xl mx-auto mb-12">
+        <div className="max-w-4xl mx-auto mb-8">
           <div
             className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
             onMouseMove={handleSliderMove}
+            onTouchMove={handleTouchMove}
           >
-            {/* Before Image (Placeholder) */}
-            <div className="absolute inset-0 bg-gradient-to-br from-muted to-card flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-foreground font-display text-2xl">ÎNAINTE</p>
-              </div>
-            </div>
+            {/* Before Image */}
+            <img
+              src={cases[activeCase].before}
+              alt="Înainte"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
 
-            {/* After Image (Placeholder) */}
+            {/* After Image */}
             <div
-              className="absolute inset-0 bg-gradient-to-br from-card to-muted flex items-center justify-center"
+              className="absolute inset-0 overflow-hidden"
               style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
-              <div className="text-center">
-                <p className="text-foreground font-display text-2xl">DUPĂ (3 LUNI)</p>
-              </div>
+              <img
+                src={cases[activeCase].after}
+                alt="După"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Labels */}
+            <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full">
+              <span className="text-sm font-sans font-medium text-foreground">ÎNAINTE</span>
+            </div>
+            <div className="absolute top-4 right-4 bg-rose-gold/90 backdrop-blur-sm px-3 py-1 rounded-full">
+              <span className="text-sm font-sans font-medium text-primary-foreground">DUPĂ (3 LUNI)</span>
             </div>
 
             {/* Slider Line */}
@@ -85,6 +117,27 @@ const GallerySection = () => {
               </div>
             </div>
           </div>
+
+          {/* Case selector */}
+          <div className="flex justify-center gap-2 mt-4">
+            {cases.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setActiveCase(index);
+                  setSliderPosition(50);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === activeCase
+                    ? "w-8 bg-rose-gold"
+                    : "bg-border hover:bg-rose-gold/50"
+                }`}
+              />
+            ))}
+          </div>
+          <p className="text-center text-sm text-muted-foreground mt-2">
+            {cases[activeCase].label}
+          </p>
         </div>
 
         {/* CTA */}

@@ -1,6 +1,9 @@
 import { Diamond, Shield, CheckCircle } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const WhyUsSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   const features = [
     {
       icon: Diamond,
@@ -23,10 +26,14 @@ const WhyUsSection = () => {
   ];
 
   return (
-    <section id="despre" className="py-24 lg:py-32 bg-background">
+    <section 
+      id="despre" 
+      className="py-24 lg:py-32 bg-background"
+      ref={ref as React.RefObject<HTMLElement>}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <h2 className="h2-section text-foreground mb-6">
             De ce să alegi un superspecialist?
           </h2>
@@ -40,8 +47,8 @@ const WhyUsSection = () => {
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className="group bg-card rounded-2xl p-8 lg:p-10 border border-border hover:border-rose-gold/50 transition-all duration-500"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className={`group bg-card rounded-2xl p-8 lg:p-10 border border-border hover:border-rose-gold/50 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Icon */}
               <div className="w-16 h-16 rounded-full bg-rose-gold/10 border border-rose-gold/30 flex items-center justify-center mb-6 group-hover:bg-rose-gold/20 transition-colors duration-300">
