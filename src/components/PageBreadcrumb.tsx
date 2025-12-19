@@ -24,6 +24,8 @@ const routeLabels: Record<string, string> = {
   "ghid-recuperare": "Ghid Recuperare",
   "despre-noi": "Despre Noi",
   "contact": "Contact",
+  "turism-medical-intern": "Paciente din Provincie",
+  "implant-mamar-in-rate": "Finanțare în Rate",
   "blog": "Blog",
   "implanturi-rotunde-vs-anatomice": "Implanturi Rotunde vs. Anatomice",
   "alaptare-dupa-augmentare-mamara": "Alăptare după Augmentare Mamară",

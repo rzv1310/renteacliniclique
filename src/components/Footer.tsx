@@ -67,6 +67,8 @@ const Footer = () => {
                 { label: "Despre Noi", href: "/despre-noi" },
                 { label: "Galerie", href: "/galerie" },
                 { label: "Tarife", href: "/tarife-finantare" },
+                { label: "Finanțare în Rate", href: "/implant-mamar-in-rate" },
+                { label: "Paciente din Provincie", href: "/turism-medical-intern" },
                 { label: "Ghid Recuperare", href: "/ghid-recuperare" },
                 { label: "Blog", href: "/blog" },
                 { label: "Contact", href: "/contact" },
