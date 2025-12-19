@@ -44,12 +44,19 @@ const Header = () => {
     { name: "Lipofilling Mamar", href: "/proceduri/lipofilling-mamar" },
   ];
 
+  const utileLinks = [
+    { name: "Ghid de Recuperare", href: "/ghid-recuperare" },
+    { name: "Turism Medical", href: "/turism-medical" },
+    { name: "Finanțare", href: "/finantare" },
+    { name: "Blog", href: "/blog" },
+  ];
+
   const navLinks = [
     { name: "Galerie", href: "/galerie" },
     { name: "Simulator 3D", href: "/simulator-3d" },
-    { name: "Tarife & Finanțare", href: "/tarife-finantare" },
+    { name: "Tarife", href: "/tarife-finantare" },
     { name: "Despre Noi", href: "/despre-noi" },
-    { name: "Blog", href: "/blog" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -108,6 +115,23 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
+
+              {/* Utile Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide">
+                  Utile
+                  <MaterialIcon name="expand_more" className="text-lg" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-card border-border">
+                  {utileLinks.map((link) => (
+                    <DropdownMenuItem key={link.href} asChild>
+                      <Link to={link.href} className="w-full cursor-pointer">
+                        {link.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </nav>
 
             {/* CTA Button */}
@@ -158,9 +182,10 @@ const Header = () => {
                 </Link>
               ))}
               <div className="border-t border-border my-2" />
-              {navLinks.map((link) => (
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mt-2 mb-1">Utile</p>
+              {utileLinks.map((link) => (
                 <Link
-                  key={link.name}
+                  key={link.href}
                   to={link.href}
                   className="text-base font-medium text-muted-foreground hover:text-rose-gold transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
