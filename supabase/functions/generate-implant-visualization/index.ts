@@ -5,6 +5,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Valid implant types and size range
+const VALID_IMPLANT_TYPES = ['rotund', 'anatomic', 'ergonomic'];
+const MIN_IMPLANT_SIZE = 200;
+const MAX_IMPLANT_SIZE = 500;
+const MAX_IMAGE_SIZE = 7000000; // ~5MB base64
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -24,12 +30,45 @@ serve(async (req) => {
 
     const { imageBase64, implantType, implantSize } = await req.json();
     
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    // Input validation
+    if (!imageBase64 || typeof imageBase64 !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Date imagine invalide.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    console.log(`Generating visualization for ${implantType} implant, ${implantSize}cc`);
+    if (imageBase64.length > MAX_IMAGE_SIZE) {
+      return new Response(
+        JSON.stringify({ error: 'Imaginea este prea mare. Maximum 5MB.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!implantType || !VALID_IMPLANT_TYPES.includes(implantType)) {
+      return new Response(
+        JSON.stringify({ error: 'Tip de implant invalid.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (typeof implantSize !== 'number' || implantSize < MIN_IMPLANT_SIZE || implantSize > MAX_IMPLANT_SIZE) {
+      return new Response(
+        JSON.stringify({ error: `Mărime implant invalidă. Trebuie să fie între ${MIN_IMPLANT_SIZE} și ${MAX_IMPLANT_SIZE}cc.` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      console.error('API key not configured');
+      return new Response(
+        JSON.stringify({ error: 'Serviciu temporar indisponibil.' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`Processing visualization request: type=${implantType}, size=${implantSize}cc`);
 
     // Build the prompt based on implant parameters
     const sizeDescription = implantSize < 300 ? "subtil, natural" : 
@@ -46,8 +85,6 @@ Keep the original person's features, clothing, and background exactly the same.
 Only enhance the chest area to show a natural-looking augmentation result.
 The enhancement should be subtle, professional, and realistic - as if showing an actual surgical result.
 Maintain proper proportions and natural body contours.`;
-
-    console.log('Sending request to AI gateway...');
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -80,7 +117,7 @@ Maintain proper proportions and natural body contours.`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
+      console.error("Gateway error:", response.status);
       
       if (response.status === 429) {
         return new Response(
@@ -90,37 +127,43 @@ Maintain proper proportions and natural body contours.`;
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: "Credite insuficiente pentru generarea AI." }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: "Serviciu temporar indisponibil." }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
-      throw new Error(`AI gateway error: ${response.status}`);
+      return new Response(
+        JSON.stringify({ error: 'Nu s-a putut genera vizualizarea. Încercați din nou.' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const data = await response.json();
-    console.log("AI response received successfully");
+    console.log("Visualization generated successfully");
     
     // Extract the generated image
     const generatedImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     
     if (!generatedImage) {
-      console.error("No image in response:", JSON.stringify(data));
-      throw new Error("Nu s-a putut genera imaginea");
+      console.error("No image in response");
+      return new Response(
+        JSON.stringify({ error: 'Nu s-a putut genera imaginea. Încercați din nou.' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     return new Response(
       JSON.stringify({ 
         generatedImage,
-        message: data.choices?.[0]?.message?.content || "Vizualizare generată cu succes"
+        message: "Vizualizare generată cu succes"
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
     
   } catch (error) {
-    console.error('Error in generate-implant-visualization:', error);
+    console.error('Visualization error occurred');
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Eroare la generarea vizualizării' }),
+      JSON.stringify({ error: 'Eroare la generarea vizualizării. Încercați din nou.' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
