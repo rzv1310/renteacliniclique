@@ -115,15 +115,59 @@ export default {
           "90%": { opacity: "1" },
           "100%": { top: "100%", opacity: "0" },
         },
-        "glow-travel-horizontal": {
+
+        // Timeline (augmentare mamara) – sequential segments across a single loop
+        "glow-travel-seg-0": {
           "0%": { left: "0%", opacity: "0" },
-          "10%": { opacity: "1" },
-          "90%": { opacity: "1" },
-          "100%": { left: "100%", opacity: "0" },
+          "6%": { opacity: "1" },
+          "30%": { left: "100%", opacity: "1" },
+          "33%": { left: "100%", opacity: "0" },
+          "34%": { left: "0%", opacity: "0" },
+          "100%": { left: "0%", opacity: "0" },
         },
-        "circle-pulse": {
-          "0%, 100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
-          "50%": { transform: "scale(1.1)", boxShadow: "0 0 20px 8px rgba(212, 175, 155, 0.6)" },
+        "glow-travel-seg-1": {
+          "0%": { left: "0%", opacity: "0" },
+          "33%": { left: "0%", opacity: "0" },
+          "39%": { opacity: "1" },
+          "63%": { left: "100%", opacity: "1" },
+          "66%": { left: "100%", opacity: "0" },
+          "67%": { left: "0%", opacity: "0" },
+          "100%": { left: "0%", opacity: "0" },
+        },
+        "glow-travel-seg-2": {
+          "0%": { left: "0%", opacity: "0" },
+          "66%": { left: "0%", opacity: "0" },
+          "72%": { opacity: "1" },
+          "96%": { left: "100%", opacity: "1" },
+          "99%": { left: "100%", opacity: "0" },
+          "100%": { left: "0%", opacity: "0" },
+        },
+
+        "pulse-step-0": {
+          "0%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "4%": { transform: "scale(1.08)", boxShadow: "0 0 20px 8px rgba(212, 175, 155, 0.55)" },
+          "8%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+        },
+        "pulse-step-1": {
+          "0%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "30%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "34%": { transform: "scale(1.08)", boxShadow: "0 0 20px 8px rgba(212, 175, 155, 0.55)" },
+          "38%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+        },
+        "pulse-step-2": {
+          "0%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "63%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "67%": { transform: "scale(1.08)", boxShadow: "0 0 20px 8px rgba(212, 175, 155, 0.55)" },
+          "71%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+        },
+        "pulse-step-3": {
+          "0%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "96%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
+          "99%": { transform: "scale(1.08)", boxShadow: "0 0 20px 8px rgba(212, 175, 155, 0.55)" },
+          "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
         },
       },
       animation: {
@@ -135,8 +179,15 @@ export default {
         "slide-in-left": "slide-in-left 0.6s ease-out forwards",
         "slide-in-right": "slide-in-right 0.6s ease-out forwards",
         "glow-travel": "glow-travel 3s ease-in-out infinite",
-        "glow-travel-horizontal": "glow-travel-horizontal 3s ease-in-out infinite",
-        "circle-pulse": "circle-pulse 0.6s ease-out",
+
+        "glow-travel-seg-0": "glow-travel-seg-0 9s ease-in-out infinite",
+        "glow-travel-seg-1": "glow-travel-seg-1 9s ease-in-out infinite",
+        "glow-travel-seg-2": "glow-travel-seg-2 9s ease-in-out infinite",
+
+        "pulse-step-0": "pulse-step-0 9s ease-in-out infinite",
+        "pulse-step-1": "pulse-step-1 9s ease-in-out infinite",
+        "pulse-step-2": "pulse-step-2 9s ease-in-out infinite",
+        "pulse-step-3": "pulse-step-3 9s ease-in-out infinite",
       },
     },
   },
