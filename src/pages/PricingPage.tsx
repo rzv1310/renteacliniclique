@@ -71,7 +71,6 @@ const PricingPage = () => {
 
   // Scroll animation refs
   const heroRef = useScrollAnimation();
-  const includedRef = useScrollAnimation();
   const packagesRef = useScrollAnimation();
   const calculatorRef = useScrollAnimation();
   const comparisonRef = useScrollAnimation();
@@ -251,12 +250,7 @@ const PricingPage = () => {
         </section>
 
         {/* What's Included Section */}
-        <section 
-          ref={includedRef.ref as React.RefObject<HTMLElement>}
-          className={`py-16 md:py-20 bg-card transition-all duration-700 delay-100 ${
-            includedRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
+        <section className="py-20 bg-card">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-4xl mx-auto">
               <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-center text-foreground mb-4">
@@ -266,20 +260,20 @@ const PricingPage = () => {
                 Nu plătești doar intervenția. Plătești liniștea că ești pe mâinile unui specialist dedicat 100% sânilor.
               </p>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {included.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 sm:gap-4 bg-background rounded-xl p-4 sm:p-5 border border-border hover:border-rose-gold/30 transition-colors duration-300"
+                    className="flex items-start gap-4 bg-background rounded-xl p-5 border border-border hover:border-rose-gold/30 transition-colors"
                   >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-rose-gold/10 flex items-center justify-center shrink-0">
-                      <span className="material-symbols-outlined text-rose-gold text-lg sm:text-xl">
+                    <div className="w-12 h-12 rounded-full bg-rose-gold/10 flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-rose-gold text-xl">
                         {item.icon}
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-medium text-foreground mb-1 text-sm sm:text-base">{item.title}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground">{item.subtitle}</p>
+                      <h3 className="font-medium text-foreground mb-1">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground">{item.subtitle}</p>
                     </div>
                   </div>
                 ))}
