@@ -1,4 +1,4 @@
-import { LayoutGrid, Box } from "lucide-react";
+import { LayoutGrid, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 
 const HeroSection = () => {
@@ -39,10 +39,10 @@ const HeroSection = () => {
                 Vezi Galeria Foto
               </button>
             </a>
-            <a href="/contact">
+            <a href="/simulator-3d">
               <button className="btn-secondary-rose-gold">
-                <Box className="w-5 h-5" />
-                Solicită Simulare 3D
+                <Sparkles className="w-5 h-5" />
+                Încearcă Simulatorul 3D
               </button>
             </a>
           </div>
