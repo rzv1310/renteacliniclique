@@ -94,10 +94,20 @@ const GhidRecuperarePage = () => {
           <div className="max-w-4xl mx-auto">
             <div className="space-y-8">
               {timeline.map((item, index) => (
-                <div key={item.period} className="relative">
-                  {/* Connector line */}
+              <div key={item.period} className="relative">
+                  {/* Connector line with animated glow dot */}
                   {index < timeline.length - 1 && (
-                    <div className="absolute left-6 top-16 w-0.5 h-full bg-border -z-10" />
+                    <div className="absolute left-6 top-16 w-0.5 h-full bg-border -z-10">
+                      {/* Animated glowing dot */}
+                      <div 
+                        className="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full animate-glow-travel"
+                        style={{ 
+                          animationDelay: `${index * 0.5}s`,
+                          background: "linear-gradient(135deg, hsl(var(--rose-gold)), hsl(var(--champagne)))",
+                          boxShadow: "0 0 10px 4px hsla(var(--rose-gold), 0.8), 0 0 20px 8px hsla(var(--rose-gold), 0.4)"
+                        }}
+                      />
+                    </div>
                   )}
                   
                   <div className="flex gap-6">
