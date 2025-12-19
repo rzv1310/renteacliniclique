@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, Play, ChevronDown, ZoomIn } from "lucide-react";
+import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, Play, ChevronDown, ZoomIn, X, Ruler } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAugmentare";
@@ -47,23 +47,146 @@ const AugmentareMamaraPage = () => {
       name: "Inframammară",
       badge: "Popular",
       description: "Incizia se face în pliul de sub sân (șanțul submamar). Este cea mai frecventă plasare.",
-      visibility: "Redusă"
+      visibility: "Redusă",
+      healingTime: "2-3 săptămâni",
+      scarLength: "4-5 cm",
+      advantages: [
+        "Cea mai bună vizibilitate pentru chirurg",
+        "Acces optim pentru plasarea implantului",
+        "Cicatrice ascunsă în pliul natural",
+        "Risc minim de afectare a țesutului mamar"
+      ],
+      disadvantages: [
+        "Poate fi vizibilă în bikini foarte decupați",
+        "Necesită sutură precisă pentru aspect optim"
+      ]
     },
     {
       id: "periareolar",
       name: "Periareolară",
       badge: null,
       description: "Incizia se face de-a lungul marginii inferioare a areolei. Cicatricea se integrează în tranziția pielii.",
-      visibility: "Moderată"
+      visibility: "Moderată",
+      healingTime: "3-4 săptămâni",
+      scarLength: "3-4 cm",
+      advantages: [
+        "Cicatrice foarte discretă",
+        "Se integrează în tranziția naturală de culoare",
+        "Acces bun pentru ajustări fine"
+      ],
+      disadvantages: [
+        "Risc ușor mai mare de afectare a sensibilității",
+        "Nu este ideală pentru implanturi foarte mari",
+        "Poate afecta țesutul glandular"
+      ]
     },
     {
       id: "transaxillary",
       name: "Transaxilară",
       badge: null,
       description: "Incizia se face în axilă. Nu lasă cicatrice pe sân, dar necesită echipament specializat.",
-      visibility: "Ascunsă"
+      visibility: "Ascunsă",
+      healingTime: "2-3 săptămâni",
+      scarLength: "4-6 cm",
+      advantages: [
+        "Nicio cicatrice pe sân",
+        "Ideală pentru paciente care doresc discreție maximă",
+        "Cicatrice ascunsă în pliul axilar"
+      ],
+      disadvantages: [
+        "Necesită echipament endoscopic specializat",
+        "Acces limitat pentru revizii ulterioare",
+        "Poate să nu fie potrivită pentru toate tipurile de implanturi"
+      ]
     }
   ];
+
+  // SVG Illustrations for incision types
+  const IncisionIllustration = ({ type }: { type: string }) => {
+    return (
+      <div className="relative w-full aspect-square max-w-[200px] mx-auto">
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          {/* Breast outline */}
+          <ellipse
+            cx="100"
+            cy="110"
+            rx="70"
+            ry="60"
+            fill="none"
+            stroke="hsl(var(--border))"
+            strokeWidth="2"
+          />
+          {/* Areola */}
+          <circle
+            cx="100"
+            cy="100"
+            r="18"
+            fill="none"
+            stroke="hsl(var(--border))"
+            strokeWidth="1.5"
+          />
+          
+          {/* Inframammary incision */}
+          {type === "inframammary" && (
+            <path
+              d="M 50 165 Q 100 175 150 165"
+              fill="none"
+              stroke="hsl(var(--primary))"
+              strokeWidth="3"
+              strokeLinecap="round"
+              className="animate-pulse"
+            />
+          )}
+          
+          {/* Periareolar incision */}
+          {type === "periareolar" && (
+            <path
+              d="M 84 112 Q 100 122 116 112"
+              fill="none"
+              stroke="hsl(var(--primary))"
+              strokeWidth="3"
+              strokeLinecap="round"
+              className="animate-pulse"
+            />
+          )}
+          
+          {/* Transaxillary incision - side view indicator */}
+          {type === "transaxillary" && (
+            <>
+              <path
+                d="M 175 70 L 185 85"
+                fill="none"
+                stroke="hsl(var(--primary))"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className="animate-pulse"
+              />
+              <text
+                x="170"
+                y="60"
+                fill="hsl(var(--muted-foreground))"
+                fontSize="10"
+                textAnchor="middle"
+              >
+                Axilă
+              </text>
+            </>
+          )}
+        </svg>
+        
+        {/* Label */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center">
+          <p className="text-xs text-muted-foreground">
+            {type === "inframammary" && "Incizie în pliul submamar"}
+            {type === "periareolar" && "Incizie sub areolă"}
+            {type === "transaxillary" && "Incizie în zona axilei"}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const selectedIncisionData = incisionOptions.find(opt => opt.id === selectedIncision);
 
   const faqs = [
     {
@@ -259,7 +382,7 @@ const AugmentareMamaraPage = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            {/* Left - Quick Stats */}
+            {/* Left - Quick Stats + Illustration */}
             <div className="space-y-8">
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-card rounded-xl p-6 text-center border border-border/50">
@@ -277,6 +400,14 @@ const AugmentareMamaraPage = () => {
                   <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Internare</p>
                   <p className="text-foreground font-medium">1 Noapte</p>
                 </div>
+              </div>
+
+              {/* Dynamic Incision Illustration */}
+              <div className="bg-card rounded-2xl p-8 border border-border/50">
+                <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-6 text-center">
+                  Localizare Incizie
+                </h4>
+                <IncisionIllustration type={selectedIncision} />
               </div>
             </div>
 
@@ -326,6 +457,65 @@ const AugmentareMamaraPage = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Extended Information Panel */}
+              {selectedIncisionData && (
+                <div className="mt-6 bg-muted/50 rounded-2xl p-6 border border-border/30 animate-fade-in">
+                  <h4 className="font-display text-lg font-medium text-foreground mb-4">
+                    Detalii: {selectedIncisionData.name}
+                  </h4>
+                  
+                  {/* Healing Time & Scar Length */}
+                  <div className="grid grid-cols-2 gap-4 mb-5">
+                    <div className="flex items-center gap-3 bg-card rounded-lg p-3">
+                      <Clock className="w-5 h-5 text-primary" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Timp vindecare</p>
+                        <p className="text-sm font-medium text-foreground">{selectedIncisionData.healingTime}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-card rounded-lg p-3">
+                      <Ruler className="w-5 h-5 text-primary" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Lungime cicatrice</p>
+                        <p className="text-sm font-medium text-foreground">{selectedIncisionData.scarLength}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Advantages */}
+                  <div className="mb-4">
+                    <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-500" />
+                      Avantaje
+                    </h5>
+                    <ul className="space-y-1.5">
+                      {selectedIncisionData.advantages.map((adv, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
+                          {adv}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Disadvantages */}
+                  <div>
+                    <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                      <X className="w-4 h-4 text-amber-500" />
+                      Considerații
+                    </h5>
+                    <ul className="space-y-1.5">
+                      {selectedIncisionData.disadvantages.map((dis, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+                          {dis}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
