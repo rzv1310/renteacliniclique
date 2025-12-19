@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +12,13 @@ const MIN_IMPLANT_SIZE = 200;
 const MAX_IMPLANT_SIZE = 500;
 const MAX_IMAGE_SIZE = 7000000; // ~5MB base64
 
+// Rate limits
+const RATE_LIMITS = {
+  perMinute: 3,
+  perHour: 10,
+  perDay: 20
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -18,13 +26,90 @@ serve(async (req) => {
   }
 
   try {
-    // Verify authentication
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      console.error('Missing authorization header');
+    // Extract client IP
+    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 
+      || req.headers.get('x-real-ip') 
+      || 'unknown';
+
+    console.log(`Request from IP: ${clientIP}`);
+
+    // Initialize Supabase admin client for rate limiting
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Supabase configuration missing');
       return new Response(
-        JSON.stringify({ error: 'Autentificare necesară pentru a utiliza simulatorul.' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Serviciu temporar indisponibil.' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Check rate limits
+    const now = new Date();
+    const oneMinuteAgo = new Date(now.getTime() - 60 * 1000);
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    // Count requests per minute
+    const { count: minuteCount, error: minuteError } = await supabaseAdmin
+      .from('rate_limits')
+      .select('*', { count: 'exact', head: true })
+      .eq('ip_address', clientIP)
+      .eq('function_name', 'generate-implant-visualization')
+      .gte('created_at', oneMinuteAgo.toISOString());
+
+    if (minuteError) {
+      console.error('Error checking minute rate limit:', minuteError);
+    }
+
+    if (minuteCount !== null && minuteCount >= RATE_LIMITS.perMinute) {
+      console.log(`Rate limit exceeded (per minute) for IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ error: 'Ați depășit limita de 3 încercări pe minut. Vă rugăm așteptați câteva secunde.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Count requests per hour
+    const { count: hourCount, error: hourError } = await supabaseAdmin
+      .from('rate_limits')
+      .select('*', { count: 'exact', head: true })
+      .eq('ip_address', clientIP)
+      .eq('function_name', 'generate-implant-visualization')
+      .gte('created_at', oneHourAgo.toISOString());
+
+    if (hourError) {
+      console.error('Error checking hour rate limit:', hourError);
+    }
+
+    if (hourCount !== null && hourCount >= RATE_LIMITS.perHour) {
+      console.log(`Rate limit exceeded (per hour) for IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ error: 'Ați depășit limita de 10 încercări pe oră. Vă rugăm încercați mai târziu.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Count requests per day
+    const { count: dayCount, error: dayError } = await supabaseAdmin
+      .from('rate_limits')
+      .select('*', { count: 'exact', head: true })
+      .eq('ip_address', clientIP)
+      .eq('function_name', 'generate-implant-visualization')
+      .gte('created_at', oneDayAgo.toISOString());
+
+    if (dayError) {
+      console.error('Error checking day rate limit:', dayError);
+    }
+
+    if (dayCount !== null && dayCount >= RATE_LIMITS.perDay) {
+      console.log(`Rate limit exceeded (per day) for IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ error: 'Ați atins limita zilnică de 20 de încercări. Reveniți mâine.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -68,7 +153,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Processing visualization request: type=${implantType}, size=${implantSize}cc`);
+    console.log(`Processing visualization request: type=${implantType}, size=${implantSize}cc, IP=${clientIP}`);
 
     // Build the prompt based on implant parameters
     const sizeDescription = implantSize < 300 ? "subtil, natural" : 
@@ -117,7 +202,7 @@ Maintain proper proportions and natural body contours.`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Gateway error:", response.status);
+      console.error("Gateway error:", response.status, errorText);
       
       if (response.status === 429) {
         return new Response(
@@ -152,6 +237,20 @@ Maintain proper proportions and natural body contours.`;
       );
     }
 
+    // Log successful request for rate limiting
+    const { error: insertError } = await supabaseAdmin
+      .from('rate_limits')
+      .insert({
+        ip_address: clientIP,
+        function_name: 'generate-implant-visualization'
+      });
+
+    if (insertError) {
+      console.error('Error logging rate limit:', insertError);
+    } else {
+      console.log(`Rate limit logged for IP: ${clientIP}`);
+    }
+
     return new Response(
       JSON.stringify({ 
         generatedImage,
@@ -161,7 +260,7 @@ Maintain proper proportions and natural body contours.`;
     );
     
   } catch (error) {
-    console.error('Visualization error occurred');
+    console.error('Visualization error occurred:', error);
     return new Response(
       JSON.stringify({ error: 'Eroare la generarea vizualizării. Încercați din nou.' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
