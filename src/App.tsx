@@ -26,11 +26,36 @@ import ContactPage from "./pages/ContactPage";
 import TurismMedicalPage from "./pages/TurismMedicalPage";
 import FinantarePage from "./pages/FinantarePage";
 
-// Blog
+// Blog - Existente
 import BlogIndex from "./pages/blog/BlogIndex";
 import ArticleRotundVsAnatomic from "./pages/blog/ArticleRotundVsAnatomic";
 import ArticleDespreAlaptare from "./pages/blog/ArticleDespreAlaptare";
 import ArticleTehnici from "./pages/blog/ArticleTehnici";
+
+// Blog - Cluster 1: Mărime și Formă
+import ArticleGhidMarimi from "./pages/blog/ArticleGhidMarimi";
+import ArticleProfilImplant from "./pages/blog/ArticleProfilImplant";
+import ArticleMacromastie from "./pages/blog/ArticleMacromastie";
+
+// Blog - Cluster 2: Procedura Chirurgicală
+import ArticleAnestezie from "./pages/blog/ArticleAnestezie";
+import ArticlePlasareImplant from "./pages/blog/ArticlePlasareImplant";
+import ArticleCumDecurgeOperatia from "./pages/blog/ArticleCumDecurgeOperatia";
+
+// Blog - Cluster 3: Siguranță și Recuperare
+import ArticleAlaptareCuImplanturi from "./pages/blog/ArticleAlaptareCuImplanturi";
+import ArticleSport from "./pages/blog/ArticleSport";
+import ArticleContracturaCapsulara from "./pages/blog/ArticleContracturaCapsulara";
+import ArticleBalonare from "./pages/blog/ArticleBalonare";
+import ArticleDureri from "./pages/blog/ArticleDureri";
+import ArticleImplantDeplasat from "./pages/blog/ArticleImplantDeplasat";
+import ArticleMasaj from "./pages/blog/ArticleMasaj";
+import ArticleSomnPeSpate from "./pages/blog/ArticleSomnPeSpate";
+import ArticleAsezareImplant from "./pages/blog/ArticleAsezareImplant";
+import ArticleCicatrici from "./pages/blog/ArticleCicatrici";
+
+// Blog - Cluster 4: Branduri
+import ArticleMentorVsMotiva from "./pages/blog/ArticleMentorVsMotiva";
 
 const queryClient = new QueryClient();
 
@@ -63,15 +88,40 @@ const App = () => (
           <Route path="/turism-medical-intern" element={<TurismMedicalPage />} />
           <Route path="/implant-mamar-in-rate" element={<FinantarePage />} />
           
-          {/* Blog */}
+          {/* Blog Index */}
           <Route path="/blog" element={<BlogIndex />} />
+          
+          {/* Blog - Cluster 1: Mărime și Formă */}
           <Route path="/blog/implanturi-rotunde-vs-anatomice" element={<ArticleRotundVsAnatomic />} />
-          <Route path="/blog/alaptare-dupa-augmentare-mamara" element={<ArticleDespreAlaptare />} />
+          <Route path="/blog/implant-mamar-250-ml-400ml" element={<ArticleGhidMarimi />} />
+          <Route path="/blog/implant-mamar-cu-profil-inalt-sau-moderat" element={<ArticleProfilImplant />} />
+          <Route path="/blog/sani-mari-macromastie-gigantomastie" element={<ArticleMacromastie />} />
+          
+          {/* Blog - Cluster 2: Procedura Chirurgicală */}
           <Route path="/blog/tehnici-insertie-implanturi" element={<ArticleTehnici />} />
+          <Route path="/blog/anestezie-augmentare-mamara" element={<ArticleAnestezie />} />
+          <Route path="/blog/plasare-implant-subglandular-submuscular" element={<ArticlePlasareImplant />} />
+          <Route path="/blog/cum-decurge-operatia-augmentare-mamara" element={<ArticleCumDecurgeOperatia />} />
+          
+          {/* Blog - Cluster 3: Siguranță și Recuperare */}
+          <Route path="/blog/alaptarea-cu-implanturi-mamare" element={<ArticleAlaptareCuImplanturi />} />
+          <Route path="/blog/sport-dupa-implant-mamar" element={<ArticleSport />} />
+          <Route path="/blog/contractura-capsulara" element={<ArticleContracturaCapsulara />} />
+          <Route path="/blog/balonare-dupa-implant-mamar" element={<ArticleBalonare />} />
+          <Route path="/blog/durerile-dupa-implant-mamar" element={<ArticleDureri />} />
+          <Route path="/blog/implant-mamar-deplasat" element={<ArticleImplantDeplasat />} />
+          <Route path="/blog/masajul-sanilor-dupa-implant" element={<ArticleMasaj />} />
+          <Route path="/blog/cat-timp-trebuie-sa-dormi-pe-spate-dupa-implant-mamar" element={<ArticleSomnPeSpate />} />
+          <Route path="/blog/in-cat-timp-se-aseaza-implantul-mamar" element={<ArticleAsezareImplant />} />
+          <Route path="/blog/cicatrici-dupa-implant" element={<ArticleCicatrici />} />
+          
+          {/* Blog - Cluster 4: Branduri */}
+          <Route path="/blog/mentor-vs-motiva" element={<ArticleMentorVsMotiva />} />
           
           {/* Redirects pentru URL-uri vechi */}
           <Route path="/preturi" element={<Navigate to="/tarife-finantare" replace />} />
           <Route path="/implanturi" element={<Navigate to="/proceduri/augmentare-mamara" replace />} />
+          <Route path="/blog/alaptare-dupa-augmentare-mamara" element={<Navigate to="/blog/alaptarea-cu-implanturi-mamare" replace />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

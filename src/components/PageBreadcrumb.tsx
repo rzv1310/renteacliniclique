@@ -29,9 +29,29 @@ const routeLabels: Record<string, string> = {
   "turism-medical-intern": "Paciente din Provincie",
   "implant-mamar-in-rate": "Finanțare în Rate",
   "blog": "Blog",
+  // Cluster 1: Mărime și Formă
   "implanturi-rotunde-vs-anatomice": "Implanturi Rotunde vs. Anatomice",
-  "alaptare-dupa-augmentare-mamara": "Alăptare după Augmentare Mamară",
+  "implant-mamar-250-ml-400ml": "Ghid Mărimi Implanturi",
+  "implant-mamar-cu-profil-inalt-sau-moderat": "Profil Implant",
+  "sani-mari-macromastie-gigantomastie": "Macromastie și Gigantomastie",
+  // Cluster 2: Procedura Chirurgicală
   "tehnici-insertie-implanturi": "Tehnici de Inserție Implanturi",
+  "anestezie-augmentare-mamara": "Anestezie Augmentare Mamară",
+  "plasare-implant-subglandular-submuscular": "Plasare Implant",
+  "cum-decurge-operatia-augmentare-mamara": "Cum Decurge Operația",
+  // Cluster 3: Siguranță și Recuperare
+  "alaptarea-cu-implanturi-mamare": "Alăptarea cu Implanturi",
+  "sport-dupa-implant-mamar": "Sport după Implant",
+  "contractura-capsulara": "Contractura Capsulară",
+  "balonare-dupa-implant-mamar": "Balonare după Implant",
+  "durerile-dupa-implant-mamar": "Dureri după Implant",
+  "implant-mamar-deplasat": "Implant Deplasat",
+  "masajul-sanilor-dupa-implant": "Masaj după Implant",
+  "cat-timp-trebuie-sa-dormi-pe-spate-dupa-implant-mamar": "Somn pe Spate",
+  "in-cat-timp-se-aseaza-implantul-mamar": "Așezare Implant",
+  "cicatrici-dupa-implant": "Cicatrici după Implant",
+  // Cluster 4: Branduri
+  "mentor-vs-motiva": "Mentor vs. Motiva",
 };
 
 const PageBreadcrumb = () => {
