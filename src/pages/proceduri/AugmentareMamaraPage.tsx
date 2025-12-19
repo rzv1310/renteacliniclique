@@ -548,38 +548,43 @@ const AugmentareMamaraPage = () => {
                     <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-border/50 overflow-hidden">
                       {/* Trail elements */}
                       {[0.15, 0.3, 0.45].map((trailDelay, i) => (
-                        <div 
+                        <div
                           key={i}
-                          className="absolute top-1/2 -translate-y-1/2 rounded-full animate-glow-travel-horizontal"
-                          style={{ 
-                            animationDelay: `${index * 3 + trailDelay}s`,
+                          className="absolute top-1/2 -translate-y-1/2 rounded-full"
+                          style={{
+                            animation: `glow-travel-seg-${index} 9s ease-in-out infinite`,
+                            animationDelay: `${trailDelay}s`,
                             width: `${8 - i * 2}px`,
                             height: `${8 - i * 2}px`,
-                            background: `rgba(212, 175, 155, ${0.3 - i * 0.1})`,
-                            boxShadow: `0 0 ${6 - i * 2}px ${3 - i}px rgba(212, 175, 155, ${0.4 - i * 0.1})`
+                            background: `rgba(212, 175, 155, ${0.28 - i * 0.08})`,
+                            boxShadow: `0 0 ${6 - i * 2}px ${3 - i}px rgba(212, 175, 155, ${0.38 - i * 0.08})`,
                           }}
                         />
                       ))}
+
                       {/* Main glowing dot */}
-                      <div 
-                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full animate-glow-travel-horizontal"
-                        style={{ 
-                          animationDelay: `${index * 3}s`,
+                      <div
+                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+                        style={{
+                          animation: `glow-travel-seg-${index} 9s ease-in-out infinite`,
                           background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
-                          boxShadow: "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)"
+                          boxShadow:
+                            "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)",
                         }}
                       />
                     </div>
                   )}
                   
                   <div className="relative z-10 text-center">
-                    <div 
-                      className="w-16 h-16 rounded-full bg-card border border-border/50 flex items-center justify-center mx-auto mb-4 transition-all duration-300"
-                      style={{
-                        animation: `circle-pulse 0.6s ease-out ${index * 3 + 2.7}s infinite`
-                      }}
-                    >
-                      <span className="text-2xl font-light text-foreground">{index + 1}</span>
+                    <div className="w-16 h-16 rounded-full bg-card border border-border/50 flex items-center justify-center mx-auto mb-4">
+                      <div
+                        className="w-full h-full rounded-full flex items-center justify-center"
+                        style={{
+                          animation: `pulse-step-${index} 9s ease-in-out infinite`,
+                        }}
+                      >
+                        <span className="text-2xl font-light text-foreground">{index + 1}</span>
+                      </div>
                     </div>
                     <h4 className="font-medium text-foreground mb-2">{step.day}</h4>
                     <p className="text-sm text-muted-foreground">{step.desc}</p>
