@@ -103,8 +103,8 @@ const GhidRecuperarePage = () => {
                         className="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full animate-glow-travel"
                         style={{ 
                           animationDelay: `${index * 0.5}s`,
-                          background: "linear-gradient(135deg, hsl(var(--rose-gold)), hsl(var(--champagne)))",
-                          boxShadow: "0 0 10px 4px hsla(var(--rose-gold), 0.8), 0 0 20px 8px hsla(var(--rose-gold), 0.4)"
+                          background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
+                          boxShadow: "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)"
                         }}
                       />
                     </div>
