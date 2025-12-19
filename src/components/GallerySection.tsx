@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 import case1Before from "@/assets/gallery/case-1-before.jpg";
 import case1After from "@/assets/gallery/case-1-after.jpg";
@@ -9,6 +10,7 @@ import case3Before from "@/assets/gallery/case-3-before.jpg";
 import case3After from "@/assets/gallery/case-3-after.jpg";
 
 const GallerySection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
   const [activeFilter, setActiveFilter] = useState("natural");
   const [sliderPosition, setSliderPosition] = useState(50);
   const [activeCase, setActiveCase] = useState(0);
@@ -40,10 +42,14 @@ const GallerySection = () => {
   };
 
   return (
-    <section id="galerie" className="py-24 lg:py-32 bg-background">
+    <section 
+      id="galerie" 
+      className="py-24 lg:py-32 bg-card"
+      ref={ref as React.RefObject<HTMLElement>}
+    >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
             Transformări Autentice
           </span>
@@ -56,7 +62,7 @@ const GallerySection = () => {
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className={`flex flex-wrap justify-center gap-3 mb-12 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {filters.map((filter) => (
             <button
               key={filter.id}
@@ -64,7 +70,7 @@ const GallerySection = () => {
               className={`px-6 py-3 rounded-full text-sm font-sans font-medium transition-all duration-300 ${
                 activeFilter === filter.id
                   ? "bg-rose-gold text-primary-foreground"
-                  : "bg-card border border-border text-muted-foreground hover:border-rose-gold/50"
+                  : "bg-background border border-border text-muted-foreground hover:border-rose-gold/50"
               }`}
             >
               {filter.label}
@@ -73,9 +79,9 @@ const GallerySection = () => {
         </div>
 
         {/* Before/After Comparison Slider */}
-        <div className="max-w-4xl mx-auto mb-8">
+        <div className={`max-w-4xl mx-auto mb-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div
-            className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
+            className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-background border border-border cursor-ew-resize select-none"
             onMouseMove={handleSliderMove}
             onTouchMove={handleTouchMove}
           >
@@ -99,10 +105,10 @@ const GallerySection = () => {
             </div>
 
             {/* Labels */}
-            <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full">
+            <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full border border-border">
               <span className="text-sm font-sans font-medium text-foreground">ÎNAINTE</span>
             </div>
-            <div className="absolute top-4 right-4 bg-rose-gold/90 backdrop-blur-sm px-3 py-1 rounded-full">
+            <div className="absolute top-4 right-4 bg-rose-gold px-4 py-2 rounded-full">
               <span className="text-sm font-sans font-medium text-primary-foreground">DUPĂ (3 LUNI)</span>
             </div>
 
@@ -111,14 +117,14 @@ const GallerySection = () => {
               className="absolute top-0 bottom-0 w-0.5 bg-foreground/50"
               style={{ left: `${sliderPosition}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-card border border-border rounded-full shadow-elegant flex items-center justify-center">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-background border border-border rounded-full shadow-elegant flex items-center justify-center">
                 <MaterialIcon name="code" className="text-xl text-rose-gold" />
               </div>
             </div>
           </div>
 
           {/* Case selector */}
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="flex justify-center gap-2 mt-6">
             {cases.map((_, index) => (
               <button
                 key={index}
@@ -134,13 +140,13 @@ const GallerySection = () => {
               />
             ))}
           </div>
-          <p className="text-center text-sm text-muted-foreground mt-2">
+          <p className="text-center text-sm text-muted-foreground mt-3">
             {cases[activeCase].label}
           </p>
         </div>
 
         {/* CTA */}
-        <div className="text-center">
+        <div className={`text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <a href="/galerie">
             <button className="btn-primary-rose-gold">
               Explorează Galeria Completă

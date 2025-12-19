@@ -34,6 +34,7 @@ const WhyUsSection = () => {
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <span className="text-label mb-4 block">De ce noi?</span>
           <h2 className="h2-section text-foreground mb-6">
             De ce să alegi un superspecialist?
           </h2>
@@ -43,23 +44,23 @@ const WhyUsSection = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-10">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className={`group bg-card rounded-2xl p-8 lg:p-10 border border-border hover:border-rose-gold/50 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group bg-card rounded-2xl p-8 lg:p-10 border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Icon */}
-              <div className="w-16 h-16 rounded-full bg-rose-gold/10 border border-rose-gold/30 flex items-center justify-center mb-6 group-hover:bg-rose-gold/20 transition-colors duration-300">
-                <MaterialIcon name={feature.icon} className="text-3xl text-rose-gold" />
+              <div className="w-14 h-14 rounded-xl bg-rose-gold/10 flex items-center justify-center mb-6 group-hover:bg-rose-gold/20 transition-colors duration-300">
+                <MaterialIcon name={feature.icon} className="text-2xl text-rose-gold" />
               </div>
 
               {/* Content */}
-              <h3 className="font-display text-2xl font-medium text-foreground mb-4">
+              <h3 className="font-display text-xl font-medium text-foreground mb-4">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed font-sans">{feature.description}</p>
+              <p className="text-muted-foreground leading-relaxed text-sm font-sans">{feature.description}</p>
             </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,6 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -48,14 +47,9 @@ const Header = () => {
   const navLinks = [
     { name: "Galerie", href: "/galerie" },
     { name: "Simulator 3D", href: "/simulator-3d" },
-    { name: "Tarife", href: "/tarife-finantare" },
+    { name: "Tarife & Finanțare", href: "/tarife-finantare" },
     { name: "Despre Noi", href: "/despre-noi" },
-  ];
-
-  const utileLinks = [
-    { name: "Finanțare Rate", href: "/implant-mamar-in-rate" },
-    { name: "Paciente din Provincie", href: "/turism-medical-intern" },
-    { name: "Ghid Recuperare", href: "/ghid-recuperare" },
+    { name: "Blog", href: "/blog" },
   ];
 
   return (
@@ -80,12 +74,12 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden xl:flex items-center gap-6">
+            <nav className="hidden xl:flex items-center gap-8">
               {/* Proceduri Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide">
                   Proceduri
-                  <ChevronDown className="w-4 h-4" />
+                  <MaterialIcon name="expand_more" className="text-lg" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-64 bg-card border-border">
                   {proceduriLinks.map((link, index) => (
@@ -114,23 +108,6 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
-
-              {/* Utile Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide">
-                  Utile
-                  <ChevronDown className="w-4 h-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56 bg-card border-border">
-                  {utileLinks.map((link) => (
-                    <DropdownMenuItem key={link.href} asChild>
-                      <Link to={link.href} className="w-full cursor-pointer">
-                        {link.name}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
             </nav>
 
             {/* CTA Button */}
@@ -139,8 +116,7 @@ const Header = () => {
                 href="tel:+40721000000"
                 className="btn-primary-rose-gold text-sm px-6 h-10 flex items-center gap-2"
               >
-                <Phone className="w-4 h-4" />
-                Sună pentru Transformare
+                Programează o Consultație
               </a>
             </div>
 
@@ -149,7 +125,7 @@ const Header = () => {
               className="xl:hidden p-2 text-foreground z-50"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <MaterialIcon name={isMobileMenuOpen ? "close" : "menu"} className="text-2xl" />
             </button>
           </div>
         </div>
@@ -185,18 +161,6 @@ const Header = () => {
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
-                  to={link.href}
-                  className="text-base font-medium text-muted-foreground hover:text-rose-gold transition-colors py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <div className="border-t border-border my-2" />
-              <p className="text-xs uppercase tracking-wider text-muted-foreground mt-2 mb-1">Utile</p>
-              {utileLinks.map((link) => (
-                <Link
-                  key={link.href}
                   to={link.href}
                   className="text-base font-medium text-muted-foreground hover:text-rose-gold transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
