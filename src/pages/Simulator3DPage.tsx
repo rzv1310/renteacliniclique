@@ -1,10 +1,43 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2 } from "lucide-react";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+const faqItems = [
+  {
+    question: "Cât de precisă este simularea AI?",
+    answer: "Simularea AI oferă o aproximare realistă bazată pe algoritmi avansați de inteligență artificială. Totuși, rezultatul final poate varia în funcție de anatomia individuală, tehnica chirurgicală și procesul de vindecare. Recomandăm consultația în cabinet pentru o simulare 3D profesională cu echipament dedicat."
+  },
+  {
+    question: "Ce tip de implant este potrivit pentru mine?",
+    answer: "Alegerea tipului de implant depinde de mai mulți factori: anatomia ta naturală, stilul de viață, preferințele estetice și recomandările medicului. Implanturile rotunde oferă volum uniform, cele anatomice au formă naturală de lacrimă, iar cele ergonomice se adaptează la mișcare. Consultația cu medicul este esențială pentru alegerea optimă."
+  },
+  {
+    question: "Ce mărime ar trebui să aleg?",
+    answer: "Mărimea ideală depinde de proporțiile corpului, lățimea toracelui și așteptările tale. Simulatorul te ajută să vizualizezi diferite opțiuni, dar decizia finală se ia împreună cu medicul specialist care va lua în considerare toți factorii anatomici și dorințele tale."
+  },
+  {
+    question: "Pot încărca orice tip de fotografie?",
+    answer: "Pentru cele mai bune rezultate, recomandăm o fotografie din față sau ușor din lateral, cu iluminare uniformă și un fundal simplu. Fotografiile trebuie să fie clare și să arate zona toracică pentru ca AI-ul să poată genera o vizualizare cât mai precisă."
+  },
+  {
+    question: "Datele mele sunt în siguranță?",
+    answer: "Da, confidențialitatea ta este prioritară. Fotografiile încărcate sunt procesate securizat și nu sunt stocate permanent pe serverele noastre. Utilizăm criptare end-to-end și respectăm toate reglementările GDPR pentru protecția datelor personale."
+  },
+  {
+    question: "Cum mă programez pentru o consultație?",
+    answer: "Poți programa o consultație direct prin pagina de contact sau sunând la clinică. În cadrul consultației, vei beneficia de o simulare 3D profesională cu echipament dedicat, discuții detaliate despre opțiuni și un plan personalizat de tratament."
+  }
+];
 
 type ImplantType = "rotund" | "anatomic" | "ergonomic";
 type ImplantSize = 200 | 275 | 350 | 425 | 500;
@@ -610,6 +643,51 @@ const Simulator3DPage = () => {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-card">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-label mb-4 inline-block">
+              <HelpCircle className="w-4 h-4 inline mr-2" />
+              Întrebări Frecvente
+            </span>
+            <h2 className="h2-section text-foreground">
+              Ai întrebări despre <span className="text-gradient-gold">simulator</span>?
+            </h2>
+          </div>
+
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqItems.map((item, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`item-${index}`}
+                  className="bg-background rounded-xl border border-border/30 px-6 overflow-hidden"
+                >
+                  <AccordionTrigger className="text-left font-display text-lg font-medium text-foreground hover:text-rose-gold hover:no-underline py-5">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-muted-foreground mb-4">
+              Nu ai găsit răspunsul căutat?
+            </p>
+            <a href="/contact">
+              <Button className="btn-secondary-rose-gold">
+                Contactează-ne
+              </Button>
+            </a>
           </div>
         </div>
       </section>
