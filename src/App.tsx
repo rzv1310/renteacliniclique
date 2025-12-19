@@ -16,6 +16,8 @@ import ImplanturiAnatomicePage from "./pages/proceduri/ImplanturiAnatomicePage";
 import ImplanturiErgonomicePage from "./pages/proceduri/ImplanturiErgonomicePage";
 import MastopexiePage from "./pages/proceduri/MastopexiePage";
 import ReviziePage from "./pages/proceduri/ReviziePage";
+import ReductieMamaraPage from "./pages/proceduri/ReductieMamaraPage";
+import LipofillingMamarPage from "./pages/proceduri/LipofillingMamarPage";
 
 // Pagini independente
 import DespreNoiPage from "./pages/DespreNoiPage";
@@ -49,6 +51,8 @@ const App = () => (
           <Route path="/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" element={<ImplanturiErgonomicePage />} />
           <Route path="/proceduri/augmentare-mamara-cu-mastopexie" element={<MastopexiePage />} />
           <Route path="/proceduri/revizie-implant-mamar" element={<ReviziePage />} />
+          <Route path="/proceduri/micsorare-sani-reductie-mamara" element={<ReductieMamaraPage />} />
+          <Route path="/proceduri/lipofilling-mamar" element={<LipofillingMamarPage />} />
           
           {/* Pagini principale */}
           <Route path="/galerie" element={<GalleryPage />} />

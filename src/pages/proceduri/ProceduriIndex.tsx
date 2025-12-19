@@ -25,6 +25,18 @@ const procedures = [
     href: "/proceduri/revizie-implant-mamar",
     subPages: [],
   },
+  {
+    title: "Reducție Mamară",
+    description: "Micșorarea sânilor pentru ameliorarea durerilor de spate și îmbunătățirea calității vieții.",
+    href: "/proceduri/micsorare-sani-reductie-mamara",
+    subPages: [],
+  },
+  {
+    title: "Lipofilling Mamar",
+    description: "Augmentare naturală cu grăsime proprie, fără implanturi – rezultat 100% natural.",
+    href: "/proceduri/lipofilling-mamar",
+    subPages: [],
+  },
 ];
 
 const ProceduriIndex = () => {

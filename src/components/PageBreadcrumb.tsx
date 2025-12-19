@@ -19,6 +19,8 @@ const routeLabels: Record<string, string> = {
   "implanturi-mamare-ergonomice": "Implanturi Mamare Ergonomice",
   "augmentare-mamara-cu-mastopexie": "Augmentare Mamară cu Mastopexie",
   "revizie-implant-mamar": "Revizie Implant Mamar",
+  "micsorare-sani-reductie-mamara": "Reducție Mamară",
+  "lipofilling-mamar": "Lipofilling Mamar",
   "galerie": "Galerie Foto",
   "tarife-finantare": "Tarife & Finanțare",
   "ghid-recuperare": "Ghid Recuperare",

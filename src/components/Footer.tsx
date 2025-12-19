@@ -96,6 +96,8 @@ const Footer = () => {
                 { label: "Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
                 { label: "Augmentare cu Mastopexie", href: "/proceduri/augmentare-mamara-cu-mastopexie" },
                 { label: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
+                { label: "Reducție Mamară", href: "/proceduri/micsorare-sani-reductie-mamara" },
+                { label: "Lipofilling Mamar", href: "/proceduri/lipofilling-mamar" },
               ].map((service) => (
                 <li key={service.href}>
                   <Link
