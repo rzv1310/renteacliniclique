@@ -1,4 +1,4 @@
-import { Diamond, Shield, CheckCircle } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const WhyUsSection = () => {
@@ -6,19 +6,19 @@ const WhyUsSection = () => {
 
   const features = [
     {
-      icon: Diamond,
+      icon: "diamond",
       title: "Maestru, nu Generalist",
       description:
         "În timp ce alți chirurgi abordează o gamă variată de proceduri, noi ne dedicăm exclusiv augmentării mamare, zi de zi. Această specializare profundă este cheia perfecțiunii tehnice și artistice.",
     },
     {
-      icon: CheckCircle,
+      icon: "verified",
       title: "Implanturi de Excepție",
       description:
         "Colaborăm exclusiv cu branduri de elită precum Mentor și Motiva, utilizând cele mai avansate tehnici, inclusiv Dual Plane și protocoale de recuperare rapidă, pentru rezultate de durată și aspect natural.",
     },
     {
-      icon: Shield,
+      icon: "shield_lock",
       title: "Siguranță Neclintită",
       description:
         "Datorită specializării noastre stricte și a protocoalelor riguroase, rata de complicații este minimă. Ne angajăm să oferim cea mai sigură și ușoară recuperare din industrie.",
@@ -38,7 +38,7 @@ const WhyUsSection = () => {
             De ce să alegi un superspecialist?
           </h2>
           <p className="text-body leading-relaxed">
-            La clinica noastră, angajamentul față de excelență se reflectă în fiecare detaliu. Experiența, precizia și dedicarea noastră exclusivă îți garantează rezultate sublime și o liniște absolută.
+            La RENTÉA, angajamentul nostru față de excelență se reflectă în fiecare detaliu. Experiența, precizia și dedicarea noastră exclusivă îți garantează rezultate sublime și o liniște absolută.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ const WhyUsSection = () => {
             >
               {/* Icon */}
               <div className="w-16 h-16 rounded-full bg-rose-gold/10 border border-rose-gold/30 flex items-center justify-center mb-6 group-hover:bg-rose-gold/20 transition-colors duration-300">
-                <feature.icon className="w-8 h-8 text-rose-gold" />
+                <MaterialIcon name={feature.icon} className="text-3xl text-rose-gold" />
               </div>
 
               {/* Content */}

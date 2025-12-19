@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const ResourcesSection = () => {
@@ -63,7 +63,7 @@ const ResourcesSection = () => {
                 </h3>
                 <span className="inline-flex items-center gap-2 text-sm font-sans font-medium text-rose-gold group-hover:gap-3 transition-all">
                   Citește Ghidul
-                  <ArrowRight className="w-4 h-4" />
+                  <MaterialIcon name="arrow_forward" className="text-base" />
                 </span>
               </div>
             </a>

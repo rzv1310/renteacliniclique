@@ -1,4 +1,4 @@
-import { LayoutGrid, Sparkles } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 import heroImage from "@/assets/hero-image.jpg";
 
 const HeroSection = () => {
@@ -35,14 +35,14 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-200">
             <a href="/galerie">
               <button className="btn-primary-rose-gold">
-                <LayoutGrid className="w-5 h-5" />
+                <MaterialIcon name="grid_view" className="text-xl" />
                 Vezi Galeria Foto
               </button>
             </a>
             <a href="/simulator-3d">
               <button className="btn-secondary-rose-gold">
-                <Sparkles className="w-5 h-5" />
-                Încearcă Simulatorul 3D
+                <MaterialIcon name="3d_rotation" className="text-xl" />
+                Solicită Simulare 3D
               </button>
             </a>
           </div>
