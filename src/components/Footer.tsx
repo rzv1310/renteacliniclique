@@ -5,13 +5,13 @@ const Footer = () => {
   return (
     <footer className="bg-card text-foreground border-t border-border">
       {/* CTA Section - Silk Black Background */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden silk-shimmer">
         {/* Silk gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-black" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/30 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-rose-gold/5 via-transparent to-transparent" />
-        {/* Subtle shine effect */}
-        <div className="absolute inset-0 opacity-30 bg-[linear-gradient(110deg,transparent_25%,rgba(255,255,255,0.03)_50%,transparent_75%)]" />
+        {/* Static subtle shine */}
+        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(110deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%)]" />
         
         <div className="container mx-auto px-4 lg:px-8 py-20 lg:py-28 relative z-10">
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
