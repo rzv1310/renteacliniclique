@@ -47,6 +47,7 @@ const Header = () => {
 
   const navLinks = [
     { name: "Galerie", href: "/galerie" },
+    { name: "Simulator 3D", href: "/simulator-3d" },
     { name: "Tarife", href: "/tarife-finantare" },
     { name: "Finanțare Rate", href: "/implant-mamar-in-rate" },
     { name: "Paciente din Provincie", href: "/turism-medical-intern" },

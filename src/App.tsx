@@ -25,6 +25,7 @@ import GhidRecuperarePage from "./pages/GhidRecuperarePage";
 import ContactPage from "./pages/ContactPage";
 import TurismMedicalPage from "./pages/TurismMedicalPage";
 import FinantarePage from "./pages/FinantarePage";
+import Simulator3DPage from "./pages/Simulator3DPage";
 
 // Blog - Existente
 import BlogIndex from "./pages/blog/BlogIndex";
@@ -81,6 +82,7 @@ const App = () => (
           
           {/* Pagini principale */}
           <Route path="/galerie" element={<GalleryPage />} />
+          <Route path="/simulator-3d" element={<Simulator3DPage />} />
           <Route path="/tarife-finantare" element={<PricingPage />} />
           <Route path="/ghid-recuperare" element={<GhidRecuperarePage />} />
           <Route path="/despre-noi" element={<DespreNoiPage />} />
