@@ -349,6 +349,7 @@
 }
 
 /* Timeline sequential glow animations - 9s total loop, 3s per segment */
+/* Horizontal (desktop) */
 @keyframes glow-travel-seg-0 {
   0% { left: 0%; opacity: 0; }
   6% { opacity: 1; }
@@ -371,6 +372,31 @@
   96% { left: 100%; opacity: 1; }
   99% { left: 100%; opacity: 0; }
   100% { left: 0%; opacity: 0; }
+}
+
+/* Vertical (mobile) */
+@keyframes glow-travel-vert-0 {
+  0% { top: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  30% { top: 100%; opacity: 1; }
+  33% { top: 100%; opacity: 0; }
+  34%, 100% { top: 0%; opacity: 0; }
+}
+
+@keyframes glow-travel-vert-1 {
+  0%, 33% { top: 0%; opacity: 0; }
+  39% { opacity: 1; }
+  63% { top: 100%; opacity: 1; }
+  66% { top: 100%; opacity: 0; }
+  67%, 100% { top: 0%; opacity: 0; }
+}
+
+@keyframes glow-travel-vert-2 {
+  0%, 66% { top: 0%; opacity: 0; }
+  72% { opacity: 1; }
+  96% { top: 100%; opacity: 1; }
+  99% { top: 100%; opacity: 0; }
+  100% { top: 0%; opacity: 0; }
 }
 
 /* Circle pulse animations synced with dot arrival */

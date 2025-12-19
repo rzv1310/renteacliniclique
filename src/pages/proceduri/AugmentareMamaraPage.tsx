@@ -540,12 +540,13 @@ const AugmentareMamaraPage = () => {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-6">
+            {/* Desktop: Horizontal grid */}
+            <div className="hidden md:grid md:grid-cols-4 gap-6">
               {recoverySteps.map((step, index) => (
                 <div key={index} className="relative">
-                  {/* Connector line with animated glow dot */}
+                  {/* Connector line with animated glow dot - horizontal */}
                   {index < recoverySteps.length - 1 && (
-                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-border/50 overflow-hidden">
+                    <div className="absolute top-8 left-1/2 w-full h-px bg-border/50 overflow-hidden">
                       {/* Trail elements */}
                       {[0.15, 0.3, 0.45].map((trailDelay, i) => (
                         <div
@@ -561,15 +562,13 @@ const AugmentareMamaraPage = () => {
                           }}
                         />
                       ))}
-
                       {/* Main glowing dot */}
                       <div
                         className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
                         style={{
                           animation: `glow-travel-seg-${index} 9s ease-in-out infinite`,
                           background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
-                          boxShadow:
-                            "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)",
+                          boxShadow: "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)",
                         }}
                       />
                     </div>
@@ -579,14 +578,67 @@ const AugmentareMamaraPage = () => {
                     <div className="w-16 h-16 rounded-full bg-card border border-border/50 flex items-center justify-center mx-auto mb-4">
                       <div
                         className="w-full h-full rounded-full flex items-center justify-center"
-                        style={{
-                          animation: `pulse-step-${index} 9s ease-in-out infinite`,
-                        }}
+                        style={{ animation: `pulse-step-${index} 9s ease-in-out infinite` }}
                       >
                         <span className="text-2xl font-light text-foreground">{index + 1}</span>
                       </div>
                     </div>
                     <h4 className="font-medium text-foreground mb-2">{step.day}</h4>
+                    <p className="text-sm text-muted-foreground">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile: Vertical layout */}
+            <div className="md:hidden space-y-0">
+              {recoverySteps.map((step, index) => (
+                <div key={index} className="relative flex gap-4">
+                  {/* Left side: Circle + vertical connector */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
+                      <div
+                        className="w-full h-full rounded-full flex items-center justify-center"
+                        style={{ animation: `pulse-step-${index} 9s ease-in-out infinite` }}
+                      >
+                        <span className="text-xl font-light text-foreground">{index + 1}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Vertical connector line */}
+                    {index < recoverySteps.length - 1 && (
+                      <div className="w-px h-20 bg-border/50 overflow-hidden relative">
+                        {/* Trail elements - vertical */}
+                        {[0.15, 0.3, 0.45].map((trailDelay, i) => (
+                          <div
+                            key={i}
+                            className="absolute left-1/2 -translate-x-1/2 rounded-full"
+                            style={{
+                              animation: `glow-travel-vert-${index} 9s ease-in-out infinite`,
+                              animationDelay: `${trailDelay}s`,
+                              width: `${6 - i * 1.5}px`,
+                              height: `${6 - i * 1.5}px`,
+                              background: `rgba(212, 175, 155, ${0.28 - i * 0.08})`,
+                              boxShadow: `0 0 ${5 - i * 1.5}px ${2 - i * 0.5}px rgba(212, 175, 155, ${0.38 - i * 0.08})`,
+                            }}
+                          />
+                        ))}
+                        {/* Main glowing dot - vertical */}
+                        <div
+                          className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full"
+                          style={{
+                            animation: `glow-travel-vert-${index} 9s ease-in-out infinite`,
+                            background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
+                            boxShadow: "0 0 8px 3px rgba(212, 175, 155, 0.8), 0 0 16px 6px rgba(212, 175, 155, 0.4)",
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Right side: Content */}
+                  <div className="pt-2 pb-6">
+                    <h4 className="font-medium text-foreground mb-1">{step.day}</h4>
                     <p className="text-sm text-muted-foreground">{step.desc}</p>
                   </div>
                 </div>
