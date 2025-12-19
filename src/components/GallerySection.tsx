@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 
 import case1Before from "@/assets/gallery/case-1-before.jpg";
 import case1After from "@/assets/gallery/case-1-after.jpg";
@@ -112,8 +112,7 @@ const GallerySection = () => {
               style={{ left: `${sliderPosition}%` }}
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-card border border-border rounded-full shadow-elegant flex items-center justify-center">
-                <ChevronLeft className="w-4 h-4 text-rose-gold" />
-                <ChevronRight className="w-4 h-4 text-rose-gold" />
+                <MaterialIcon name="code" className="text-xl text-rose-gold" />
               </div>
             </div>
           </div>

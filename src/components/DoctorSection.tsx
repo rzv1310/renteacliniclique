@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 import doctorImage from "@/assets/doctor-portrait.jpg";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
@@ -17,12 +17,12 @@ const DoctorSection = () => {
             <div className="relative z-10">
               <img
                 src={doctorImage}
-                alt="Dr. Gina Wafi"
+                alt="Dr. Andrei Rentea"
                 className="w-full max-w-md mx-auto lg:mx-0 rounded-2xl shadow-elegant"
               />
               {/* Name overlay */}
               <div className="absolute bottom-4 left-4 right-4 bg-card/90 backdrop-blur-sm rounded-xl p-4">
-                <p className="font-display text-xl text-foreground">Dr. Gina Wafi</p>
+                <p className="font-display text-xl text-foreground">Dr. Andrei Rentea</p>
                 <p className="text-sm text-muted-foreground">Chirurg Estetician Principal & Fondator</p>
               </div>
             </div>
@@ -44,7 +44,7 @@ const DoctorSection = () => {
             </blockquote>
 
             <p className="text-body leading-relaxed mb-8">
-              Dr. Gina Wafi nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, ea aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
+              Dr. Andrei Rentea nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, el aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
             </p>
 
             <a 
@@ -52,7 +52,7 @@ const DoctorSection = () => {
               className="inline-flex items-center gap-2 text-rose-gold font-sans font-medium hover:gap-3 transition-all"
             >
               Citește povestea completă
-              <ArrowRight className="w-5 h-5" />
+              <MaterialIcon name="arrow_forward" className="text-xl" />
             </a>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star } from "lucide-react";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const TestimonialsSection = () => {
@@ -8,7 +8,7 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       quote:
-        "Mi-a fost frică de rezultatul 'artificial', dar Dr. Wafi a înțeles exact ce vreau. Arată atât de natural încât nimeni nu crede că am implanturi.",
+        "Mi-a fost frică de rezultatul 'artificial', dar Dr. Rentea a înțeles exact ce vreau. Arată atât de natural încât nimeni nu crede că am implanturi.",
       author: "Maria",
       details: "28 ani • Implant Motiva Ergonomix",
       rating: 5,
@@ -52,13 +52,13 @@ const TestimonialsSection = () => {
           <div className="bg-card rounded-3xl p-8 md:p-12 border border-border relative overflow-hidden">
             {/* Decorative Quote */}
             <div className="absolute top-4 left-8 text-rose-gold/10 font-display text-[150px] leading-none select-none">
-              "
+              <MaterialIcon name="format_quote" className="text-[150px]" />
             </div>
 
             {/* Rating */}
             <div className="flex gap-1 mb-6 relative z-10">
               {[...Array(testimonials[activeIndex].rating)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-rose-gold text-rose-gold" />
+                <MaterialIcon key={i} name="star" className="text-xl text-rose-gold" filled />
               ))}
             </div>
 
