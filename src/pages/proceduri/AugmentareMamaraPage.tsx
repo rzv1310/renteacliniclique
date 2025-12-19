@@ -175,7 +175,7 @@ const AugmentareMamaraPage = () => {
         </svg>
         
         {/* Label */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center">
+        <div className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 text-center">
           <p className="text-xs text-muted-foreground">
             {type === "inframammary" && "Incizie în pliul submamar"}
             {type === "periareolar" && "Incizie sub areolă"}
