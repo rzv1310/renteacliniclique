@@ -1,0 +1,4 @@
+project_id = "vdycnvglfifpsyxwbwrl"
+
+[functions.generate-implant-visualization]
+verify_jwt = false
