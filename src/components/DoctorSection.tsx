@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import doctorImage from "@/assets/doctor-portrait.jpg";
 
 const DoctorSection = () => {
   return (
-    <section className="py-24 lg:py-32 overflow-hidden">
+    <section className="py-24 lg:py-32 overflow-hidden bg-background">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image Side */}
@@ -15,51 +14,40 @@ const DoctorSection = () => {
                 alt="Dr. Gina Wafi"
                 className="w-full max-w-md mx-auto lg:mx-0 rounded-2xl shadow-elegant"
               />
+              {/* Name overlay */}
+              <div className="absolute bottom-4 left-4 right-4 bg-card/90 backdrop-blur-sm rounded-xl p-4">
+                <p className="font-display text-xl text-foreground">Dr. Gina Wafi</p>
+                <p className="text-sm text-muted-foreground">Chirurg Estetician Principal & Fondator</p>
+              </div>
             </div>
-            {/* Decorative Elements */}
-            <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-champagne-light rounded-2xl -z-10" />
-            <div className="absolute -top-6 -left-6 w-32 h-32 border-2 border-rose-gold/30 rounded-2xl -z-10" />
           </div>
 
           {/* Content Side */}
           <div className="lg:pl-8">
-            <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-              Meet the Doctor
+            <span className="text-label mb-4 block">
+              Artizan al Frumuseții
             </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-deep-brown mb-6 leading-tight">
-              Arhitectul schimbării tale.
+            <h2 className="h2-section text-foreground mb-6 leading-tight">
+              Arhitectul viziunii tale.
             </h2>
 
-            <blockquote className="text-xl md:text-2xl text-soft-brown leading-relaxed mb-8 italic font-serif">
+            <blockquote className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8 italic font-display">
               "Cred că augmentarea mamară nu este doar despre volum, ci despre proporții
-              și armonie. M-am dedicat acestei proceduri pentru a oferi pacientelor mele
+              și armonie. M-am dedicat acestei singure proceduri pentru a oferi pacientelor mele
               nu doar un rezultat estetic, ci o experiență de siguranță totală."
             </blockquote>
 
-            {/* Signature */}
-            <div className="mb-8">
-              <p className="font-serif text-2xl text-deep-brown mb-1">Dr. Gina Wafi</p>
-              <p className="text-soft-brown text-sm tracking-wide">
-                Medic Primar Chirurgie Plastică și Estetică
-              </p>
-            </div>
+            <p className="text-body leading-relaxed mb-8">
+              Dr. Gina Wafi nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, ea aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
+            </p>
 
-            {/* Credentials */}
-            <div className="flex flex-wrap gap-4 mb-8">
-              {["ISAPS", "SECPRE", "ARCE"].map((credential) => (
-                <span
-                  key={credential}
-                  className="px-4 py-2 bg-champagne-light rounded-full text-sm font-medium text-soft-brown"
-                >
-                  {credential}
-                </span>
-              ))}
-            </div>
-
-            <Button variant="elegant" size="lg" className="group">
+            <a 
+              href="/despre-noi" 
+              className="inline-flex items-center gap-2 text-rose-gold font-sans font-medium hover:gap-3 transition-all"
+            >
               Citește povestea completă
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
+              <ArrowRight className="w-5 h-5" />
+            </a>
           </div>
         </div>
       </div>
