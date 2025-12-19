@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, Play, ChevronDown, ZoomIn } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAugmentare";
 
 // Import gallery images
 import case1Before from "@/assets/gallery/case-1-before.jpg";
@@ -15,6 +16,30 @@ const AugmentareMamaraPage = () => {
   const [selectedShape, setSelectedShape] = useState<"round" | "anatomical">("round");
   const [selectedIncision, setSelectedIncision] = useState<string>("inframammary");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const galleryCases = [
+    {
+      id: "3829",
+      beforeImage: case1Before,
+      afterImage: case1After,
+      title: "Caz #3829",
+      details: "325cc • Rotunde • Dual Plane"
+    },
+    {
+      id: "4102",
+      beforeImage: case2Before,
+      afterImage: case2After,
+      title: "Caz #4102",
+      details: "290cc • Anatomice • Sub-muscular"
+    }
+  ];
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
 
   const incisionOptions = [
     {
@@ -388,59 +413,39 @@ const AugmentareMamaraPage = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Case 1 */}
-            <div className="group relative">
-              <div className="grid grid-cols-2 gap-2 rounded-xl overflow-hidden">
-                <div className="relative aspect-[3/4]">
-                  <img src={case1Before} alt="Înainte" className="w-full h-full object-cover" />
-                  <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 text-white text-xs rounded">
-                    Înainte
-                  </span>
+            {galleryCases.map((caseItem, index) => (
+              <div key={caseItem.id} className="group relative">
+                <div 
+                  className="grid grid-cols-2 gap-2 rounded-xl overflow-hidden cursor-pointer"
+                  onClick={() => openLightbox(index)}
+                >
+                  <div className="relative aspect-[3/4]">
+                    <img src={caseItem.beforeImage} alt="Înainte" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 text-white text-xs rounded">
+                      Înainte
+                    </span>
+                  </div>
+                  <div className="relative aspect-[3/4]">
+                    <img src={caseItem.afterImage} alt="După" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 text-white text-xs rounded">
+                      După
+                    </span>
+                  </div>
                 </div>
-                <div className="relative aspect-[3/4]">
-                  <img src={case1After} alt="După" className="w-full h-full object-cover" />
-                  <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 text-white text-xs rounded">
-                    După
-                  </span>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center justify-between">
-                <div>
-                  <p className="text-foreground font-medium">Caz #3829</p>
-                  <p className="text-sm text-muted-foreground">325cc • Rotunde • Dual Plane</p>
-                </div>
-                <button className="p-2 rounded-full bg-card border border-border/50 hover:border-primary/50 transition-colors">
-                  <ZoomIn className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </div>
-            </div>
-
-            {/* Case 2 */}
-            <div className="group relative">
-              <div className="grid grid-cols-2 gap-2 rounded-xl overflow-hidden">
-                <div className="relative aspect-[3/4]">
-                  <img src={case2Before} alt="Înainte" className="w-full h-full object-cover" />
-                  <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 text-white text-xs rounded">
-                    Înainte
-                  </span>
-                </div>
-                <div className="relative aspect-[3/4]">
-                  <img src={case2After} alt="După" className="w-full h-full object-cover" />
-                  <span className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 text-white text-xs rounded">
-                    După
-                  </span>
+                <div className="mt-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-foreground font-medium">{caseItem.title}</p>
+                    <p className="text-sm text-muted-foreground">{caseItem.details}</p>
+                  </div>
+                  <button 
+                    onClick={() => openLightbox(index)}
+                    className="p-2 rounded-full bg-card border border-border/50 hover:border-primary/50 transition-colors"
+                  >
+                    <ZoomIn className="w-4 h-4 text-muted-foreground" />
+                  </button>
                 </div>
               </div>
-              <div className="mt-4 flex items-center justify-between">
-                <div>
-                  <p className="text-foreground font-medium">Caz #4102</p>
-                  <p className="text-sm text-muted-foreground">290cc • Anatomice • Sub-muscular</p>
-                </div>
-                <button className="p-2 rounded-full bg-card border border-border/50 hover:border-primary/50 transition-colors">
-                  <ZoomIn className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="text-center mt-12">
@@ -452,6 +457,13 @@ const AugmentareMamaraPage = () => {
             </Link>
           </div>
         </div>
+
+        <GalleryLightboxAugmentare
+          cases={galleryCases}
+          isOpen={lightboxOpen}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+        />
       </section>
 
       {/* FAQ Section */}
