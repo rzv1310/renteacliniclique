@@ -1,10 +1,106 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Phone, Mail, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Phone, Mail, MapPin, Clock, Loader2, CheckCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+// Zod validation schema with proper constraints
+const contactFormSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(2, "Prenumele trebuie să aibă cel puțin 2 caractere")
+    .max(50, "Prenumele nu poate depăși 50 de caractere")
+    .regex(/^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/, "Prenumele poate conține doar litere"),
+  lastName: z
+    .string()
+    .trim()
+    .min(2, "Numele trebuie să aibă cel puțin 2 caractere")
+    .max(50, "Numele nu poate depăși 50 de caractere")
+    .regex(/^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/, "Numele poate conține doar litere"),
+  email: z
+    .string()
+    .trim()
+    .email("Adresa de email nu este validă")
+    .max(100, "Email-ul nu poate depăși 100 de caractere"),
+  phone: z
+    .string()
+    .trim()
+    .regex(
+      /^(\+40|0)[0-9]{9}$/,
+      "Numărul de telefon trebuie să fie în format românesc (ex: +40721000000 sau 0721000000)"
+    ),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Mesajul trebuie să aibă cel puțin 10 caractere")
+    .max(1000, "Mesajul nu poate depăși 1000 de caractere"),
+});
+
+type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 const ContactPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      message: "",
+    },
+  });
+
+  const onSubmit = async (data: ContactFormValues) => {
+    setIsSubmitting(true);
+    
+    try {
+      const { data: responseData, error } = await supabase.functions.invoke('contact-form', {
+        body: data,
+      });
+
+      if (error) {
+        console.error("Contact form error:", error);
+        toast.error("A apărut o eroare. Te rugăm să încerci din nou.");
+        return;
+      }
+
+      if (responseData?.error) {
+        toast.error(responseData.error);
+        return;
+      }
+
+      setIsSuccess(true);
+      form.reset();
+      toast.success("Mesajul a fost trimis cu succes!");
+      
+      // Reset success state after 5 seconds
+      setTimeout(() => setIsSuccess(false), 5000);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast.error("A apărut o eroare neașteptată. Te rugăm să încerci din nou.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <PageLayout>
       {/* Hero */}
@@ -100,52 +196,145 @@ const ContactPage = () => {
                 Trimite-ne un Mesaj
               </h2>
 
-              <form className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-deep-brown mb-2 block">
-                      Nume
-                    </label>
-                    <Input placeholder="Numele tău" className="bg-background" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-deep-brown mb-2 block">
-                      Prenume
-                    </label>
-                    <Input placeholder="Prenumele tău" className="bg-background" />
-                  </div>
+              {isSuccess ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
+                  <h3 className="font-serif text-xl font-semibold text-deep-brown mb-2">
+                    Mulțumim pentru mesaj!
+                  </h3>
+                  <p className="text-soft-brown">
+                    Vom reveni cu un răspuns în cel mai scurt timp.
+                  </p>
                 </div>
+              ) : (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-deep-brown">
+                              Nume
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Numele tău" 
+                                className="bg-background" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-deep-brown">
+                              Prenume
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Prenumele tău" 
+                                className="bg-background" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <div>
-                  <label className="text-sm font-medium text-deep-brown mb-2 block">
-                    Email
-                  </label>
-                  <Input type="email" placeholder="email@exemplu.ro" className="bg-background" />
-                </div>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-deep-brown">
+                            Email
+                          </FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="email" 
+                              placeholder="email@exemplu.ro" 
+                              className="bg-background" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div>
-                  <label className="text-sm font-medium text-deep-brown mb-2 block">
-                    Telefon
-                  </label>
-                  <Input type="tel" placeholder="+40 7XX XXX XXX" className="bg-background" />
-                </div>
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-deep-brown">
+                            Telefon
+                          </FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="tel" 
+                              placeholder="+40721000000" 
+                              className="bg-background" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div>
-                  <label className="text-sm font-medium text-deep-brown mb-2 block">
-                    Mesaj
-                  </label>
-                  <Textarea 
-                    placeholder="Cum te putem ajuta?" 
-                    rows={5}
-                    className="bg-background resize-none"
-                  />
-                </div>
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-deep-brown">
+                            Mesaj
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Cum te putem ajuta?" 
+                              rows={5}
+                              className="bg-background resize-none"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <Button variant="hero" size="lg" className="w-full group">
-                  Trimite Mesajul
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </form>
+                    <Button 
+                      type="submit" 
+                      variant="hero" 
+                      size="lg" 
+                      className="w-full group"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Se trimite...
+                        </>
+                      ) : (
+                        <>
+                          Trimite Mesajul
+                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              )}
             </div>
           </div>
         </div>
