@@ -30,6 +30,8 @@ const Header = () => {
     { name: "— Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
     { name: "Mastopexie (Ridicare)", href: "/proceduri/augmentare-mamara-cu-mastopexie" },
     { name: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
+    { name: "Reducție Mamară", href: "/proceduri/micsorare-sani-reductie-mamara" },
+    { name: "Lipofilling Mamar", href: "/proceduri/lipofilling-mamar" },
   ];
 
   const navLinks = [
