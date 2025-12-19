@@ -347,3 +347,53 @@
   animation: silk-shimmer 8s ease-in-out infinite;
   pointer-events: none;
 }
+
+/* Timeline sequential glow animations - 9s total loop, 3s per segment */
+@keyframes glow-travel-seg-0 {
+  0% { left: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  30% { left: 100%; opacity: 1; }
+  33% { left: 100%; opacity: 0; }
+  34%, 100% { left: 0%; opacity: 0; }
+}
+
+@keyframes glow-travel-seg-1 {
+  0%, 33% { left: 0%; opacity: 0; }
+  39% { opacity: 1; }
+  63% { left: 100%; opacity: 1; }
+  66% { left: 100%; opacity: 0; }
+  67%, 100% { left: 0%; opacity: 0; }
+}
+
+@keyframes glow-travel-seg-2 {
+  0%, 66% { left: 0%; opacity: 0; }
+  72% { opacity: 1; }
+  96% { left: 100%; opacity: 1; }
+  99% { left: 100%; opacity: 0; }
+  100% { left: 0%; opacity: 0; }
+}
+
+/* Circle pulse animations synced with dot arrival */
+@keyframes pulse-step-0 {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  4% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  8%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
+
+@keyframes pulse-step-1 {
+  0%, 30% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  34% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  38%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
+
+@keyframes pulse-step-2 {
+  0%, 63% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  67% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  71%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
+
+@keyframes pulse-step-3 {
+  0%, 96% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  99% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
