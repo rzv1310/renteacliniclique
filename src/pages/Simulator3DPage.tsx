@@ -1,10 +1,20 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle } from "lucide-react";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+
+interface RateLimits {
+  limits: {
+    minute: { used: number; limit: number; remaining: number };
+    hour: { used: number; limit: number; remaining: number };
+    day: { used: number; limit: number; remaining: number };
+  };
+  canGenerate: boolean;
+  limitType: 'minute' | 'hour' | 'day' | null;
+}
 import {
   Accordion,
   AccordionContent,
@@ -72,12 +82,33 @@ const Simulator3DPage = () => {
   const [zoom, setZoom] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [rateLimits, setRateLimits] = useState<RateLimits | null>(null);
+  const [isLoadingLimits, setIsLoadingLimits] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
 
   const heroAnimation = useScrollAnimation();
   const controlsAnimation = useScrollAnimation();
   const visualAnimation = useScrollAnimation();
+
+  const fetchRateLimits = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('check-rate-limits');
+      if (error) {
+        console.error('Error fetching rate limits:', error);
+        return;
+      }
+      setRateLimits(data);
+    } catch (error) {
+      console.error('Error fetching rate limits:', error);
+    } finally {
+      setIsLoadingLimits(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRateLimits();
+  }, [fetchRateLimits]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -149,12 +180,16 @@ const Simulator3DPage = () => {
         setGeneratedImage(data.generatedImage);
         setShowComparison(true);
         toast.success("Vizualizare AI generată cu succes!");
+        // Refresh rate limits after generation
+        fetchRateLimits();
       } else {
         throw new Error('Nu s-a putut genera imaginea');
       }
     } catch (error) {
       console.error('Error generating AI visualization:', error);
       toast.error(error instanceof Error ? error.message : 'Eroare la generarea vizualizării AI');
+      // Refresh rate limits on error too (in case it was a rate limit error)
+      fetchRateLimits();
     } finally {
       setIsGenerating(false);
     }
@@ -360,12 +395,57 @@ const Simulator3DPage = () => {
                 </div>
               </div>
 
+              {/* Rate Limits Display */}
+              <div className="bg-card rounded-2xl p-4 shadow-elegant border border-border/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <Clock className="w-4 h-4 text-rose-gold" />
+                  <h4 className="font-medium text-foreground text-sm">Încercări disponibile</h4>
+                </div>
+                
+                {isLoadingLimits ? (
+                  <div className="flex items-center justify-center py-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                  </div>
+                ) : rateLimits ? (
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div className="bg-muted/50 rounded-lg p-2">
+                      <p className={`text-lg font-semibold ${rateLimits.limits.minute.remaining > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {rateLimits.limits.minute.remaining}
+                      </p>
+                      <p className="text-xs text-muted-foreground">/ minut</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-2">
+                      <p className={`text-lg font-semibold ${rateLimits.limits.hour.remaining > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {rateLimits.limits.hour.remaining}
+                      </p>
+                      <p className="text-xs text-muted-foreground">/ oră</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-2">
+                      <p className={`text-lg font-semibold ${rateLimits.limits.day.remaining > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {rateLimits.limits.day.remaining}
+                      </p>
+                      <p className="text-xs text-muted-foreground">/ zi</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center">Nu s-au putut încărca limitele</p>
+                )}
+                
+                {rateLimits && !rateLimits.canGenerate && (
+                  <p className="text-xs text-red-500 text-center mt-2">
+                    {rateLimits.limitType === 'minute' && 'Așteptați câteva secunde pentru a încerca din nou.'}
+                    {rateLimits.limitType === 'hour' && 'Ați atins limita pe oră. Încercați mai târziu.'}
+                    {rateLimits.limitType === 'day' && 'Ați atins limita zilnică. Reveniți mâine.'}
+                  </p>
+                )}
+              </div>
+
               {/* AI Generate Button */}
               {uploadedImage && (
                 <Button
                   className="w-full btn-primary-rose-gold h-14 text-lg"
                   onClick={generateAIVisualization}
-                  disabled={isGenerating}
+                  disabled={isGenerating || (rateLimits && !rateLimits.canGenerate)}
                 >
                   {isGenerating ? (
                     <>
