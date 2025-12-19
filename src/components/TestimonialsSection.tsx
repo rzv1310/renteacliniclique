@@ -48,39 +48,42 @@ const TestimonialsSection = () => {
         </div>
 
         {/* Testimonial Card */}
-        <div className={`max-w-4xl mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+        <div className={`max-w-3xl mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="bg-card rounded-3xl p-8 md:p-12 border border-border relative overflow-hidden">
-            {/* Decorative Quote */}
-            <div className="absolute top-4 left-8 text-rose-gold/10 font-display text-[150px] leading-none select-none">
-              <MaterialIcon name="format_quote" className="text-[150px]" />
-            </div>
-
-            {/* Rating */}
-            <div className="flex gap-1 mb-6 relative z-10">
-              {[...Array(testimonials[activeIndex].rating)].map((_, i) => (
-                <MaterialIcon key={i} name="star" className="text-xl text-rose-gold" filled />
-              ))}
+            {/* Decorative gradient */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-gold via-rose-gold/50 to-transparent" />
+            
+            {/* Quote icon */}
+            <div className="flex justify-center mb-6">
+              <MaterialIcon name="format_quote" className="text-5xl text-rose-gold/30" />
             </div>
 
             {/* Quote */}
-            <blockquote className="font-display text-2xl md:text-3xl text-foreground leading-relaxed mb-8 relative z-10 italic">
+            <blockquote className="font-display text-xl md:text-2xl text-foreground leading-relaxed mb-8 text-center italic">
               "{testimonials[activeIndex].quote}"
             </blockquote>
 
             {/* Author */}
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 rounded-full bg-rose-gold/20 flex items-center justify-center">
-                <span className="font-display text-lg text-rose-gold">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-rose-gold/20 flex items-center justify-center border-2 border-rose-gold/30">
+                <span className="font-display text-xl text-rose-gold">
                   {testimonials[activeIndex].author[0]}
                 </span>
               </div>
-              <div>
+              <div className="text-center">
                 <p className="font-sans font-medium text-foreground">
                   {testimonials[activeIndex].author}
                 </p>
                 <p className="text-sm text-muted-foreground font-sans">
                   {testimonials[activeIndex].details}
                 </p>
+              </div>
+              
+              {/* Rating */}
+              <div className="flex gap-1">
+                {[...Array(testimonials[activeIndex].rating)].map((_, i) => (
+                  <MaterialIcon key={i} name="star" className="text-lg text-rose-gold" filled />
+                ))}
               </div>
             </div>
           </div>

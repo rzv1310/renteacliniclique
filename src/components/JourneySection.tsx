@@ -1,4 +1,8 @@
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import MaterialIcon from "@/components/ui/MaterialIcon";
+
+// Import journey images
+import abstractFeminine from "@/assets/abstract-feminine.jpg";
 
 const JourneySection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -6,27 +10,35 @@ const JourneySection = () => {
   const steps = [
     {
       step: "1",
+      icon: "calendar_month",
       title: "Consultația & Simulare 3D",
       description:
         "O discuție personalizată, măsurători precise și o simulare 3D avansată vă vor dezvălui rezultatul înainte de intervenție.",
+      image: abstractFeminine,
     },
     {
       step: "2",
+      icon: "medical_services",
       title: "Ziua Intervenției",
       description:
         "O procedură de aproximativ 60 de minute, sub anestezie generală, efectuată în condiții de maximă siguranță și confort.",
+      image: abstractFeminine,
     },
     {
       step: "3",
+      icon: "healing",
       title: "Recuperare Expediată",
       description:
         "Protocolul nostru post-operator este conceput pentru o recuperare rapidă, cu disconfort minim, permițându-vă să reveniți la activitățile zilnice.",
+      image: abstractFeminine,
     },
     {
       step: "4",
+      icon: "self_improvement",
       title: "Noul Dumneavoastră Eu",
       description:
         "După aproximativ 3 luni, veți celebra forma finală a transformării dumneavoastră, însoțită de o nouă încredere și armonie.",
+      image: abstractFeminine,
     },
   ];
 
@@ -50,29 +62,44 @@ const JourneySection = () => {
         </div>
 
         {/* Steps Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, index) => (
             <div
               key={step.step}
-              className={`relative group transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group bg-card rounded-2xl overflow-hidden border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              {/* Step Number */}
-              <div className="mb-6">
-                <div className="w-16 h-16 rounded-full border-2 border-rose-gold flex items-center justify-center group-hover:bg-rose-gold/10 transition-colors duration-300">
-                  <span className="font-display text-2xl text-rose-gold font-medium">
-                    {step.step}
-                  </span>
+              {/* Image */}
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <img 
+                  src={step.image} 
+                  alt={step.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+                
+                {/* Step Number Badge */}
+                <div className="absolute top-4 left-4 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-rose-gold flex items-center justify-center">
+                    <span className="font-display text-sm text-primary-foreground font-medium">
+                      {step.step}
+                    </span>
+                  </div>
                 </div>
               </div>
 
               {/* Content */}
-              <h3 className="font-display text-xl font-medium text-foreground mb-3">
-                {step.title}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed text-sm font-sans">
-                {step.description}
-              </p>
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <MaterialIcon name={step.icon} className="text-2xl text-rose-gold" />
+                  <h3 className="font-display text-lg font-medium text-foreground">
+                    {step.title}
+                  </h3>
+                </div>
+                <p className="text-muted-foreground leading-relaxed text-sm font-sans">
+                  {step.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

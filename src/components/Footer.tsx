@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Phone, Mail, MapPin, Instagram, Facebook, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import MaterialIcon from "@/components/ui/MaterialIcon";
 
 const Footer = () => {
   const parallaxRef = useRef<HTMLDivElement>(null);
@@ -13,24 +13,22 @@ const Footer = () => {
       const rect = parallaxRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Only apply parallax when section is in view
       if (rect.top < windowHeight && rect.bottom > 0) {
         const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
-        setParallaxOffset(scrollProgress * 50 - 25); // -25 to 25 range
+        setParallaxOffset(scrollProgress * 50 - 25);
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial call
+    handleScroll();
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <footer className="bg-card text-foreground border-t border-border">
-      {/* CTA Section - Silk Black Background with Parallax */}
+      {/* CTA Section */}
       <div ref={parallaxRef} className="relative overflow-hidden silk-shimmer">
-        {/* Parallax background layers */}
         <div 
           className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-black transition-transform duration-100 ease-out"
           style={{ transform: `translateY(${parallaxOffset * 0.5}px)` }}
@@ -43,7 +41,6 @@ const Footer = () => {
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-rose-gold/5 via-transparent to-transparent transition-transform duration-100 ease-out"
           style={{ transform: `translateY(${parallaxOffset * 0.7}px)` }}
         />
-        {/* Static subtle shine */}
         <div className="absolute inset-0 opacity-20 bg-[linear-gradient(110deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%)]" />
         
         <div className="container mx-auto px-4 lg:px-8 py-20 lg:py-28 relative z-10">
@@ -59,7 +56,7 @@ const Footer = () => {
             </p>
             <button className="btn-primary-rose-gold group mx-auto">
               Programează o Consultație
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <MaterialIcon name="arrow_forward" className="text-xl group-hover:translate-x-1 transition-transform" />
             </button>
             <p className="text-sm text-zinc-500 mt-5">
               Cost consultație: 250 RON (deductibil din operație)
@@ -88,13 +85,13 @@ const Footer = () => {
                 href="#"
                 className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300"
               >
-                <Instagram className="w-5 h-5" />
+                <MaterialIcon name="photo_camera" className="text-xl" />
               </a>
               <a
                 href="#"
                 className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300"
               >
-                <Facebook className="w-5 h-5" />
+                <MaterialIcon name="group" className="text-xl" />
               </a>
             </div>
           </div>
@@ -159,7 +156,7 @@ const Footer = () => {
             <h4 className="font-sans font-medium text-sm uppercase tracking-wider mb-6 text-foreground">Contact</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-rose-gold shrink-0 mt-0.5" />
+                <MaterialIcon name="location_on" className="text-xl text-rose-gold shrink-0 mt-0.5" />
                 <span className="text-muted-foreground text-sm">
                   Str. Exemplu nr. 123
                   <br />
@@ -167,7 +164,7 @@ const Footer = () => {
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-rose-gold shrink-0" />
+                <MaterialIcon name="phone" className="text-xl text-rose-gold shrink-0" />
                 <a
                   href="tel:+40721000000"
                   className="text-muted-foreground hover:text-rose-gold transition-colors text-sm"
@@ -176,7 +173,7 @@ const Footer = () => {
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-rose-gold shrink-0" />
+                <MaterialIcon name="mail" className="text-xl text-rose-gold shrink-0" />
                 <a
                   href="mailto:contact@rentea.ro"
                   className="text-muted-foreground hover:text-rose-gold transition-colors text-sm"
