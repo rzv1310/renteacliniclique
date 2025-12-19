@@ -192,6 +192,18 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
+              <div className="border-t border-border my-2" />
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mt-2 mb-1">Utile</p>
+              {utileLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-base font-medium text-muted-foreground hover:text-rose-gold transition-colors py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
               <button className="btn-primary-rose-gold mt-4">
                 Programează Consultația
               </button>
