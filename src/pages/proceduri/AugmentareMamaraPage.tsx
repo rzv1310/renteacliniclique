@@ -547,12 +547,12 @@ const AugmentareMamaraPage = () => {
                   {index < recoverySteps.length - 1 && (
                     <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-border/50 overflow-hidden">
                       {/* Trail elements */}
-                      {[0.15, 0.3, 0.45].map((delay, i) => (
+                      {[0.15, 0.3, 0.45].map((trailDelay, i) => (
                         <div 
                           key={i}
                           className="absolute top-1/2 -translate-y-1/2 rounded-full animate-glow-travel-horizontal"
                           style={{ 
-                            animationDelay: `${index * 0.5 + delay}s`,
+                            animationDelay: `${index * 3 + trailDelay}s`,
                             width: `${8 - i * 2}px`,
                             height: `${8 - i * 2}px`,
                             background: `rgba(212, 175, 155, ${0.3 - i * 0.1})`,
@@ -564,7 +564,7 @@ const AugmentareMamaraPage = () => {
                       <div 
                         className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full animate-glow-travel-horizontal"
                         style={{ 
-                          animationDelay: `${index * 0.5}s`,
+                          animationDelay: `${index * 3}s`,
                           background: "linear-gradient(135deg, #d4af9b, #e8d5c4)",
                           boxShadow: "0 0 10px 4px rgba(212, 175, 155, 0.8), 0 0 20px 8px rgba(212, 175, 155, 0.4)"
                         }}
