@@ -155,6 +155,20 @@ serve(async (req) => {
 
     console.log(`Processing visualization request: type=${implantType}, size=${implantSize}cc, IP=${clientIP}`);
 
+    // Log request for rate limiting BEFORE calling AI (to prevent abuse even if AI fails)
+    const { error: insertError } = await supabaseAdmin
+      .from('rate_limits')
+      .insert({
+        ip_address: clientIP,
+        function_name: 'generate-implant-visualization'
+      });
+
+    if (insertError) {
+      console.error('Error logging rate limit:', insertError);
+    } else {
+      console.log(`Rate limit logged for IP: ${clientIP}`);
+    }
+
     // Build the prompt based on implant parameters
     const sizeDescription = implantSize < 300 ? "subtil, natural" : 
                            implantSize < 400 ? "moderat, echilibrat" : 
@@ -235,20 +249,6 @@ Maintain proper proportions and natural body contours.`;
         JSON.stringify({ error: 'Nu s-a putut genera imaginea. Încercați din nou.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
-    }
-
-    // Log successful request for rate limiting
-    const { error: insertError } = await supabaseAdmin
-      .from('rate_limits')
-      .insert({
-        ip_address: clientIP,
-        function_name: 'generate-implant-visualization'
-      });
-
-    if (insertError) {
-      console.error('Error logging rate limit:', insertError);
-    } else {
-      console.log(`Rate limit logged for IP: ${clientIP}`);
     }
 
     return new Response(
