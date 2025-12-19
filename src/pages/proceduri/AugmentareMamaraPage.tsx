@@ -381,37 +381,27 @@ const AugmentareMamaraPage = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            {/* Left - Quick Stats + Illustration */}
-            <div className="space-y-8">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-card rounded-xl p-6 text-center border border-border/50">
-                  <Clock className="w-6 h-6 text-primary mx-auto mb-3" />
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Durată</p>
-                  <p className="text-foreground font-medium">1 - 2 Ore</p>
-                </div>
-                <div className="bg-card rounded-xl p-6 text-center border border-border/50">
-                  <Stethoscope className="w-6 h-6 text-primary mx-auto mb-3" />
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Anestezie</p>
-                  <p className="text-foreground font-medium">Generală</p>
-                </div>
-                <div className="bg-card rounded-xl p-6 text-center border border-border/50">
-                  <Building2 className="w-6 h-6 text-primary mx-auto mb-3" />
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Internare</p>
-                  <p className="text-foreground font-medium">1 Noapte</p>
-                </div>
+          <div className="max-w-6xl mx-auto">
+            {/* Quick Stats */}
+            <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto mb-12">
+              <div className="bg-card rounded-xl p-6 text-center border border-border/50">
+                <Clock className="w-6 h-6 text-primary mx-auto mb-3" />
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Durată</p>
+                <p className="text-foreground font-medium">1 - 2 Ore</p>
               </div>
-
-              {/* Dynamic Incision Illustration */}
-              <div className="bg-card rounded-2xl p-8 border border-border/50">
-                <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-6 text-center">
-                  Localizare Incizie
-                </h4>
-                <IncisionIllustration type={selectedIncision} />
+              <div className="bg-card rounded-xl p-6 text-center border border-border/50">
+                <Stethoscope className="w-6 h-6 text-primary mx-auto mb-3" />
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Anestezie</p>
+                <p className="text-foreground font-medium">Generală</p>
+              </div>
+              <div className="bg-card rounded-xl p-6 text-center border border-border/50">
+                <Building2 className="w-6 h-6 text-primary mx-auto mb-3" />
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Internare</p>
+                <p className="text-foreground font-medium">1 Noapte</p>
               </div>
             </div>
 
-            {/* Right - Incision Options */}
+            {/* Incision Options */}
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-display text-xl font-medium text-foreground">
@@ -422,14 +412,14 @@ const AugmentareMamaraPage = () => {
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
                 {incisionOptions.map((option) => (
                   <div
                     key={option.id}
                     onClick={() => setSelectedIncision(option.id)}
                     className={`cursor-pointer rounded-xl p-5 transition-all duration-300 ${
                       selectedIncision === option.id
-                        ? "bg-card border border-primary/50"
+                        ? "bg-card border-2 border-primary shadow-gold"
                         : "bg-card/50 border border-border/30 hover:border-border"
                     }`}
                   >
@@ -458,61 +448,77 @@ const AugmentareMamaraPage = () => {
                 ))}
               </div>
 
-              {/* Extended Information Panel */}
+              {/* Extended Information Panel with SVG inside */}
               {selectedIncisionData && (
-                <div className="mt-6 bg-muted/50 rounded-2xl p-6 border border-border/30 animate-fade-in">
-                  <h4 className="font-display text-lg font-medium text-foreground mb-4">
-                    Detalii: {selectedIncisionData.name}
-                  </h4>
-                  
-                  {/* Healing Time & Scar Length */}
-                  <div className="grid grid-cols-2 gap-4 mb-5">
-                    <div className="flex items-center gap-3 bg-card rounded-lg p-3">
-                      <Clock className="w-5 h-5 text-primary" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">Timp vindecare</p>
-                        <p className="text-sm font-medium text-foreground">{selectedIncisionData.healingTime}</p>
+                <div className="bg-muted/50 rounded-2xl p-6 border border-border/30 animate-fade-in">
+                  <div className="grid md:grid-cols-[180px_1fr] gap-6">
+                    {/* SVG Illustration inside the details card */}
+                    <div className="flex flex-col items-center justify-center">
+                      <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 text-center">
+                        Localizare Incizie
+                      </h4>
+                      <IncisionIllustration type={selectedIncision} />
+                    </div>
+
+                    {/* Details content */}
+                    <div>
+                      <h4 className="font-display text-lg font-medium text-foreground mb-4">
+                        Detalii: {selectedIncisionData.name}
+                      </h4>
+                      
+                      {/* Healing Time & Scar Length */}
+                      <div className="grid grid-cols-2 gap-4 mb-5">
+                        <div className="flex items-center gap-3 bg-card rounded-lg p-3">
+                          <Clock className="w-5 h-5 text-primary" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">Timp vindecare</p>
+                            <p className="text-sm font-medium text-foreground">{selectedIncisionData.healingTime}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 bg-card rounded-lg p-3">
+                          <Ruler className="w-5 h-5 text-primary" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">Lungime cicatrice</p>
+                            <p className="text-sm font-medium text-foreground">{selectedIncisionData.scarLength}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Advantages & Disadvantages in two columns */}
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {/* Advantages */}
+                        <div>
+                          <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                            <Check className="w-4 h-4 text-green-500" />
+                            Avantaje
+                          </h5>
+                          <ul className="space-y-1.5">
+                            {selectedIncisionData.advantages.map((adv, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
+                                {adv}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Disadvantages */}
+                        <div>
+                          <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                            <X className="w-4 h-4 text-amber-500" />
+                            Considerații
+                          </h5>
+                          <ul className="space-y-1.5">
+                            {selectedIncisionData.disadvantages.map((dis, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+                                {dis}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 bg-card rounded-lg p-3">
-                      <Ruler className="w-5 h-5 text-primary" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">Lungime cicatrice</p>
-                        <p className="text-sm font-medium text-foreground">{selectedIncisionData.scarLength}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Advantages */}
-                  <div className="mb-4">
-                    <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
-                      <Check className="w-4 h-4 text-green-500" />
-                      Avantaje
-                    </h5>
-                    <ul className="space-y-1.5">
-                      {selectedIncisionData.advantages.map((adv, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
-                          {adv}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Disadvantages */}
-                  <div>
-                    <h5 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
-                      <X className="w-4 h-4 text-amber-500" />
-                      Considerații
-                    </h5>
-                    <ul className="space-y-1.5">
-                      {selectedIncisionData.disadvantages.map((dis, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                          {dis}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </div>
               )}
