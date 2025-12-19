@@ -238,8 +238,8 @@ const SimulatorSection = () => {
                 />
                 
                 <div className="flex justify-center">
-                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-rose-gold/10 rounded-full">
-                    <span className="text-2xl font-serif font-semibold text-rose-gold">{selectedSize}</span>
+                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-rose-gold/10 rounded-full transition-all duration-300">
+                    <span className="text-2xl font-serif font-semibold text-rose-gold transition-all duration-300">{selectedSize}</span>
                     <span className="text-soft-brown">cc</span>
                   </div>
                 </div>
@@ -368,12 +368,12 @@ const SimulatorSection = () => {
                         alt="După" 
                         className="max-w-full max-h-full object-contain"
                       />
-                      {/* Overlay effect for implant visualization */}
+                      {/* Overlay effect for implant visualization - with smooth transitions */}
                       <div 
-                        className="absolute inset-0 pointer-events-none"
+                        className="absolute inset-0 pointer-events-none transition-all duration-500 ease-out"
                         style={{
-                          background: `radial-gradient(ellipse 40% 30% at 35% 45%, hsla(var(--rose-gold), 0.15) 0%, transparent 70%),
-                                       radial-gradient(ellipse 40% 30% at 65% 45%, hsla(var(--rose-gold), 0.15) 0%, transparent 70%)`,
+                          background: `radial-gradient(ellipse ${40 + (selectedType === "rotund" ? 5 : 0)}% ${30 + (selectedSize - 200) / 20}% at 35% 45%, hsla(var(--rose-gold), ${selectedType === "ergonomic" ? 0.2 : 0.15}) 0%, transparent 70%),
+                                       radial-gradient(ellipse ${40 + (selectedType === "rotund" ? 5 : 0)}% ${30 + (selectedSize - 200) / 20}% at 65% 45%, hsla(var(--rose-gold), ${selectedType === "ergonomic" ? 0.2 : 0.15}) 0%, transparent 70%)`,
                           transform: `scaleY(${transform.scale})`,
                           transformOrigin: "center 45%"
                         }}
@@ -402,49 +402,45 @@ const SimulatorSection = () => {
                           d="M 60 100 Q 50 120 45 160 Q 40 200 50 250 L 80 300 L 120 300 L 150 250 Q 160 200 155 160 Q 150 120 140 100 Z" 
                           fill="url(#skinGradientAfter)"
                         />
-                        {/* Enhanced chest with implants */}
+                        {/* Enhanced chest with implants - with smooth transitions */}
                         <ellipse 
                           cx="75" 
-                          cy="140" 
+                          cy={140 + (selectedType === "anatomic" ? 3 : 0)} 
                           rx={18 + (selectedSize - 200) / 25} 
-                          ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : 0)} 
+                          ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : selectedType === "rotund" ? -1 : 1)} 
                           fill="hsl(var(--rose-gold))" 
-                          opacity="0.35"
+                          opacity={selectedType === "ergonomic" ? 0.4 : 0.35}
                           filter="url(#glow)"
-                          style={{
-                            transform: selectedType === "anatomic" ? "translateY(3px)" : "none",
-                            transformOrigin: "center"
-                          }}
+                          className="transition-all duration-500 ease-out"
                         />
                         <ellipse 
                           cx="125" 
-                          cy="140" 
+                          cy={140 + (selectedType === "anatomic" ? 3 : 0)} 
                           rx={18 + (selectedSize - 200) / 25} 
-                          ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : 0)} 
+                          ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : selectedType === "rotund" ? -1 : 1)} 
                           fill="hsl(var(--rose-gold))" 
-                          opacity="0.35"
+                          opacity={selectedType === "ergonomic" ? 0.4 : 0.35}
                           filter="url(#glow)"
-                          style={{
-                            transform: selectedType === "anatomic" ? "translateY(3px)" : "none",
-                            transformOrigin: "center"
-                          }}
+                          className="transition-all duration-500 ease-out"
                         />
-                        {/* Highlight effect */}
+                        {/* Highlight effect - with smooth transitions */}
                         <ellipse 
-                          cx="70" 
-                          cy="135" 
+                          cx={70 + (selectedType === "rotund" ? 2 : 0)} 
+                          cy={135 + (selectedType === "anatomic" ? 2 : 0)} 
                           rx={8 + (selectedSize - 200) / 50} 
                           ry={6 + (selectedSize - 200) / 60} 
                           fill="white" 
                           opacity="0.3"
+                          className="transition-all duration-500 ease-out"
                         />
                         <ellipse 
-                          cx="120" 
-                          cy="135" 
+                          cx={120 + (selectedType === "rotund" ? 2 : 0)} 
+                          cy={135 + (selectedType === "anatomic" ? 2 : 0)} 
                           rx={8 + (selectedSize - 200) / 50} 
                           ry={6 + (selectedSize - 200) / 60} 
                           fill="white" 
                           opacity="0.3"
+                          className="transition-all duration-500 ease-out"
                         />
                       </svg>
                       <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-rose-gold whitespace-nowrap">
@@ -480,18 +476,18 @@ const SimulatorSection = () => {
                 )}
               </div>
 
-              {/* Info Panel */}
+              {/* Info Panel - with smooth transitions */}
               <div className="p-4 bg-champagne-light/50 border-t border-border/50">
                 <div className="flex items-center justify-between text-sm">
-                  <div>
+                  <div className="transition-all duration-300">
                     <span className="text-muted-foreground">Tip selectat:</span>
-                    <span className="ml-2 font-semibold text-deep-brown">
+                    <span className="ml-2 font-semibold text-deep-brown transition-colors duration-300">
                       {implantTypes.find(t => t.type === selectedType)?.name}
                     </span>
                   </div>
-                  <div>
+                  <div className="transition-all duration-300">
                     <span className="text-muted-foreground">Mărime:</span>
-                    <span className="ml-2 font-semibold text-rose-gold">{selectedSize}cc</span>
+                    <span className="ml-2 font-semibold text-rose-gold transition-all duration-300">{selectedSize}cc</span>
                   </div>
                 </div>
               </div>
