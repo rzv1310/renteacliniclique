@@ -2,10 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, X, Heart, ArrowRight, Send } from "lucide-react";
+import { Check, X, Heart, Send } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
@@ -20,6 +19,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+// Zod validation schema
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Numele trebuie să aibă cel puțin 2 caractere").max(100, "Numele este prea lung"),
+  email: z.string().email("Adresa de email nu este validă"),
+  phone: z.string().min(10, "Numărul de telefon trebuie să aibă cel puțin 10 cifre").regex(/^[0-9+\s()-]+$/, "Format telefon invalid"),
+  package: z.string().optional(),
+  message: z.string().max(1000, "Mesajul este prea lung").optional(),
+});
 
 // Custom hook for scroll animations
 const useScrollAnimation = (threshold = 0.1) => {
@@ -56,6 +65,7 @@ const PricingPage = () => {
     package: "",
     message: "",
   });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const basePrice = 4000;
 
@@ -75,6 +85,22 @@ const PricingPage = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormErrors({});
+    
+    // Validate with zod
+    const result = contactFormSchema.safeParse(formData);
+    
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          errors[err.path[0] as string] = err.message;
+        }
+      });
+      setFormErrors(errors);
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Simulate form submission
@@ -86,6 +112,7 @@ const PricingPage = () => {
     });
     
     setFormData({ name: "", email: "", phone: "", package: "", message: "" });
+    setFormErrors({});
     setIsSubmitting(false);
   };
 
@@ -243,10 +270,7 @@ const PricingPage = () => {
                 {included.map((item, index) => (
                   <div
                     key={index}
-                    className={`flex items-start gap-3 sm:gap-4 bg-background rounded-xl p-4 sm:p-5 border border-border hover:border-rose-gold/30 transition-all duration-500 ${
-                      includedRef.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                    }`}
-                    style={{ transitionDelay: `${index * 100}ms` }}
+                    className="flex items-start gap-3 sm:gap-4 bg-background rounded-xl p-4 sm:p-5 border border-border hover:border-rose-gold/30 transition-colors duration-300"
                   >
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-rose-gold/10 flex items-center justify-center shrink-0">
                       <span className="material-symbols-outlined text-rose-gold text-lg sm:text-xl">
@@ -566,12 +590,14 @@ const PricingPage = () => {
                     <Input
                       id="name"
                       type="text"
-                      required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Numele tău"
-                      className="bg-background border-border focus:border-rose-gold"
+                      className={`bg-background border-border focus:border-rose-gold ${formErrors.name ? 'border-destructive' : ''}`}
                     />
+                    {formErrors.name && (
+                      <p className="text-destructive text-xs mt-1">{formErrors.name}</p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
@@ -580,12 +606,14 @@ const PricingPage = () => {
                     <Input
                       id="phone"
                       type="tel"
-                      required
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="07XX XXX XXX"
-                      className="bg-background border-border focus:border-rose-gold"
+                      className={`bg-background border-border focus:border-rose-gold ${formErrors.phone ? 'border-destructive' : ''}`}
                     />
+                    {formErrors.phone && (
+                      <p className="text-destructive text-xs mt-1">{formErrors.phone}</p>
+                    )}
                   </div>
                 </div>
 
@@ -596,12 +624,14 @@ const PricingPage = () => {
                   <Input
                     id="email"
                     type="email"
-                    required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="email@exemplu.ro"
-                    className="bg-background border-border focus:border-rose-gold"
+                    className={`bg-background border-border focus:border-rose-gold ${formErrors.email ? 'border-destructive' : ''}`}
                   />
+                  {formErrors.email && (
+                    <p className="text-destructive text-xs mt-1">{formErrors.email}</p>
+                  )}
                 </div>
 
                 <div>
