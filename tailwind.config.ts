@@ -115,6 +115,12 @@ export default {
           "90%": { opacity: "1" },
           "100%": { top: "100%", opacity: "0" },
         },
+        "glow-travel-horizontal": {
+          "0%": { left: "0%", opacity: "0" },
+          "10%": { opacity: "1" },
+          "90%": { opacity: "1" },
+          "100%": { left: "100%", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -125,6 +131,7 @@ export default {
         "slide-in-left": "slide-in-left 0.6s ease-out forwards",
         "slide-in-right": "slide-in-right 0.6s ease-out forwards",
         "glow-travel": "glow-travel 2s ease-in-out infinite",
+        "glow-travel-horizontal": "glow-travel-horizontal 2s ease-in-out infinite",
       },
     },
   },
