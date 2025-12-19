@@ -4,21 +4,28 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="bg-card text-foreground border-t border-border">
-      {/* CTA Section */}
-      <div className="border-b border-border">
-        <div className="container mx-auto px-4 lg:px-8 py-16 lg:py-24">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light mb-6">
+      {/* CTA Section - Silk Black Background */}
+      <div className="relative overflow-hidden">
+        {/* Silk gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-black" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-rose-gold/5 via-transparent to-transparent" />
+        {/* Subtle shine effect */}
+        <div className="absolute inset-0 opacity-30 bg-[linear-gradient(110deg,transparent_25%,rgba(255,255,255,0.03)_50%,transparent_75%)]" />
+        
+        <div className="container mx-auto px-4 lg:px-8 py-20 lg:py-28 relative z-10">
+          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-white">
               O investiție în încrederea ta pe care o vei purta în fiecare zi.
             </h2>
-            <p className="text-muted-foreground text-lg mb-8">
+            <p className="text-zinc-400 text-lg mb-10">
               Primul pas către schimbare începe cu o simplă conversație.
             </p>
-            <button className="btn-primary-rose-gold group">
+            <button className="btn-primary-rose-gold group mx-auto">
               Programează o Consultație
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <p className="text-sm text-muted-foreground mt-4">
+            <p className="text-sm text-zinc-500 mt-5">
               Cost consultație: 250 RON (deductibil din operație)
             </p>
           </div>
