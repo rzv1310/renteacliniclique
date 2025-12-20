@@ -38,7 +38,7 @@ const JourneySection = () => {
     {
       step: "4",
       icon: "self_improvement",
-      title: "Noul Dumneavoastră Eu",
+      title: "Noua Tu",
       description:
         "După aproximativ 3 luni, veți celebra forma finală a transformării dumneavoastră, însoțită de o nouă încredere și armonie.",
       image: step4Image,
@@ -57,7 +57,7 @@ const JourneySection = () => {
             PARCURS PERSONALIZAT
           </span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-6">
-            <span className="italic">De la Vis la Realitate în 4 Pași Simfoni.</span>
+            <span className="italic">De la Vis la Realitate în 4 Pași</span>
           </h2>
           <p className="text-body leading-relaxed">
             Transformarea dumneavoastră este o călătorie atent orchestrată, concepută pentru a fi discretă, confortabilă și excepțională la fiecare pas.
