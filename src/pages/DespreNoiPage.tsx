@@ -84,11 +84,11 @@ const DespreNoiPage = () => {
             <div>
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center bg-secondary rounded-xl p-6">
+                <div className="text-center">
                   <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">15+</p>
                   <p className="text-muted-foreground text-sm">Ani Experiență</p>
                 </div>
-                <div className="text-center bg-secondary rounded-xl p-6">
+                <div className="text-center">
                   <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">3000+</p>
                   <p className="text-muted-foreground text-sm">Paciente Mulțumite</p>
                 </div>
