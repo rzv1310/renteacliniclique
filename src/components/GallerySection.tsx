@@ -44,14 +44,14 @@ const GallerySection = () => {
   return (
     <section 
       id="galerie" 
-      className="py-24 lg:py-32 bg-card"
+      className="py-24 lg:py-32 bg-background"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
-            Transformări Autentice
+            TRANSFORMĂRI AUTENTICE
           </span>
           <h2 className="h2-section text-foreground mb-6">
             Rezultate Reale. Fără Filtre.
@@ -70,7 +70,7 @@ const GallerySection = () => {
               className={`px-6 py-3 rounded-full text-sm font-sans font-medium transition-all duration-300 ${
                 activeFilter === filter.id
                   ? "bg-rose-gold text-primary-foreground"
-                  : "bg-background border border-border text-muted-foreground hover:border-rose-gold/50"
+                  : "bg-card border border-border text-muted-foreground hover:border-rose-gold/50"
               }`}
             >
               {filter.label}
@@ -81,7 +81,7 @@ const GallerySection = () => {
         {/* Before/After Comparison Slider */}
         <div className={`max-w-4xl mx-auto mb-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div
-            className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-background border border-border cursor-ew-resize select-none"
+            className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
             onMouseMove={handleSliderMove}
             onTouchMove={handleTouchMove}
           >
@@ -105,11 +105,11 @@ const GallerySection = () => {
             </div>
 
             {/* Labels */}
-            <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-4 py-2 rounded-full border border-border">
-              <span className="text-sm font-sans font-medium text-foreground">ÎNAINTE</span>
+            <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full border border-border">
+              <span className="text-sm font-sans font-medium text-foreground">Înainte</span>
             </div>
             <div className="absolute top-4 right-4 bg-rose-gold px-4 py-2 rounded-full">
-              <span className="text-sm font-sans font-medium text-primary-foreground">DUPĂ (3 LUNI)</span>
+              <span className="text-sm font-sans font-medium text-primary-foreground">După (3 luni)</span>
             </div>
 
             {/* Slider Line */}
@@ -117,7 +117,7 @@ const GallerySection = () => {
               className="absolute top-0 bottom-0 w-0.5 bg-foreground/50"
               style={{ left: `${sliderPosition}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-background border border-border rounded-full shadow-elegant flex items-center justify-center">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-card border border-border rounded-full shadow-elegant flex items-center justify-center">
                 <MaterialIcon name="code" className="text-xl text-rose-gold" />
               </div>
             </div>

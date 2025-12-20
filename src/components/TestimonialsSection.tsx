@@ -33,14 +33,14 @@ const TestimonialsSection = () => {
 
   return (
     <section 
-      className="py-24 lg:py-32 overflow-hidden bg-background"
+      className="py-24 lg:py-32 overflow-hidden bg-card"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
-            Experiențe Veridice
+            EXPERIENȚE VERIDICE
           </span>
           <h2 className="h2-section text-foreground mb-6">
             Poveștile pacientelor noastre
@@ -49,7 +49,7 @@ const TestimonialsSection = () => {
 
         {/* Testimonial Card */}
         <div className={`max-w-3xl mx-auto transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <div className="bg-card rounded-3xl p-8 md:p-12 border border-border relative overflow-hidden">
+          <div className="bg-background rounded-3xl p-8 md:p-12 border border-border relative overflow-hidden">
             {/* Decorative gradient */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-gold via-rose-gold/50 to-transparent" />
             

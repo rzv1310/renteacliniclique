@@ -44,14 +44,14 @@ const JourneySection = () => {
 
   return (
     <section 
-      className="py-24 lg:py-32 bg-background"
+      className="py-24 lg:py-32 bg-card"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
-            Parcurs Personalizat
+            PARCURS PERSONALIZAT
           </span>
           <h2 className="h2-section text-foreground mb-6">
             De la Vis la Realitate în 4 Pași Simfoni.
