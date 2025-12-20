@@ -250,7 +250,7 @@ const AugmentareMamaraPage = () => {
           </p>
 
           <div className="flex justify-center animate-fade-in-up animation-delay-200">
-            <Button size="lg" className="bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
+            <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
               <Phone className="w-5 h-5 mr-2" />
               Fă primul pas pentru transformare
             </Button>
