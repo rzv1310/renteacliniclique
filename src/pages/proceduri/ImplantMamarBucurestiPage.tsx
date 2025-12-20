@@ -696,16 +696,16 @@ const AugmentareMamaraPage = () => {
       {/* Stats Section */}
       <section className="py-16 bg-card border-y border-border/30">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto text-center">
-            <div ref={yearsRef}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-3xl mx-auto text-center">
+            <div ref={yearsRef} className="flex flex-col items-center">
               <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{yearsCount}+</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Ani Experiență</p>
             </div>
-            <div ref={proceduresRef}>
+            <div ref={proceduresRef} className="flex flex-col items-center">
               <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{proceduresCount}+</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Proceduri</p>
             </div>
-            <div ref={ratingRef}>
+            <div ref={ratingRef} className="flex flex-col items-center">
               <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{(ratingCount / 10).toFixed(1)}</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Rating Pacienți</p>
             </div>
