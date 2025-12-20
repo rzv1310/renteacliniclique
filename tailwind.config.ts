@@ -17,7 +17,7 @@ export default {
         display: ["Cormorant Garamond", "Georgia", "serif"],
         sans: ["Montserrat", "system-ui", "sans-serif"],
         serif: ["Cormorant Garamond", "Georgia", "serif"],
-        handwriting: ["Great Vibes", "cursive"],
+        handwriting: ["Pacifico", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
