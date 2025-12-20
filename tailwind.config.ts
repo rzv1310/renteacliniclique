@@ -170,6 +170,14 @@ export default {
           "99%": { transform: "scale(1.08)", boxShadow: "0 0 20px 8px rgba(212, 175, 155, 0.55)" },
           "100%": { transform: "scale(1)", boxShadow: "0 0 0 0 rgba(212, 175, 155, 0)" },
         },
+        "glow-pulse": {
+          "0%, 100%": { 
+            filter: "drop-shadow(0 0 15px rgba(183, 110, 121, 0.5))",
+          },
+          "50%": { 
+            filter: "drop-shadow(0 0 25px rgba(183, 110, 121, 0.8))",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -189,6 +197,7 @@ export default {
         "pulse-step-1": "pulse-step-1 9s ease-in-out infinite",
         "pulse-step-2": "pulse-step-2 9s ease-in-out infinite",
         "pulse-step-3": "pulse-step-3 9s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 2.5s ease-in-out infinite",
       },
     },
   },
