@@ -870,15 +870,20 @@ const AugmentareMamaraPage = () => {
         
         <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <Diamond className="w-12 h-12 text-primary mx-auto mb-8" />
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-6">
-              Arta Îmbunătățirii Naturale
+              Implant Mamar București
             </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Credem în estetica personalizată. Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel. 
-              Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, 
-              proiecție și un rezultat care se simte autentic tu.
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              La Rentéa Aesthetic Clinique credem în estetica personalizată. 
+              Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel. 
+              Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, proiecție și un rezultat care se simte autentic.
             </p>
+            <Button variant="hero" size="xl" className="group" asChild>
+              <a href="tel:+40721234567">
+                <Phone className="w-5 h-5 mr-2" />
+                Sună Acum
+              </a>
+            </Button>
           </div>
         </div>
       </section>
