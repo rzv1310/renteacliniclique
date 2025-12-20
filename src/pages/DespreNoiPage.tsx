@@ -100,24 +100,75 @@ const DespreNoiPage = () => {
       {/* Echipa */}
       <section className="py-20 bg-gradient-soft">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-12">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-12 text-center">
               Echipa Noastră
             </h2>
 
-            <div className="bg-card rounded-2xl p-8 lg:p-12 shadow-elegant">
+            {/* Doctor Header Card */}
+            <div className="bg-card rounded-2xl p-8 lg:p-12 shadow-elegant mb-8 text-center">
               <div className="w-32 h-32 rounded-full bg-secondary mx-auto mb-6 flex items-center justify-center">
-                <span className="text-4xl">👩‍⚕️</span>
+                <span className="text-4xl">👨‍⚕️</span>
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">
-                Dr. Maria Rentéa
+              <h3 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
+                Dr. Lucian Popa
               </h3>
-              <p className="text-primary mb-4">Chirurg Estetician Principal</p>
-              <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Cu peste 15 ani de experiență în chirurgie estetică mamară, Dr. Rentéa s-a 
-                specializat exclusiv în acest domeniu pentru a oferi cele mai bune rezultate 
-                posibile. A efectuat peste 3000 de intervenții și participă regulat la 
-                congrese internaționale de specialitate.
+              <p className="text-primary mb-4">Medic Primar Chirurgie Estetică, Plastică și Reconstructivă</p>
+              <p className="font-serif text-lg md:text-xl text-foreground/80 italic max-w-2xl mx-auto">
+                Medicină prin ochii unui artist. Precizie prin mâna unui chirurg.
+              </p>
+            </div>
+
+            {/* Introduction Card */}
+            <div className="bg-card rounded-2xl p-8 lg:p-10 shadow-elegant mb-6">
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                Sunt Dr. Lucian Popa și cred că chirurgia estetică este punctul de întâlnire dintre rigoarea științifică și viziunea artistică. Cu o experiență de peste 25 de ani în chirurgie plastică și reconstructivă, am învățat că dincolo de bisturiu, cel mai important instrument este capacitatea de a asculta și de a înțelege unicitatea fiecărui pacient.
+              </p>
+            </div>
+
+            {/* Art Background Card */}
+            <div className="bg-card rounded-2xl p-8 lg:p-10 shadow-elegant mb-6 border-l-4 border-primary">
+              <p className="text-muted-foreground leading-relaxed">
+                Călătoria mea nu a început direct în sala de operație, ci în atelierele Școlii de Muzică și Arte Plastice „N. N. Tonitza". Acolo mi-am educat privirea pentru proporții, forme și armonie – calități pe care, ani mai târziu, le-am integrat în practica mea medicală. Astăzi, nu caut doar să "operez", ci să sculptez rezultate care să se simtă naturale și să ofere încredere.
+              </p>
+            </div>
+
+            {/* Professional Journey Card */}
+            <div className="bg-card rounded-2xl p-8 lg:p-10 shadow-elegant mb-6">
+              <h4 className="font-serif text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Award className="w-5 h-5 text-primary" />
+                Parcursul Profesional
+              </h4>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Am absolvit Universitatea de Medicină și Farmacie „Gr. T. Popa" din Iași în 1991, iar dorința de perfecționare m-a purtat prin stagii de pregătire internațională, inclusiv la Spitalul St. Elisabeth din Bruxelles. Am parcurs toate etapele ierarhiei medicale, de la medic stagiar la Medic Primar și Doctor în Științe Medicale.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Am avut onoarea să formez viitori medici ca Asistent Universitar și să îmi asum responsabilități complexe ca Manager al Spitalului Clinic de Urgențe „Sf. Ioan" Iași. Spiritul antreprenorial și dorința de a ridica standardele m-au determinat să co-fondez Esthetic Center, un reper în medicina estetică ieșeană.
+              </p>
+            </div>
+
+            {/* Present Day Card */}
+            <div className="bg-card rounded-2xl p-8 lg:p-10 shadow-elegant mb-6">
+              <h4 className="font-serif text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" />
+                Prezentul
+              </h4>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Astăzi, îmi dedic expertiza pacienților mei în două locații de top: la Omini Clinic în Iași și la Rentéa Aesthetic Clinique în București.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                Sunt membru activ al celor mai prestigioase societăți de profil (Societatea Română de Chirurgie Estetică, de Microchirurgie și de Chirurgie Plastică Reconstructivă), ceea ce îmi permite să rămân conectat la cele mai noi tehnici globale.
+              </p>
+            </div>
+
+            {/* Philosophy Card */}
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-8 lg:p-10 shadow-elegant border border-primary/20">
+              <h4 className="font-serif text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Heart className="w-5 h-5 text-primary" />
+                Filozofia mea
+              </h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Nu cred în șabloane. Abordarea mea este personalizată, minuțioasă și orientată către perfecțiune. Fie că vorbim despre o intervenție complexă sau una de finețe, scopul meu este să îți ofer nu doar un rezultat estetic, ci o experiență medicală sigură și completă.
               </p>
             </div>
           </div>
