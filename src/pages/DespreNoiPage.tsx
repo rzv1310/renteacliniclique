@@ -26,9 +26,7 @@ const DespreNoiPage = () => {
             Despre Noi
           </span>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
-            Singura Clinică Din București
-            <br />
-            <span className="text-gradient-gold">100% Specializată</span>
+            Rentéa Aesthetic Clinique București
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-100">
             La Rentéa, ne dedicăm exclusiv chirurgiei estetice mamare. Această specializare 
