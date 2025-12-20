@@ -4,8 +4,12 @@ import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-despre.jpg";
 import doctorImage from "@/assets/dr-lucian-popa.webp";
+import { useCounterAnimation } from "@/hooks/use-counter-animation";
 
 const DespreNoiPage = () => {
+  const { count: yearsCount, ref: yearsRef } = useCounterAnimation({ end: 25, duration: 2000 });
+  const { count: patientsCount, ref: patientsRef } = useCounterAnimation({ end: 1000, duration: 2500 });
+
   return (
     <PageLayout>
       {/* Hero - Full Screen */}
@@ -84,12 +88,12 @@ const DespreNoiPage = () => {
             <div>
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center">
-                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">15+</p>
+                <div className="text-center" ref={yearsRef}>
+                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">{yearsCount}+</p>
                   <p className="text-muted-foreground text-sm">Ani Experiență</p>
                 </div>
-                <div className="text-center">
-                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">3000+</p>
+                <div className="text-center" ref={patientsRef}>
+                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">{patientsCount}+</p>
                   <p className="text-muted-foreground text-sm">Paciente Mulțumite</p>
                 </div>
               </div>
