@@ -12,6 +12,8 @@ const HeroSection = () => {
           src={heroImage}
           alt="Echipa Rentéa Aesthetic Clinique"
           className="w-full h-full object-cover object-top -translate-y-[30px]"
+          fetchPriority="high"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent" />
