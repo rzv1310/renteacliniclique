@@ -817,6 +817,38 @@ const AugmentareMamaraPage = () => {
         </div>
       </section>
 
+      {/* Implant Mamar București CTA */}
+      <section className="py-16 relative overflow-hidden">
+        {/* Background image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroNaturalBeauty})` }}
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/85" />
+        
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-6">
+              Implant Mamar București
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              La Rentéa Aesthetic Clinique credem în estetica personalizată.
+              <br />
+              Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel.
+              <br />
+              Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, proiecție și un rezultat care se simte autentic.
+            </p>
+            <Button variant="hero" size="xl" className="group" asChild>
+              <a href="tel:+40740000000">
+                <Phone className="w-5 h-5 mr-2" />
+                0740 000 000
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4 lg:px-8">
@@ -854,38 +886,6 @@ const AugmentareMamaraPage = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Art of Natural Enhancement */}
-      <section className="py-16 relative overflow-hidden">
-        {/* Background image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroNaturalBeauty})` }}
-        />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/85" />
-        
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-6">
-              Implant Mamar București
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              La Rentéa Aesthetic Clinique credem în estetica personalizată.
-              <br />
-              Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel.
-              <br />
-              Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, proiecție și un rezultat care se simte autentic.
-            </p>
-            <Button variant="hero" size="xl" className="group" asChild>
-              <a href="tel:+40740000000">
-                <Phone className="w-5 h-5 mr-2" />
-                0740 000 000
-              </a>
-            </Button>
           </div>
         </div>
       </section>
