@@ -8,7 +8,7 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       quote:
-        "Mi-a fost frică de rezultatul 'artificial', dar Dr. Rentea a înțeles exact ce vreau. Arată atât de natural încât nimeni nu crede că am implanturi.",
+        "Mi-a fost frică de rezultatul 'artificial', dar Dr. Popa a înțeles exact ce vreau. Arată atât de natural încât nimeni nu crede că am implanturi.",
       author: "Maria",
       details: "28 ani • Implant Motiva Ergonomix",
       rating: 5,

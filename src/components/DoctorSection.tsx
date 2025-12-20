@@ -17,12 +17,12 @@ const DoctorSection = () => {
             <div className="relative z-10">
               <img
                 src={doctorImage}
-                alt="Dr. Andrei Rentea"
+                alt="Dr. Lucian Popa"
                 className="w-full max-w-md mx-auto lg:mx-0 rounded-2xl shadow-elegant"
               />
               {/* Name overlay */}
               <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur-sm rounded-xl p-4 border border-border">
-                <p className="font-display text-xl text-foreground">Dr. Andrei Rentea</p>
+                <p className="font-display text-xl text-foreground">Dr. Lucian Popa</p>
                 <p className="text-sm text-muted-foreground">Chirurg Estetician Principal & Fondator</p>
               </div>
             </div>
@@ -38,11 +38,11 @@ const DoctorSection = () => {
             </h2>
 
             <p className="text-body leading-relaxed mb-6">
-              Dr. Andrei Rentea este un chirurg estetician renumit, dedicat în mod exclusiv chirurgiei mamare. Cu o experiență vastă și o pasiune pentru perfecțiune, el a transformat viețile a sute de femei prin proceduri atent personalizate.
+              Dr. Lucian Popa este un chirurg estetician renumit, dedicat în mod exclusiv chirurgiei mamare. Cu o experiență vastă și o pasiune pentru perfecțiune, el a transformat viețile a sute de femei prin proceduri atent personalizate.
             </p>
 
             <p className="text-body leading-relaxed mb-8">
-              Dr. Andrei Rentea nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, el aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
+              Dr. Lucian Popa nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, el aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
             </p>
 
             <a 
