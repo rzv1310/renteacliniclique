@@ -4,8 +4,8 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-import galleryBefore from "@/assets/gallery/gallery-before.png";
-import galleryAfter from "@/assets/gallery/gallery-after.png";
+import galleryBefore from "@/assets/gallery/gallery-before.webp";
+import galleryAfter from "@/assets/gallery/gallery-after.webp";
 import voluptuousBefore from "@/assets/gallery/voluptuous-before.png";
 import voluptuousAfter from "@/assets/gallery/voluptuous-after.png";
 import sportyBefore from "@/assets/gallery/sporty-before.png";
