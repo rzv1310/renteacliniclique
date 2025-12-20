@@ -13,7 +13,7 @@ const WhyUsSection = () => {
       description:
         "În timp ce alți chirurgi abordează o gamă variată de proceduri, noi ne dedicăm exclusiv augmentării mamare, zi de zi. Această specializare profundă este cheia perfecțiunii tehnice și artistice.",
       image: maestruImage,
-      imagePosition: "object-[center_5%]",
+      imagePosition: "object-[center_3%]",
     },
     {
       icon: "verified",
