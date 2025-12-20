@@ -240,7 +240,7 @@ export default {
         "glow-wave-2": "glow-wave-2 10s ease-in-out infinite",
         "glow-wave-3": "glow-wave-3 10s ease-in-out infinite",
         "slow-pulse": "slow-pulse 1s ease-in-out infinite",
-        "text-glow": "text-glow 3s ease-in-out infinite",
+        "text-glow": "text-glow 5s ease-in-out infinite",
       },
     },
   },
