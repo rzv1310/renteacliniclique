@@ -312,11 +312,11 @@ const AugmentareMamaraPage = () => {
                   <Check className="w-6 h-6 text-primary" />
                 </div>
               )}
-              <div className="aspect-[4/3] bg-gradient-to-br from-[#f5e6d3] to-[#e8d4c0] rounded-xl mb-6 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/3] rounded-xl mb-6 overflow-hidden">
                 <img 
                   src={implantRound} 
                   alt="Implant rotund" 
-                  className="w-3/4 h-3/4 object-contain"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <h3 className="font-display text-xl font-medium text-foreground mb-2">
@@ -357,11 +357,11 @@ const AugmentareMamaraPage = () => {
                   <Check className="w-6 h-6 text-primary" />
                 </div>
               )}
-              <div className="aspect-[4/3] bg-gradient-to-br from-[#f5e6d3] to-[#e8d4c0] rounded-xl mb-6 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/3] rounded-xl mb-6 overflow-hidden">
                 <img 
                   src={implantAnatomic} 
                   alt="Implant anatomic" 
-                  className="w-3/4 h-3/4 object-contain"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <h3 className="font-display text-xl font-medium text-foreground mb-2">
