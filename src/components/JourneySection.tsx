@@ -70,7 +70,10 @@ const JourneySection = () => {
                       ? 'text-rose-gold animate-glow-pulse' 
                       : 'text-rose-gold/20'
                   }`}
-                  style={{ transitionDelay: `${index * 200 + 400}ms` }}
+                  style={{ 
+                    transitionDelay: `${index * 200 + 400}ms`,
+                    animationDelay: isVisible ? `${index * 0.6}s` : '0s'
+                  }}
                 >
                   {step.step}
                 </span>
