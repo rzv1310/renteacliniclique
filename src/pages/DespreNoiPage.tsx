@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Award, Heart, Users, Phone } from "lucide-react";
+import { ArrowRight, Award, Heart, Users, Phone, Shield, Sparkles } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-despre.jpg";
@@ -65,8 +65,8 @@ const DespreNoiPage = () => {
               {[
                 { icon: Award, title: "Excelență", desc: "Standarde înalte în tot ceea ce facem" },
                 { icon: Heart, title: "Empatie", desc: "Înțelegem nevoile fiecărei paciente" },
-                { icon: Users, title: "Personalizare", desc: "Fiecare caz este unic" },
-                { icon: Award, title: "Siguranță", desc: "Protocoale stricte de siguranță" },
+                { icon: Sparkles, title: "Personalizare", desc: "Fiecare caz este unic" },
+                { icon: Shield, title: "Siguranță", desc: "Protocoale stricte de siguranță" },
               ].map((value) => (
                 <div key={value.title} className="bg-secondary rounded-xl p-6 text-center">
                   <value.icon className="w-8 h-8 text-primary mb-3 mx-auto" />
