@@ -1,5 +1,6 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import maestruImage from "@/assets/maestru-doctor.png";
 
 const WhyUsSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -10,6 +11,7 @@ const WhyUsSection = () => {
       title: "Maestru, nu Generalist",
       description:
         "În timp ce alți chirurgi abordează o gamă variată de proceduri, noi ne dedicăm exclusiv augmentării mamare, zi de zi. Această specializare profundă este cheia perfecțiunii tehnice și artistice.",
+      image: maestruImage,
     },
     {
       icon: "verified",
@@ -52,10 +54,18 @@ const WhyUsSection = () => {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Image with Icon */}
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-rose-gold/5 to-rose-gold/10 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-rose-gold/20 flex items-center justify-center group-hover:bg-rose-gold/30 transition-colors duration-300">
-                  <MaterialIcon name={feature.icon} className="text-4xl text-rose-gold" />
-                </div>
+              <div className="relative aspect-[4/3] bg-gradient-to-br from-rose-gold/5 to-rose-gold/10 flex items-center justify-center overflow-hidden">
+                {feature.image ? (
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title}
+                    className="w-full h-full object-cover object-top"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-rose-gold/20 flex items-center justify-center group-hover:bg-rose-gold/30 transition-colors duration-300">
+                    <MaterialIcon name={feature.icon} className="text-4xl text-rose-gold" />
+                  </div>
+                )}
               </div>
 
               {/* Content */}
