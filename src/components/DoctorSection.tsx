@@ -1,4 +1,5 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
+import { Button } from "@/components/ui/button";
 import doctorImage from "@/assets/doctor-portrait.png";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
@@ -45,12 +46,11 @@ const DoctorSection = () => {
               Dr. Lucian Popa nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, el aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
             </p>
 
-            <a 
-              href="/despre-noi" 
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-rose-gold text-rose-gold font-sans font-medium hover:bg-rose-gold/10 transition-all"
-            >
-              Citește povestea completă
-              <MaterialIcon name="arrow_forward" className="text-xl" />
+            <a href="/despre-noi">
+              <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold group">
+                Citește povestea completă
+                <MaterialIcon name="arrow_forward" className="text-xl ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
             </a>
           </div>
         </div>
