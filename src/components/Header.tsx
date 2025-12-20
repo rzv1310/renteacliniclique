@@ -138,9 +138,9 @@ const Header = () => {
             <div className="hidden xl:flex items-center">
               <a
                 href="tel:+40721000000"
-                className="btn-primary-rose-gold text-sm px-6 h-10 flex items-center gap-2"
+                className="text-sm px-6 h-10 flex items-center gap-2 bg-transparent border border-muted-foreground/30 rounded-full text-foreground hover:border-rose-gold hover:text-rose-gold transition-colors duration-300"
               >
-                Programează o Consultație
+                +40 721 000 000
               </a>
             </div>
 
