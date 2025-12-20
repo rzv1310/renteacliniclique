@@ -2,19 +2,24 @@ import React, { useCallback, useEffect, useState } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 // Import resource images
 import resource1Image from "@/assets/resources/resource-1.jpg";
 import resource2Image from "@/assets/resources/resource-2.jpg";
 import resource3Image from "@/assets/resources/resource-3.jpg";
+import resource4Image from "@/assets/resources/resource-4.jpg";
 
 const ResourcesSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: "start",
-    slidesToScroll: 1,
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { 
+      loop: true, 
+      align: "start",
+      slidesToScroll: 1,
+    },
+    [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })]
+  );
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const resources = [
@@ -39,7 +44,7 @@ const ResourcesSection = () => {
     {
       title: "Preț Implant Mamar",
       link: "/preturi",
-      image: resource1Image,
+      image: resource4Image,
       buttonText: "Vezi Tarifele",
     },
   ];
