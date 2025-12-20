@@ -34,7 +34,7 @@ const DespreNoiPage = () => {
           </p>
           <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold animate-fade-in-up animation-delay-200">
             <Phone className="w-5 h-5 mr-2" />
-            Fă primul pas pentru transformare
+            Programează Vizita
           </Button>
         </div>
       </section>
