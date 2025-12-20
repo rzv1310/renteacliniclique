@@ -874,14 +874,16 @@ const AugmentareMamaraPage = () => {
               Implant Mamar București
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              La Rentéa Aesthetic Clinique credem în estetica personalizată. 
-              Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel. 
+              La Rentéa Aesthetic Clinique credem în estetica personalizată.
+              <br />
+              Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel.
+              <br />
               Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, proiecție și un rezultat care se simte autentic.
             </p>
             <Button variant="hero" size="xl" className="group" asChild>
-              <a href="tel:+40721234567">
+              <a href="tel:+40740000000">
                 <Phone className="w-5 h-5 mr-2" />
-                Sună Acum
+                0740 000 000
               </a>
             </Button>
           </div>
