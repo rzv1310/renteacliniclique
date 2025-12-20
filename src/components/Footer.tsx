@@ -78,8 +78,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-              Singura clinică din București dedicată exclusiv augmentării mamare.
-              Specializare 100%.
+              Clinică medicală premium în inima Bucureștiului, lideri în chirurgie estetică mamară.
             </p>
             <div className="flex gap-4">
               <a
