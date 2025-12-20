@@ -74,6 +74,7 @@ export default {
         "deep-bg": "hsl(var(--deep-bg))",
         "dark-neutral": "hsl(var(--dark-neutral))",
         "light-grey": "hsl(var(--light-grey))",
+        "luxury-brown": "hsl(var(--luxury-brown))",
       },
       borderRadius: {
         lg: "var(--radius)",
