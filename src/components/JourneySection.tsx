@@ -64,7 +64,14 @@ const JourneySection = () => {
             >
               {/* Step Number */}
               <div className="pt-8 pb-4 px-6">
-                <span className="font-display text-6xl lg:text-7xl font-light text-rose-gold/30">
+                <span 
+                  className={`font-display text-6xl lg:text-7xl font-light transition-all duration-1000 ${
+                    isVisible 
+                      ? 'text-rose-gold drop-shadow-[0_0_20px_rgba(183,110,121,0.6)]' 
+                      : 'text-rose-gold/20'
+                  }`}
+                  style={{ transitionDelay: `${index * 200 + 400}ms` }}
+                >
                   {step.step}
                 </span>
               </div>
