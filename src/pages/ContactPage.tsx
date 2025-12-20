@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Phone, Mail, MapPin, Loader2, CheckCircle, ChevronDown } from "lucide-react";
+import { ArrowRight, Phone, Mail, MapPin, Loader2, CheckCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -405,9 +405,8 @@ const ContactPage = () => {
                       value={`item-${index}`}
                       className="bg-card border border-border rounded-lg px-6 data-[state=open]:border-primary/30"
                     >
-                      <AccordionTrigger className="text-sm text-foreground hover:no-underline py-4 [&[data-state=open]>svg]:rotate-180">
+                      <AccordionTrigger className="text-sm text-foreground hover:no-underline py-4">
                         {item.question}
-                        <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                       </AccordionTrigger>
                       <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
                         {item.answer}
