@@ -29,7 +29,7 @@ const GallerySection = () => {
       { before: voluptuousAfter, after: voluptuousBefore, label: "Caz #1 - Voluptuous 450cc" },
     ],
     sporty: [
-      { before: sportyBefore, after: sportyAfter, label: "Caz #1 - Sporty 300cc" },
+      { before: sportyAfter, after: sportyBefore, label: "Caz #1 - Sporty 300cc" },
     ],
   };
 
