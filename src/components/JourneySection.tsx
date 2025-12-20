@@ -53,8 +53,8 @@ const JourneySection = () => {
           <span className="text-label mb-4 block">
             PARCURS PERSONALIZAT
           </span>
-          <h2 className="h2-section text-foreground mb-6">
-            De la Vis la Realitate în 4 Pași Simfoni.
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-6">
+            <span className="italic">De la Vis la Realitate în 4 Pași Simfoni.</span>
           </h2>
           <p className="text-body leading-relaxed">
             Transformarea dumneavoastră este o călătorie atent orchestrată, concepută pentru a fi discretă, confortabilă și excepțională la fiecare pas.
@@ -66,7 +66,7 @@ const JourneySection = () => {
           {steps.map((step, index) => (
             <div
               key={step.step}
-              className={`group bg-card rounded-2xl overflow-hidden border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group bg-background rounded-2xl overflow-hidden border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Image */}
@@ -76,23 +76,14 @@ const JourneySection = () => {
                   alt={step.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
-                
-                {/* Step Number Badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-rose-gold flex items-center justify-center">
-                    <span className="font-display text-sm text-primary-foreground font-medium">
-                      {step.step}
-                    </span>
-                  </div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <MaterialIcon name={step.icon} className="text-2xl text-rose-gold" />
-                  <h3 className="font-display text-lg font-medium text-foreground">
+              <div className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <MaterialIcon name={step.icon} className="text-xl text-rose-gold" />
+                  <h3 className="font-display text-base font-medium text-foreground">
                     {step.title}
                   </h3>
                 </div>
