@@ -10,7 +10,7 @@ import NotFound from "./pages/NotFound";
 
 // Proceduri
 import ProceduriIndex from "./pages/proceduri/ProceduriIndex";
-import AugmentareMamaraPage from "./pages/proceduri/AugmentareMamaraPage";
+import ImplantMamarBucurestiPage from "./pages/proceduri/ImplantMamarBucurestiPage";
 import ImplanturiRotundePage from "./pages/proceduri/ImplanturiRotundePage";
 import ImplanturiAnatomicePage from "./pages/proceduri/ImplanturiAnatomicePage";
 import ImplanturiErgonomicePage from "./pages/proceduri/ImplanturiErgonomicePage";
@@ -71,7 +71,7 @@ const App = () => (
           
           {/* Proceduri */}
           <Route path="/proceduri" element={<ProceduriIndex />} />
-          <Route path="/proceduri/implant-mamar-bucuresti" element={<AugmentareMamaraPage />} />
+          <Route path="/proceduri/implant-mamar-bucuresti" element={<ImplantMamarBucurestiPage />} />
           <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" element={<ImplanturiRotundePage />} />
           <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" element={<ImplanturiAnatomicePage />} />
           <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" element={<ImplanturiErgonomicePage />} />
