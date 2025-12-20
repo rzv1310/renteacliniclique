@@ -46,6 +46,8 @@ const Header = () => {
 
   const utileLinks = [
     { name: "Ghid de Recuperare", href: "/ghid-recuperare" },
+    { name: "Despre Noi", href: "/despre-noi" },
+    { name: "Contact", href: "/contact" },
     { name: "Turism Medical", href: "/turism-medical-intern" },
     { name: "Finanțare", href: "/implant-mamar-in-rate" },
     { name: "Blog", href: "/blog" },
@@ -55,9 +57,6 @@ const Header = () => {
     { name: "Galerie", href: "/galerie" },
     { name: "Simulator 3D", href: "/simulator-3d" },
     { name: "Tarife", href: "/implant-mamar-pret" },
-    { name: "Ghid Recuperare", href: "/ghid-recuperare" },
-    { name: "Despre Noi", href: "/despre-noi" },
-    { name: "Contact", href: "/contact" },
   ];
 
   return (
