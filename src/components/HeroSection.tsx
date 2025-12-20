@@ -18,17 +18,8 @@ const HeroSection = () => {
       {/* Content - Two columns at bottom */}
       <div className="relative container mx-auto px-4 lg:px-8 pb-16 lg:pb-24">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-end">
-          {/* Left - Title */}
-          <div className="animate-fade-in-up">
-            <h1 className="h1-hero text-foreground">
-              Nu facem "de toate".
-              <br />
-              <span className="text-gradient-gold italic">Facem sâni perfecți.</span>
-            </h1>
-          </div>
-
-          {/* Right - Text and Buttons */}
-          <div className="animate-fade-in-up animation-delay-100">
+          {/* Left - Text and Buttons */}
+          <div className="animate-fade-in-up order-2 lg:order-1">
             <p className="text-body leading-relaxed mb-6 max-w-md">
               Rentéa Aesthetic Clinique - Lider în chirurgia estetică din București, supra-specializați în augmentare mamară.
             </p>
@@ -48,6 +39,15 @@ const HeroSection = () => {
                 </button>
               </a>
             </div>
+          </div>
+
+          {/* Right - Title */}
+          <div className="animate-fade-in-up animation-delay-100 order-1 lg:order-2">
+            <h1 className="h1-hero text-foreground lg:text-right">
+              Nu facem "de toate".
+              <br />
+              <span className="text-gradient-gold italic">Facem sâni perfecți.</span>
+            </h1>
           </div>
         </div>
       </div>
