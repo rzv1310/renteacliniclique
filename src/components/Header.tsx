@@ -193,9 +193,12 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
-              <button className="btn-primary-rose-gold mt-4">
-                Programează Consultația
-              </button>
+              <a 
+                href="tel:+40721000000"
+                className="mt-4 text-sm px-6 h-10 flex items-center justify-center gap-2 bg-transparent border border-muted-foreground/30 rounded-full text-foreground hover:border-rose-gold hover:text-rose-gold transition-colors duration-300"
+              >
+                +40 721 000 000
+              </a>
             </nav>
           </div>
         </div>
