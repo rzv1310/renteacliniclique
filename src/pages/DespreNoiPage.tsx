@@ -122,7 +122,7 @@ const DespreNoiPage = () => {
             {/* Introduction Card */}
             <div className="bg-card rounded-2xl p-8 lg:p-10 shadow-elegant mb-6">
               <p className="text-muted-foreground leading-relaxed text-lg">
-                Sunt Dr. Lucian Popa și cred că chirurgia estetică este punctul de întâlnire dintre rigoarea științifică și viziunea artistică. Cu o experiență de peste 25 de ani în chirurgie plastică și reconstructivă, am învățat că dincolo de bisturiu, cel mai important instrument este capacitatea de a asculta și de a înțelege unicitatea fiecărui pacient.
+                Sunt Dr. Lucian Popa și cred că chirurgia estetică este punctul de întâlnire dintre rigoarea științifică și viziunea artistică. Cu o <span className="text-foreground font-medium">experiență de peste 25 de ani</span> în chirurgie plastică și reconstructivă, am învățat că dincolo de bisturiu, cel mai important instrument este capacitatea de a asculta și de a înțelege unicitatea fiecărui pacient.
               </p>
             </div>
 
@@ -140,7 +140,7 @@ const DespreNoiPage = () => {
                 Parcursul Profesional
               </h4>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Am absolvit Universitatea de Medicină și Farmacie „Gr. T. Popa" din Iași în 1991, iar dorința de perfecționare m-a purtat prin stagii de pregătire internațională, inclusiv la Spitalul St. Elisabeth din Bruxelles. Am parcurs toate etapele ierarhiei medicale, de la medic stagiar la Medic Primar și Doctor în Științe Medicale.
+                Am absolvit Universitatea de Medicină și Farmacie „Gr. T. Popa" din Iași în 1991, iar dorința de perfecționare m-a purtat prin stagii de pregătire internațională, inclusiv la Spitalul St. Elisabeth din Bruxelles. Am parcurs toate etapele ierarhiei medicale, de la medic stagiar la <span className="text-foreground font-medium">Medic Primar și Doctor în Științe Medicale.</span>
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Am avut onoarea să formez viitori medici ca Asistent Universitar și să îmi asum responsabilități complexe ca Manager al Spitalului Clinic de Urgențe „Sf. Ioan" Iași. Spiritul antreprenorial și dorința de a ridica standardele m-au determinat să co-fondez Esthetic Center, un reper în medicina estetică ieșeană.
@@ -154,7 +154,7 @@ const DespreNoiPage = () => {
                 Prezentul
               </h4>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Astăzi, îmi dedic expertiza pacienților mei în două locații de top: la Omini Clinic în Iași și la Rentéa Aesthetic Clinique în București.
+                Astăzi, îmi dedic expertiza pacienților mei în două locații de top: la Omini Clinic în Iași și la <span className="text-foreground font-medium">Rentéa Aesthetic Clinique în București.</span>
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Sunt membru activ al celor mai prestigioase societăți de profil (Societatea Română de Chirurgie Estetică, de Microchirurgie și de Chirurgie Plastică Reconstructivă), ceea ce îmi permite să rămân conectat la cele mai noi tehnici globale.
