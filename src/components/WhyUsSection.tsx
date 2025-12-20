@@ -13,6 +13,7 @@ const WhyUsSection = () => {
       description:
         "În timp ce alți chirurgi abordează o gamă variată de proceduri, noi ne dedicăm exclusiv augmentării mamare, zi de zi. Această specializare profundă este cheia perfecțiunii tehnice și artistice.",
       image: maestruImage,
+      imagePosition: "object-[center_5%]",
     },
     {
       icon: "verified",
@@ -26,6 +27,7 @@ const WhyUsSection = () => {
       description:
         "Datorită specializării noastre stricte și a protocoalelor riguroase, rata de complicații este minimă. Ne angajăm să oferim cea mai sigură și ușoară recuperare din industrie.",
       image: sigurantaImage,
+      imagePosition: "object-[center_15%]",
     },
   ];
 
@@ -61,7 +63,7 @@ const WhyUsSection = () => {
                   <img 
                     src={feature.image} 
                     alt={feature.title}
-                    className="w-full h-full object-cover object-[center_15%] scale-125"
+                    className={`w-full h-full object-cover scale-125 ${feature.imagePosition || 'object-center'}`}
                   />
                 ) : (
                   <div className="w-20 h-20 rounded-full bg-rose-gold/20 flex items-center justify-center group-hover:bg-rose-gold/30 transition-colors duration-300">
