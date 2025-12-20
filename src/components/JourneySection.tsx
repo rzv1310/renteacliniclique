@@ -2,7 +2,10 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 
 // Import journey images
-import abstractFeminine from "@/assets/abstract-feminine.jpg";
+import step1Image from "@/assets/journey/step-1-consultation.jpg";
+import step2Image from "@/assets/journey/step-2-surgery.jpg";
+import step3Image from "@/assets/journey/step-3-recovery.jpg";
+import step4Image from "@/assets/journey/step-4-result.jpg";
 
 const JourneySection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -14,7 +17,7 @@ const JourneySection = () => {
       title: "Consultația & Simulare 3D",
       description:
         "O discuție personalizată, măsurători precise și o simulare 3D avansată vă vor dezvălui rezultatul înainte de intervenție.",
-      image: abstractFeminine,
+      image: step1Image,
     },
     {
       step: "2",
@@ -22,7 +25,7 @@ const JourneySection = () => {
       title: "Ziua Intervenției",
       description:
         "O procedură de aproximativ 60 de minute, sub anestezie generală, efectuată în condiții de maximă siguranță și confort.",
-      image: abstractFeminine,
+      image: step2Image,
     },
     {
       step: "3",
@@ -30,7 +33,7 @@ const JourneySection = () => {
       title: "Recuperare Expediată",
       description:
         "Protocolul nostru post-operator este conceput pentru o recuperare rapidă, cu disconfort minim, permițându-vă să reveniți la activitățile zilnice.",
-      image: abstractFeminine,
+      image: step3Image,
     },
     {
       step: "4",
@@ -38,7 +41,7 @@ const JourneySection = () => {
       title: "Noul Dumneavoastră Eu",
       description:
         "După aproximativ 3 luni, veți celebra forma finală a transformării dumneavoastră, însoțită de o nouă încredere și armonie.",
-      image: abstractFeminine,
+      image: step4Image,
     },
   ];
 
