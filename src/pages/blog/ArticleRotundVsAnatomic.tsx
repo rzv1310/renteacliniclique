@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Clock, ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import heroImage from "@/assets/heroes/hero-rotund-vs-anatomic.png";
+import heroImage from "@/assets/heroes/hero-rotund-vs-anatomic.jpg";
 
 const ArticleRotundVsAnatomic = () => {
   return (
