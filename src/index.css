@@ -474,7 +474,7 @@
   height: 8px;
   background: radial-gradient(circle, hsl(30 50% 70%) 0%, hsl(30 40% 53%) 40%, transparent 70%);
   border-radius: 50%;
-  animation: border-glow-travel 3s linear infinite;
+  animation: border-glow-travel 8s linear infinite;
   z-index: 10;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 12px 4px hsl(30 40% 53% / 0.6), 0 0 20px 8px hsl(30 40% 53% / 0.3);
