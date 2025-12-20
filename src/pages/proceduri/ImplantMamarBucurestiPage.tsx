@@ -692,11 +692,11 @@ const AugmentareMamaraPage = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
             <div>
-              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">15+</p>
+              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">25+</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Ani Experiență</p>
             </div>
             <div>
-              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">2k+</p>
+              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">1000+</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Proceduri</p>
             </div>
             <div>
