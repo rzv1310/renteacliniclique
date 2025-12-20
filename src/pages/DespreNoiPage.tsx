@@ -81,19 +81,34 @@ const DespreNoiPage = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: Award, title: "Excelență", desc: "Standarde înalte în tot ceea ce facem" },
-                { icon: Heart, title: "Empatie", desc: "Înțelegem nevoile fiecărei paciente" },
-                { icon: Users, title: "Personalizare", desc: "Fiecare caz este unic" },
-                { icon: Award, title: "Siguranță", desc: "Protocoale stricte de siguranță" },
-              ].map((value) => (
-                <div key={value.title} className="bg-secondary rounded-xl p-6">
-                  <value.icon className="w-8 h-8 text-primary mb-3" />
-                  <h3 className="font-medium text-foreground mb-1">{value.title}</h3>
-                  <p className="text-xs text-muted-foreground">{value.desc}</p>
+            <div>
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center bg-secondary rounded-xl p-6">
+                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">15+</p>
+                  <p className="text-muted-foreground text-sm">Ani Experiență</p>
                 </div>
-              ))}
+                <div className="text-center bg-secondary rounded-xl p-6">
+                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">3000+</p>
+                  <p className="text-muted-foreground text-sm">Paciente Mulțumite</p>
+                </div>
+              </div>
+
+              {/* Values */}
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { icon: Award, title: "Excelență", desc: "Standarde înalte în tot ceea ce facem" },
+                  { icon: Heart, title: "Empatie", desc: "Înțelegem nevoile fiecărei paciente" },
+                  { icon: Users, title: "Personalizare", desc: "Fiecare caz este unic" },
+                  { icon: Award, title: "Siguranță", desc: "Protocoale stricte de siguranță" },
+                ].map((value) => (
+                  <div key={value.title} className="bg-secondary rounded-xl p-6">
+                    <value.icon className="w-8 h-8 text-primary mb-3" />
+                    <h3 className="font-medium text-foreground mb-1">{value.title}</h3>
+                    <p className="text-xs text-muted-foreground">{value.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
