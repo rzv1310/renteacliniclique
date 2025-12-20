@@ -2,6 +2,7 @@ import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import maestruImage from "@/assets/maestru-doctor.png";
 import sigurantaImage from "@/assets/siguranta-doctor.png";
+import implantImage from "@/assets/implant-mentor.webp";
 
 const WhyUsSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -20,6 +21,9 @@ const WhyUsSection = () => {
       title: "Implanturi de Excepție",
       description:
         "Colaborăm exclusiv cu branduri de elită precum Mentor și Motiva, utilizând cele mai avansate tehnici, inclusiv Dual Plane și protocoale de recuperare rapidă, pentru rezultate de durată și aspect natural.",
+      image: implantImage,
+      imagePosition: "object-center",
+      imageBgClass: "bg-black",
     },
     {
       icon: "shield_lock",
@@ -58,7 +62,7 @@ const WhyUsSection = () => {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Image with Icon */}
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-rose-gold/5 to-rose-gold/10 flex items-center justify-center overflow-hidden">
+              <div className={`relative aspect-[4/3] ${feature.imageBgClass || 'bg-gradient-to-br from-rose-gold/5 to-rose-gold/10'} flex items-center justify-center overflow-hidden`}>
                 {feature.image ? (
                   <img 
                     src={feature.image} 
