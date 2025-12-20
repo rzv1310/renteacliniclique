@@ -215,13 +215,11 @@ serve(async (req) => {
       console.error("Failed to record rate limit:", insertError);
     }
 
-    // Log the contact form submission (in production, you'd send an email or store in DB)
+    // Log the contact form submission without PII for GDPR compliance
     console.log("Contact form submitted successfully:", {
-      name: `${sanitizedData.firstName} ${sanitizedData.lastName}`,
-      email: sanitizedData.email,
-      phone: sanitizedData.phone,
       messageLength: sanitizedData.message.length,
       timestamp: new Date().toISOString(),
+      success: true,
     });
 
     // In a real implementation, you would:
