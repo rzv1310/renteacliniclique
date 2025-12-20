@@ -67,7 +67,7 @@ const PageBreadcrumb = () => {
   };
 
   return (
-    <div className="bg-secondary/50 border-b border-border">
+    <div className="bg-transparent">
       <div className="container mx-auto px-4 lg:px-8 py-4">
         <Breadcrumb>
           <BreadcrumbList>
