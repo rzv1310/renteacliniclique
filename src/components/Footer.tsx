@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import MaterialIcon from "@/components/ui/MaterialIcon";
+import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   const parallaxRef = useRef<HTMLDivElement>(null);
@@ -54,10 +55,10 @@ const Footer = () => {
             <p className="text-zinc-400 text-lg mb-10">
               Primul pas către schimbare începe cu o simplă conversație.
             </p>
-            <button className="btn-primary-rose-gold group mx-auto">
+            <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold group">
               Programează o Consultație
-              <MaterialIcon name="arrow_forward" className="text-xl group-hover:translate-x-1 transition-transform" />
-            </button>
+              <MaterialIcon name="arrow_forward" className="text-xl ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
             <p className="text-sm text-zinc-500 mt-5">
               Cost consultație: 250 RON (deductibil din operație)
             </p>
