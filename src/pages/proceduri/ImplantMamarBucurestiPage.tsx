@@ -815,7 +815,7 @@ const AugmentareMamaraPage = () => {
       </section>
 
       {/* Art of Natural Enhancement */}
-      <section className="py-24 bg-background">
+      <section className="py-12 bg-luxury-charcoal">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <Diamond className="w-12 h-12 text-primary mx-auto mb-8" />
