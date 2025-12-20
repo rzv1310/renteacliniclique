@@ -85,16 +85,13 @@ const ImplantsPage = () => {
         
         <div className="relative container mx-auto px-4 lg:px-8 text-center">
           <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-            Tipuri de Implanturi
+            Redefinește-ți Silueta
           </span>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
-            Ghidul Complet al
-            <br />
-            <span className="text-gradient-gold">Implanturilor Mamare</span>
+            Implant Mamar București
           </h1>
           <p className="text-lg text-soft-brown leading-relaxed max-w-2xl mx-auto">
-            Fiecare tip de implant are avantajele sale. Hai să le descoperim împreună pentru a
-            alege cel mai potrivit pentru tine.
+            Augmentare Mamară în București - precizie medicală combinată cu o viziune artistică.
           </p>
         </div>
       </section>
