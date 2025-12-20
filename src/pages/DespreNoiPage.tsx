@@ -48,36 +48,32 @@ const DespreNoiPage = () => {
       {/* Filozofia */}
       <section className="py-20">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-
-            <div>
+          <div className="max-w-5xl mx-auto">
+            {/* Stats & Values - 3 columns symmetric layout */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {/* Stats */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center" ref={yearsRef}>
-                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">{yearsCount}+</p>
-                  <p className="text-muted-foreground text-sm">Ani Experiență</p>
-                </div>
-                <div className="text-center" ref={patientsRef}>
-                  <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">{patientsCount}+</p>
-                  <p className="text-muted-foreground text-sm">Paciente Mulțumite</p>
-                </div>
+              <div className="text-center bg-secondary rounded-xl p-6" ref={yearsRef}>
+                <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">{yearsCount}+</p>
+                <p className="text-muted-foreground text-sm">Ani Experiență</p>
+              </div>
+              <div className="text-center bg-secondary rounded-xl p-6" ref={patientsRef}>
+                <p className="font-serif text-3xl lg:text-4xl text-primary font-semibold mb-1">{patientsCount}+</p>
+                <p className="text-muted-foreground text-sm">Paciente Mulțumite</p>
               </div>
 
               {/* Values */}
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { icon: Award, title: "Excelență", desc: "Standarde înalte în tot ceea ce facem" },
-                  { icon: Heart, title: "Empatie", desc: "Înțelegem nevoile fiecărei paciente" },
-                  { icon: Users, title: "Personalizare", desc: "Fiecare caz este unic" },
-                  { icon: Award, title: "Siguranță", desc: "Protocoale stricte de siguranță" },
-                ].map((value) => (
-                  <div key={value.title} className="bg-secondary rounded-xl p-6">
-                    <value.icon className="w-8 h-8 text-primary mb-3" />
-                    <h3 className="font-medium text-foreground mb-1">{value.title}</h3>
-                    <p className="text-xs text-muted-foreground">{value.desc}</p>
-                  </div>
-                ))}
-              </div>
+              {[
+                { icon: Award, title: "Excelență", desc: "Standarde înalte în tot ceea ce facem" },
+                { icon: Heart, title: "Empatie", desc: "Înțelegem nevoile fiecărei paciente" },
+                { icon: Users, title: "Personalizare", desc: "Fiecare caz este unic" },
+                { icon: Award, title: "Siguranță", desc: "Protocoale stricte de siguranță" },
+              ].map((value) => (
+                <div key={value.title} className="bg-secondary rounded-xl p-6 text-center">
+                  <value.icon className="w-8 h-8 text-primary mb-3 mx-auto" />
+                  <h3 className="font-medium text-foreground mb-1">{value.title}</h3>
+                  <p className="text-xs text-muted-foreground">{value.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
