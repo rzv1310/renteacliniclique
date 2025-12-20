@@ -1,7 +1,7 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
-import maestruImage from "@/assets/maestru-doctor.png";
-import sigurantaImage from "@/assets/siguranta-doctor.png";
+import maestruImage from "@/assets/maestru-doctor.webp";
+import sigurantaImage from "@/assets/siguranta-doctor.webp";
 import implantImage from "@/assets/implant-mentor.webp";
 
 const WhyUsSection = () => {

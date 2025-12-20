@@ -1,6 +1,6 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { Button } from "@/components/ui/button";
-import doctorImage from "@/assets/doctor-portrait.png";
+import doctorImage from "@/assets/doctor-portrait.webp";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const DoctorSection = () => {
