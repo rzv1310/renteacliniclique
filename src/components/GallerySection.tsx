@@ -37,6 +37,12 @@ const GallerySection = () => {
 
   const cases = casesByFilter[activeFilter] || [];
 
+  const imagePositions: Record<string, { before: string; after: string }> = {
+    natural: { before: "object-[40%_center]", after: "object-[30%_center]" },
+    voluptuous: { before: "object-[40%_center]", after: "object-[30%_center]" },
+    sporty: { before: "object-[35%_center]", after: "object-[35%_center]" },
+  };
+
   const handleSliderMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -100,7 +106,7 @@ const GallerySection = () => {
               <img
                 src={cases[activeCase]?.before}
                 alt="Înainte"
-                className="absolute inset-0 w-full h-full object-cover object-[40%_center]"
+                className={`absolute inset-0 w-full h-full object-cover ${imagePositions[activeFilter]?.before || "object-center"}`}
               />
 
               {/* After Image */}
@@ -111,7 +117,7 @@ const GallerySection = () => {
               <img
                   src={cases[activeCase]?.after}
                   alt="După"
-                  className="absolute inset-0 w-full h-full object-cover object-[30%_center]"
+                  className={`absolute inset-0 w-full h-full object-cover ${imagePositions[activeFilter]?.after || "object-center"}`}
                 />
               </div>
 
