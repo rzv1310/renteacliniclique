@@ -45,27 +45,6 @@ const DespreNoiPage = () => {
       {/* Breadcrumb */}
       <PageBreadcrumb />
 
-      {/* Stats */}
-      <section className="py-16 bg-gradient-soft">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            {[
-              { value: "15+", label: "Ani Experiență" },
-              { value: "3000+", label: "Paciente Mulțumite" },
-              { value: "100%", label: "Specializare" },
-              { value: "98%", label: "Rată de Satisfacție" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="font-serif text-4xl lg:text-5xl text-primary font-semibold mb-2">
-                  {stat.value}
-                </p>
-                <p className="text-muted-foreground text-sm">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Filozofia */}
       <section className="py-20">
         <div className="container mx-auto px-4 lg:px-8">
