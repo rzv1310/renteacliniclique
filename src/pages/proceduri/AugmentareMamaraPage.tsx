@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, Play, ChevronDown, ZoomIn, X, Ruler } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAugmentare";
 
 // Import hero image
@@ -263,6 +264,9 @@ const AugmentareMamaraPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Art of Natural Enhancement */}
       <section className="py-24 bg-background">

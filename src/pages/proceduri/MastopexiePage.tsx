@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-mastopexy.jpg";
 
 const MastopexiePage = () => {
@@ -39,6 +40,9 @@ const MastopexiePage = () => {
           </Button>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Ce este */}
       <section className="py-16 bg-gradient-soft">

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, AlertCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-revision.jpg";
 
 const ReviziePage = () => {
@@ -39,6 +40,9 @@ const ReviziePage = () => {
           </Button>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Motive */}
       <section className="py-16 bg-gradient-soft">

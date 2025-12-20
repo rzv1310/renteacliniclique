@@ -8,13 +8,10 @@ interface PageLayoutProps {
   showBreadcrumb?: boolean;
 }
 
-const PageLayout = ({ children, showBreadcrumb = true }: PageLayoutProps) => {
+const PageLayout = ({ children, showBreadcrumb = false }: PageLayoutProps) => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <div className="pt-24 lg:pt-28">
-        {showBreadcrumb && <PageBreadcrumb />}
-      </div>
       <main className="flex-1">
         {children}
       </main>
