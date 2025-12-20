@@ -842,7 +842,7 @@ const AugmentareMamaraPage = () => {
             <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold" asChild>
               <a href="tel:+40740000000">
                 <Phone className="w-5 h-5 mr-2" />
-                Ești gata pentru cea mai buna versiune a ta?
+                Ești gata pentru <span className="text-primary italic">cea mai bună versiune</span> a ta?
               </a>
             </Button>
           </div>
