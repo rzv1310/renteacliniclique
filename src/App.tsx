@@ -83,7 +83,7 @@ const App = () => (
           {/* Pagini principale */}
           <Route path="/galerie" element={<GalleryPage />} />
           <Route path="/simulator-3d" element={<Simulator3DPage />} />
-          <Route path="/tarife-finantare" element={<PricingPage />} />
+          <Route path="/implant-mamar-pret" element={<PricingPage />} />
           <Route path="/ghid-recuperare" element={<GhidRecuperarePage />} />
           <Route path="/despre-noi" element={<DespreNoiPage />} />
           <Route path="/contact" element={<ContactPage />} />
@@ -121,7 +121,7 @@ const App = () => (
           <Route path="/blog/mentor-vs-motiva" element={<ArticleMentorVsMotiva />} />
           
           {/* Redirects pentru URL-uri vechi */}
-          <Route path="/preturi" element={<Navigate to="/tarife-finantare" replace />} />
+          
           <Route path="/implanturi" element={<Navigate to="/proceduri/implant-mamar-bucuresti" replace />} />
           <Route path="/turism-medical" element={<Navigate to="/turism-medical-intern" replace />} />
           <Route path="/finantare" element={<Navigate to="/implant-mamar-in-rate" replace />} />

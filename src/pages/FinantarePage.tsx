@@ -329,7 +329,7 @@ const FinantarePage = () => {
               <Link to="/contact">Programează Consultație</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link to="/tarife-finantare">Vezi Toate Tarifele</Link>
+              <Link to="/implant-mamar-pret">Vezi Toate Tarifele</Link>
             </Button>
           </div>
         </div>

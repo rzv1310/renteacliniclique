@@ -54,7 +54,7 @@ const Header = () => {
   const navLinks = [
     { name: "Galerie", href: "/galerie" },
     { name: "Simulator 3D", href: "/simulator-3d" },
-    { name: "Tarife", href: "/tarife-finantare" },
+    { name: "Tarife", href: "/implant-mamar-pret" },
     { name: "Ghid Recuperare", href: "/ghid-recuperare" },
     { name: "Despre Noi", href: "/despre-noi" },
     { name: "Contact", href: "/contact" },
