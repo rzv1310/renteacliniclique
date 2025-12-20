@@ -39,7 +39,7 @@ const Header = () => {
     { name: "— Implanturi Anatomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" },
     { name: "— Implanturi Ergonomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" },
     { name: "Lifting Mamar", href: "/proceduri/lifting-mamar-mastopexie-ridicare-sani" },
-    { name: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
+    { name: "Revizie Implant", href: "/proceduri/schimbare-inlocuire-implant-mamar-revizie" },
     { name: "Reducție Mamară", href: "/proceduri/micsorare-sani-reductie-mamara" },
     { name: "Lipofilling Mamar", href: "/proceduri/lipofilling-mamar" },
   ];

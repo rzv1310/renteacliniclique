@@ -24,7 +24,7 @@ const procedures = [
   {
     title: "Revizie Implant Mamar",
     description: "Schimbarea sau îndepărtarea implanturilor existente pentru rezultate îmbunătățite sau din motive medicale.",
-    href: "/proceduri/revizie-implant-mamar",
+    href: "/proceduri/schimbare-inlocuire-implant-mamar-revizie",
     subPages: [],
   },
   {
