@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, Play, ChevronDown, ZoomIn, X, Ruler } from "lucide-react";
+import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, ChevronDown, ZoomIn, X, Ruler, Phone } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -249,14 +249,10 @@ const AugmentareMamaraPage = () => {
             Augmentare Mamară în București - precizie medicală combinată cu viziune artistică.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-200">
+          <div className="flex justify-center animate-fade-in-up animation-delay-200">
             <Button variant="hero" size="lg" className="group">
-              Programează Consultația
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button variant="outline" size="lg" className="group border-border/50 hover:border-primary/50">
-              <Play className="w-5 h-5 mr-2" />
-              Vezi Procedura
+              <Phone className="w-5 h-5 mr-2" />
+              Fă primul pas pentru transformare
             </Button>
           </div>
         </div>
