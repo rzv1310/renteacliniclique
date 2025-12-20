@@ -124,6 +124,8 @@ const App = () => (
           <Route path="/preturi" element={<Navigate to="/tarife-finantare" replace />} />
           <Route path="/implanturi" element={<Navigate to="/proceduri/augmentare-mamara" replace />} />
           <Route path="/blog/alaptare-dupa-augmentare-mamara" element={<Navigate to="/blog/alaptarea-cu-implanturi-mamare" replace />} />
+          <Route path="/turism-medical" element={<Navigate to="/turism-medical-intern" replace />} />
+          <Route path="/finantare" element={<Navigate to="/implant-mamar-in-rate" replace />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
