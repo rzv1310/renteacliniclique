@@ -839,10 +839,10 @@ const AugmentareMamaraPage = () => {
               <br />
               Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, proiecție și un rezultat care se simte autentic.
             </p>
-            <Button variant="hero" size="xl" className="group" asChild>
+            <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold" asChild>
               <a href="tel:+40740000000">
                 <Phone className="w-5 h-5 mr-2" />
-                0740 000 000
+                Ești gata pentru cea mai buna versiune a ta?
               </a>
             </Button>
           </div>
