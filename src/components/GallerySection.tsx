@@ -44,7 +44,7 @@ const GallerySection = () => {
   return (
     <section 
       id="galerie" 
-      className="py-24 lg:py-32 bg-background"
+      className="py-16 lg:py-20 bg-background"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
@@ -84,7 +84,7 @@ const GallerySection = () => {
         {/* Before/After Comparison Slider */}
         <div className={`max-w-5xl mx-auto mb-6 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div
-            className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
+            className="relative aspect-[16/7] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
             onMouseMove={handleSliderMove}
             onTouchMove={handleTouchMove}
           >
