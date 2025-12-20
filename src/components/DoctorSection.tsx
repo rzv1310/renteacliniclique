@@ -23,7 +23,7 @@ const DoctorSection = () => {
               {/* Name overlay */}
               <div className="absolute bottom-4 left-4 right-4 bg-background/90 backdrop-blur-sm rounded-xl p-4 border border-border">
                 <p className="font-display text-xl text-foreground">Dr. Lucian Popa</p>
-                <p className="text-sm text-muted-foreground">Chirurg Estetician Principal & Fondator</p>
+                <p className="text-sm text-muted-foreground">Chirurg Estetician</p>
               </div>
             </div>
           </div>
