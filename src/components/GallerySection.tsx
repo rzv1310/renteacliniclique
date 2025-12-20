@@ -6,6 +6,8 @@ import galleryBefore from "@/assets/gallery/gallery-before.png";
 import galleryAfter from "@/assets/gallery/gallery-after.png";
 import voluptuousBefore from "@/assets/gallery/voluptuous-before.png";
 import voluptuousAfter from "@/assets/gallery/voluptuous-after.png";
+import sportyBefore from "@/assets/gallery/sporty-before.png";
+import sportyAfter from "@/assets/gallery/sporty-after.png";
 
 const GallerySection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -26,7 +28,9 @@ const GallerySection = () => {
     voluptuous: [
       { before: voluptuousAfter, after: voluptuousBefore, label: "Caz #1 - Voluptuous 450cc" },
     ],
-    sporty: [],
+    sporty: [
+      { before: sportyBefore, after: sportyAfter, label: "Caz #1 - Sporty 300cc" },
+    ],
   };
 
   const cases = casesByFilter[activeFilter] || [];
