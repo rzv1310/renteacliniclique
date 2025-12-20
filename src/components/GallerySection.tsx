@@ -48,40 +48,43 @@ const GallerySection = () => {
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Section Header */}
-        <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-label mb-4 block">
-            TRANSFORMĂRI AUTENTICE
-          </span>
-          <h2 className="h2-section text-foreground mb-6">
-            Rezultate Reale. Fără Filtre.
-          </h2>
-          <p className="text-body leading-relaxed">
-            Fiecare corp este unic și merită o atenție deosebită. Explorează peste 500 de cazuri rezolvate, ce subliniază măiestria noastră și armonia rezultatelor obținute.
-          </p>
-        </div>
+        {/* Header Row with Title and Filters */}
+        <div className={`flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Left side - Title */}
+          <div className="max-w-xl">
+            <span className="text-label mb-4 block">
+              TRANSFORMĂRI AUTENTICE
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-4">
+              <span className="italic">Rezultate Reale. Fără Filtre.</span>
+            </h2>
+            <p className="text-body leading-relaxed">
+              Fiecare corp este unic și merită o atenție deosebită. Explorează peste 500 de cazuri rezolvate, ce subliniază măiestria noastră și armonia rezultatelor obținute.
+            </p>
+          </div>
 
-        {/* Filter Tabs */}
-        <div className={`flex flex-wrap justify-center gap-3 mb-12 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          {filters.map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => setActiveFilter(filter.id)}
-              className={`px-6 py-3 rounded-full text-sm font-sans font-medium transition-all duration-300 ${
-                activeFilter === filter.id
-                  ? "bg-rose-gold text-primary-foreground"
-                  : "bg-card border border-border text-muted-foreground hover:border-rose-gold/50"
-              }`}
-            >
-              {filter.label}
-            </button>
-          ))}
+          {/* Right side - Filters */}
+          <div className="flex flex-wrap gap-3">
+            {filters.map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => setActiveFilter(filter.id)}
+                className={`px-5 py-2.5 rounded-full text-sm font-sans font-medium transition-all duration-300 ${
+                  activeFilter === filter.id
+                    ? "bg-rose-gold text-primary-foreground"
+                    : "bg-card border border-border text-muted-foreground hover:border-rose-gold/50"
+                }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Before/After Comparison Slider */}
-        <div className={`max-w-4xl mx-auto mb-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`max-w-5xl mx-auto mb-6 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div
-            className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
+            className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
             onMouseMove={handleSliderMove}
             onTouchMove={handleTouchMove}
           >
@@ -122,36 +125,17 @@ const GallerySection = () => {
               </div>
             </div>
           </div>
-
-          {/* Case selector */}
-          <div className="flex justify-center gap-2 mt-6">
-            {cases.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setActiveCase(index);
-                  setSliderPosition(50);
-                }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === activeCase
-                    ? "w-8 bg-rose-gold"
-                    : "bg-border hover:bg-rose-gold/50"
-                }`}
-              />
-            ))}
-          </div>
-          <p className="text-center text-sm text-muted-foreground mt-3">
-            {cases[activeCase].label}
-          </p>
         </div>
 
-        {/* CTA */}
+        {/* Bottom CTA Text */}
         <div className={`text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <a href="/galerie">
-            <button className="btn-primary-rose-gold">
-              Explorează Galeria Completă
-              <span className="text-sm opacity-80">(Filtrează după înălțimea ta)</span>
-            </button>
+          <a 
+            href="/galerie" 
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-rose-gold transition-colors"
+          >
+            <span className="font-sans text-sm">Explorează Galeria Foto</span>
+            <span className="text-rose-gold">•</span>
+            <span className="font-sans text-sm">Filtrează după înălțimea ta</span>
           </a>
         </div>
       </div>
