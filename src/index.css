@@ -407,7 +407,7 @@
   100% { top: 0%; opacity: 0; }
 }
 
-/* Circle pulse animations synced with dot arrival - 12s loop for 4 segments */
+/* Circle pulse animations synced with dot arrival - Desktop (9s loop, 3 segments) */
 @keyframes pulse-step-0 {
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
   3% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
@@ -432,10 +432,30 @@
   99%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
 }
 
-@keyframes pulse-step-4 {
-  0%, 97% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
-  99% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+/* Circle pulse animations synced with dot arrival - Mobile (9s loop, 4 segments) */
+/* Mobile segments arrive at: 21%, 46%, 71%, 96% */
+@keyframes pulse-step-mobile-0 {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  3% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  6%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
+
+@keyframes pulse-step-mobile-1 {
+  0%, 18% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  21% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  24%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
+
+@keyframes pulse-step-mobile-2 {
+  0%, 43% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  46% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  49%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+}
+
+@keyframes pulse-step-mobile-3 {
+  0%, 68% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  71% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  74%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
 }
 
 /* Glowing dot border animation */

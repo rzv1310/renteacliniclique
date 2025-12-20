@@ -640,7 +640,7 @@ const AugmentareMamaraPage = () => {
                     <div className="w-12 h-12 rounded-full bg-card border border-border/50 flex items-center justify-center shrink-0">
                       <div
                         className="w-full h-full rounded-full flex items-center justify-center"
-                        style={{ animation: `pulse-step-${index} 9s ease-in-out infinite` }}
+                        style={{ animation: `pulse-step-mobile-${index} 9s ease-in-out infinite` }}
                       >
                         <span className="text-xl font-light text-foreground">{index + 1}</span>
                       </div>
