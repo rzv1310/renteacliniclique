@@ -18,7 +18,7 @@ const GallerySection = () => {
   ];
 
   const cases = [
-    { before: galleryBefore, after: galleryAfter, label: "Caz #1 - Natural 350cc" },
+    { before: galleryAfter, after: galleryBefore, label: "Caz #1 - Natural 350cc" },
   ];
 
   const handleSliderMove = (e: React.MouseEvent<HTMLDivElement>) => {
