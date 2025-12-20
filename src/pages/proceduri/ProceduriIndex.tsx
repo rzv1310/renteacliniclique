@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import heroImage from "@/assets/heroes/hero-proceduri.jpg";
 
 const procedures = [
   {
@@ -42,28 +43,37 @@ const procedures = [
 const ProceduriIndex = () => {
   return (
     <PageLayout>
-      {/* Hero */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-              Servicii Specializate
-            </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
-              Proceduri de
-              <br />
-              <span className="text-gradient-gold">Augmentare Mamară</span>
-            </h1>
-            <p className="text-lg text-soft-brown leading-relaxed">
-              Suntem singura clinică din București dedicată exclusiv chirurgiei estetice mamare.
-              Specializarea noastră 100% înseamnă experiență superioară și rezultate excepționale.
-            </p>
-          </div>
+      {/* Hero - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Femeie elegantă"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+
+        {/* Content */}
+        <div className="relative container mx-auto px-4 lg:px-8 text-center pt-20">
+          <span className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4 block animate-fade-in">
+            Servicii Specializate
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
+            Proceduri de
+            <br />
+            <span className="text-gradient-gold">Augmentare Mamară</span>
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-100">
+            Suntem singura clinică din București dedicată exclusiv chirurgiei estetice mamare.
+            Specializarea noastră 100% înseamnă experiență superioară și rezultate excepționale.
+          </p>
         </div>
       </section>
 
       {/* Procedures Grid */}
-      <section className="pb-24">
+      <section className="py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid gap-8 max-w-5xl mx-auto">
             {procedures.map((procedure) => (
@@ -73,10 +83,10 @@ const ProceduriIndex = () => {
               >
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                   <div className="flex-1">
-                    <h2 className="font-serif text-2xl lg:text-3xl font-semibold text-deep-brown mb-3">
+                    <h2 className="font-serif text-2xl lg:text-3xl font-semibold text-foreground mb-3">
                       {procedure.title}
                     </h2>
-                    <p className="text-soft-brown leading-relaxed mb-4">
+                    <p className="text-muted-foreground leading-relaxed mb-4">
                       {procedure.description}
                     </p>
                     
@@ -86,7 +96,7 @@ const ProceduriIndex = () => {
                           <Link
                             key={sub.href}
                             to={sub.href}
-                            className="text-sm px-4 py-2 bg-champagne-light rounded-full text-soft-brown hover:bg-champagne hover:text-deep-brown transition-colors"
+                            className="text-sm px-4 py-2 bg-secondary/30 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
                           >
                             {sub.name}
                           </Link>
@@ -97,7 +107,7 @@ const ProceduriIndex = () => {
                   
                   <Link
                     to={procedure.href}
-                    className="flex items-center gap-2 text-rose-gold hover:text-deep-brown transition-colors font-medium group shrink-0"
+                    className="flex items-center gap-2 text-primary hover:text-foreground transition-colors font-medium group shrink-0"
                   >
                     Află mai multe
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
