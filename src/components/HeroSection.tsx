@@ -15,7 +15,7 @@ const HeroSection = () => {
       </div>
 
       {/* Content - Centered */}
-      <div className="relative container mx-auto px-4 lg:px-8 pt-20 pb-16 text-center">
+      <div className="relative container mx-auto px-4 lg:px-8 pt-40 lg:pt-52 pb-16 text-center">
         <div className="max-w-3xl mx-auto">
           {/* Main Title */}
           <h1 className="h1-hero text-foreground mb-6 animate-fade-in-up">
