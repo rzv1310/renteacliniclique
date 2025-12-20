@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 
@@ -14,7 +14,6 @@ const ArticleDureri = () => {
               <ArrowLeft className="w-4 h-4" />Înapoi la Blog
             </Link>
             <div className="flex items-center gap-4 text-sm text-soft-brown mb-6">
-              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />8 Dec 2024</span>
               <span className="flex items-center gap-1"><Clock className="w-4 h-4" />7 min citire</span>
             </div>
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-deep-brown mb-8">Durerile după implant mamar: Ce e normal și când să te îngrijorezi</h1>

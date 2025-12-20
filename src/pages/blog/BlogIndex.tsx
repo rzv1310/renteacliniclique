@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Calendar, Ruler, Stethoscope, Shield, Award } from "lucide-react";
+import { ArrowRight, Ruler, Stethoscope, Shield, Award } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroBlog from "@/assets/heroes/hero-blog.jpg";
@@ -154,11 +154,7 @@ const ArticleCard = ({ article }: { article: typeof clusterMarimeForma[0] }) => 
     to={`/blog/${article.slug}`}
     className="block bg-card rounded-2xl p-6 shadow-soft hover:shadow-elegant transition-all duration-300 group"
   >
-    <div className="flex items-center gap-4 text-sm text-soft-brown mb-3">
-      <span className="flex items-center gap-1">
-        <Calendar className="w-4 h-4" />
-        {article.date}
-      </span>
+    <div className="text-sm text-soft-brown mb-3">
       <span>{article.readTime} citire</span>
     </div>
     <h3 className="font-serif text-lg lg:text-xl font-semibold text-deep-brown mb-2 group-hover:text-rose-gold transition-colors">

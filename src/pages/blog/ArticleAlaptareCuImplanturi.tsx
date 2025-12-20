@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 
@@ -21,10 +21,6 @@ const ArticleAlaptareCuImplanturi = () => {
             </Link>
 
             <div className="flex items-center gap-4 text-sm text-soft-brown mb-6">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                12 Dec 2024
-              </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 8 min citire

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-rotund-vs-anatomic.png";
@@ -22,7 +22,6 @@ const ArticleRotundVsAnatomic = () => {
             Implanturi Rotunde vs. Anatomice: Ghid Complet
           </h1>
           <div className="flex items-center justify-center gap-4 text-sm text-white/90">
-            <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />15 Dec 2024</span>
             <span className="flex items-center gap-1"><Clock className="w-4 h-4" />8 min citire</span>
           </div>
         </div>
