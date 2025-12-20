@@ -415,21 +415,21 @@
 }
 
 @keyframes pulse-step-1 {
-  0%, 22% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
-  25% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
-  28%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  0%, 27% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  30% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  33%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
 }
 
 @keyframes pulse-step-2 {
-  0%, 47% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
-  50% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
-  53%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  0%, 60% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  63% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  66%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
 }
 
 @keyframes pulse-step-3 {
-  0%, 72% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
-  75% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
-  78%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  0%, 93% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
+  96% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
+  99%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
 }
 
 @keyframes pulse-step-4 {
