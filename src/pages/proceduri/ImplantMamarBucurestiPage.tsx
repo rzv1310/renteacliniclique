@@ -52,7 +52,7 @@ const AugmentareMamaraPage = () => {
   const incisionOptions = [
     {
       id: "inframammary",
-      name: "Inframammară",
+      name: "Inframamară",
       badge: "Popular",
       description: "Incizia se face în pliul de sub sân (șanțul submamar). Este cea mai frecventă plasare.",
       visibility: "Redusă",
@@ -65,7 +65,7 @@ const AugmentareMamaraPage = () => {
         "Risc minim de afectare a țesutului mamar"
       ],
       disadvantages: [
-        "Poate fi vizibilă în bikini foarte decupați",
+        "Poate fi vizibilă în sutien foarte decupat",
         "Necesită sutură precisă pentru aspect optim"
       ]
     },
@@ -99,12 +99,12 @@ const AugmentareMamaraPage = () => {
       advantages: [
         "Nicio cicatrice pe sân",
         "Ideală pentru paciente care doresc discreție maximă",
-        "Cicatrice ascunsă în pliul axilar"
+        "Cicatrice ascunsă în pliul axilar (sub braț)"
       ],
       disadvantages: [
         "Necesită echipament endoscopic specializat",
         "Acces limitat pentru revizii ulterioare",
-        "Poate să nu fie potrivită pentru toate tipurile de implanturi"
+        "Nu este potrivită pentru orice tip de implant"
       ]
     }
   ];
@@ -418,7 +418,7 @@ const AugmentareMamaraPage = () => {
               Detalii Procedurale
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Transparența este cheia confortului. Iată ce poți aștepta din punct de vedere tehnic de la serviciul nostru premium.
+              Transparența este cheia confortului. Iată ce poți aștepta din punct de vedere tehnic
             </p>
           </div>
 
@@ -428,7 +428,7 @@ const AugmentareMamaraPage = () => {
               <div className="bg-card rounded-xl p-6 text-center border border-border/50">
                 <Clock className="w-6 h-6 text-primary mx-auto mb-3" />
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Durată</p>
-                <p className="text-foreground font-medium">1 - 2 Ore</p>
+                <p className="text-foreground font-medium">aprox. 2 ore</p>
               </div>
               <div className="bg-card rounded-xl p-6 text-center border border-border/50">
                 <Stethoscope className="w-6 h-6 text-primary mx-auto mb-3" />
@@ -446,10 +446,10 @@ const AugmentareMamaraPage = () => {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-display text-xl font-medium text-foreground">
-                  Opțiuni de Plasare a Inciziei
+                  Tipuri de incizii
                 </h3>
                 <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                  Selectează preferințe
+                  Selectează opțiuni
                 </span>
               </div>
 
@@ -504,7 +504,7 @@ const AugmentareMamaraPage = () => {
                     {/* Details content */}
                     <div>
                       <h4 className="font-display text-lg font-medium text-foreground mb-4">
-                        Detalii: {selectedIncisionData.name}
+                        Detalii: Incizie {selectedIncisionData.name}
                       </h4>
                       
                       {/* Healing Time & Scar Length */}
