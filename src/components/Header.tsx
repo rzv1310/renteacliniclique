@@ -110,7 +110,11 @@ const Header = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-rose-gold transition-colors duration-300 tracking-wide"
+                  className={`text-sm font-medium transition-colors duration-300 tracking-wide ${
+                    link.name === "Simulator 3D" 
+                      ? "text-foreground animate-pulse" 
+                      : "text-muted-foreground hover:text-rose-gold"
+                  }`}
                 >
                   {link.name}
                 </Link>
