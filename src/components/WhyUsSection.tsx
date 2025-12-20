@@ -61,7 +61,7 @@ const WhyUsSection = () => {
                   <img 
                     src={feature.image} 
                     alt={feature.title}
-                    className="w-full h-full object-cover object-[center_30%] scale-125"
+                    className="w-full h-full object-cover object-[center_40%] scale-125"
                   />
                 ) : (
                   <div className="w-20 h-20 rounded-full bg-rose-gold/20 flex items-center justify-center group-hover:bg-rose-gold/30 transition-colors duration-300">
