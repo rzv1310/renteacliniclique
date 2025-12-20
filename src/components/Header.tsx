@@ -34,10 +34,10 @@ const Header = () => {
 
   const proceduriLinks = [
     { name: "Toate Procedurile", href: "/proceduri" },
-    { name: "Augmentare Mamară", href: "/proceduri/augmentare-mamara" },
-    { name: "— Implanturi Rotunde", href: "/proceduri/augmentare-mamara/implanturi-mamare-rotunde" },
-    { name: "— Implanturi Anatomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-anatomice" },
-    { name: "— Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
+    { name: "Implant Mamar București", href: "/proceduri/implant-mamar-bucuresti" },
+    { name: "— Implanturi Rotunde", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" },
+    { name: "— Implanturi Anatomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" },
+    { name: "— Implanturi Ergonomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" },
     { name: "Mastopexie (Ridicare)", href: "/proceduri/augmentare-mamara-cu-mastopexie" },
     { name: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
     { name: "Reducție Mamară", href: "/proceduri/micsorare-sani-reductie-mamara" },

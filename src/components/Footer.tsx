@@ -130,10 +130,10 @@ const Footer = () => {
             <h4 className="font-sans font-medium text-sm uppercase tracking-wider mb-6 text-foreground">Proceduri</h4>
             <ul className="space-y-3">
               {[
-                { label: "Augmentare Mamară", href: "/proceduri/augmentare-mamara" },
-                { label: "Implanturi Rotunde", href: "/proceduri/augmentare-mamara/implanturi-mamare-rotunde" },
-                { label: "Implanturi Anatomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-anatomice" },
-                { label: "Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
+                { label: "Implant Mamar București", href: "/proceduri/implant-mamar-bucuresti" },
+                { label: "Implanturi Rotunde", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" },
+                { label: "Implanturi Anatomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" },
+                { label: "Implanturi Ergonomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" },
                 { label: "Augmentare cu Mastopexie", href: "/proceduri/augmentare-mamara-cu-mastopexie" },
                 { label: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
                 { label: "Reducție Mamară", href: "/proceduri/micsorare-sani-reductie-mamara" },

@@ -104,7 +104,7 @@ const LipofillingMamarPage = () => {
               </Link>
             </Button>
             <Button variant="outline" size="xl" asChild>
-              <Link to="/proceduri/augmentare-mamara">Compară cu Implanturi</Link>
+              <Link to="/proceduri/implant-mamar-bucuresti">Compară cu Implanturi</Link>
             </Button>
           </div>
         </div>
