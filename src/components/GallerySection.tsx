@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { Link } from "react-router-dom";
 
 import galleryBefore from "@/assets/gallery/gallery-before.png";
 import galleryAfter from "@/assets/gallery/gallery-after.png";
@@ -144,12 +145,22 @@ const GallerySection = () => {
         <div className={`text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <a 
             href="/galerie" 
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-rose-gold transition-colors"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-rose-gold transition-colors mb-8"
           >
             <span className="font-sans text-sm">Explorează Galeria Foto</span>
             <span className="text-rose-gold">•</span>
             <span className="font-sans text-sm">Filtrează după înălțimea ta</span>
           </a>
+          
+          {/* Simulator 3D Button */}
+          <div className="mt-8">
+            <Link to="/simulator-3d">
+              <button className="btn-primary-rose-gold">
+                <MaterialIcon name="3d_rotation" className="text-xl" />
+                Simulator 3D
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

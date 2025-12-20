@@ -28,12 +28,6 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="/simulator-3d">
-                <button className="btn-primary-rose-gold">
-                  <MaterialIcon name="3d_rotation" className="text-xl" />
-                  Simulator 3D
-                </button>
-              </a>
               <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
                 <Phone className="w-5 h-5 mr-2" />
                 Fă primul pas pentru transformare
