@@ -246,7 +246,7 @@ const AugmentareMamaraPage = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-light animate-fade-in-up animation-delay-100">
-            Augmentare Mamară în București - precizie medicală combinată cu o viziune artistică.
+            Augmentare Mamară în București - precizie medicală combinată cu viziune artistică.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-200">
