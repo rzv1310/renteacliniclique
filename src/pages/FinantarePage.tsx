@@ -315,12 +315,12 @@ const FinantarePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-foreground text-background">
+      <section className="py-16 md:py-24 bg-[hsl(25,15%,12%)]">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6">
             Hai Să Discutăm Opțiunile Tale
           </h2>
-          <p className="text-background/70 max-w-2xl mx-auto mb-8">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
             Consultanții noștri te pot ajuta să alegi cea mai bună variantă de finanțare 
             pentru situația ta. Consultația este gratuită și fără obligații.
           </p>
@@ -328,7 +328,7 @@ const FinantarePage = () => {
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
               <Link to="/contact">Programează Consultație</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-background/30 text-background hover:bg-background/10" asChild>
+            <Button size="lg" variant="outline" asChild>
               <Link to="/tarife-finantare">Vezi Toate Tarifele</Link>
             </Button>
           </div>

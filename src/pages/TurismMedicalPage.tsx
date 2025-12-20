@@ -231,12 +231,12 @@ const TurismMedicalPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-foreground text-background">
+      <section className="py-16 md:py-24 bg-[hsl(25,15%,12%)]">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6">
             Pregătită Să Faci Primul Pas?
           </h2>
-          <p className="text-background/70 max-w-2xl mx-auto mb-8">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
             Programează o consultație video gratuită și discutăm toate detaliile. 
             Te ajutăm cu tot ce ai nevoie pentru vizita ta.
           </p>
@@ -244,7 +244,7 @@ const TurismMedicalPage = () => {
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
               <Link to="/contact">Consultație Video Gratuită</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-background/30 text-background hover:bg-background/10" asChild>
+            <Button size="lg" variant="outline" asChild>
               <a href="tel:+40721234567">
                 <Phone className="w-4 h-4 mr-2" />
                 0721 234 567
