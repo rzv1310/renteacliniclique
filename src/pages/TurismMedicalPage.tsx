@@ -1,8 +1,10 @@
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Hotel, Calendar, Car, Phone, CheckCircle, Clock, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroImage from "@/assets/heroes/hero-turism.jpg";
 
 const TurismMedicalPage = () => {
   const steps = [
@@ -70,34 +72,48 @@ const TurismMedicalPage = () => {
 
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-blush/30 to-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 bg-rose-gold/10 text-rose-gold rounded-full text-sm font-medium mb-6">
-              Paciente din Provincie
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-foreground mb-6 leading-tight">
-              Distanța Nu Mai Este o <span className="text-rose-gold">Barieră</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
-              Am creat un sistem complet care face experiența ta cât mai simplă și confortabilă, 
-              indiferent de unde vii din țară.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-rose-gold hover:bg-rose-gold/90 text-white" asChild>
-                <Link to="/contact">Programează Consultație Video</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="tel:+40721234567">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Sună Acum
-                </a>
-              </Button>
-            </div>
+      {/* Hero Section - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Turism Medical"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-4 pt-20">
+          <span className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4 block animate-fade-in">
+            Paciente din Provincie
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
+            Distanța Nu Mai Este o
+            <br />
+            <span className="text-gradient-gold">Barieră</span>
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8 animate-fade-in-up animation-delay-100">
+            Am creat un sistem complet care face experiența ta cât mai simplă și confortabilă, 
+            indiferent de unde vii din țară.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-200">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+              <Link to="/contact">Programează Consultație Video</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href="tel:+40721234567">
+                <Phone className="w-4 h-4 mr-2" />
+                Sună Acum
+              </a>
+            </Button>
           </div>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Steps Section */}
       <section className="py-16 md:py-24">
@@ -113,10 +129,10 @@ const TurismMedicalPage = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {steps.map((step, index) => (
-              <Card key={index} className="border-border/50 hover:border-rose-gold/30 transition-colors">
+              <Card key={index} className="border-border/50 hover:border-primary/30 transition-colors">
                 <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-rose-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <step.icon className="w-6 h-6 text-rose-gold" />
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                    <step.icon className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="text-lg font-medium text-foreground mb-2">{step.title}</h3>
                   <p className="text-muted-foreground text-sm">{step.description}</p>
@@ -128,7 +144,7 @@ const TurismMedicalPage = () => {
       </section>
 
       {/* Accommodation Section */}
-      <section className="py-16 md:py-24 bg-blush/20">
+      <section className="py-16 md:py-24 bg-secondary/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-foreground mb-4">
@@ -143,17 +159,17 @@ const TurismMedicalPage = () => {
             {hotels.map((hotel, index) => (
               <Card key={index} className="border-border/50">
                 <CardContent className="p-6">
-                  <Hotel className="w-8 h-8 text-rose-gold mb-4" />
+                  <Hotel className="w-8 h-8 text-primary mb-4" />
                   <h3 className="text-lg font-medium text-foreground mb-1">{hotel.name}</h3>
                   <div className="flex items-center text-sm text-muted-foreground mb-2">
                     <MapPin className="w-4 h-4 mr-1" />
                     {hotel.distance}
                   </div>
-                  <p className="text-rose-gold font-medium mb-4">{hotel.price}</p>
+                  <p className="text-primary font-medium mb-4">{hotel.price}</p>
                   <ul className="space-y-2">
                     {hotel.features.map((feature, idx) => (
                       <li key={idx} className="text-sm text-muted-foreground flex items-center">
-                        <CheckCircle className="w-4 h-4 text-rose-gold mr-2 flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-primary mr-2 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -172,7 +188,7 @@ const TurismMedicalPage = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-light text-foreground mb-6">
-                  De Ce Să Alegi <span className="text-rose-gold">Clinica Noastră?</span>
+                  De Ce Să Alegi <span className="text-primary">Clinica Noastră?</span>
                 </h2>
                 <p className="text-muted-foreground mb-8">
                   Înțelegem provocările pe care le implică deplasarea pentru o intervenție chirurgicală. 
@@ -181,14 +197,14 @@ const TurismMedicalPage = () => {
                 <ul className="space-y-4">
                   {benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-rose-gold mr-3 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-primary mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-foreground">{benefit}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="bg-gradient-to-br from-rose-gold/10 to-blush/30 rounded-2xl p-8">
-                <Clock className="w-12 h-12 text-rose-gold mb-4" />
+              <div className="bg-gradient-to-br from-primary/10 to-secondary/30 rounded-2xl p-8">
+                <Clock className="w-12 h-12 text-primary mb-4" />
                 <h3 className="text-2xl font-light text-foreground mb-4">Program Tipic</h3>
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between border-b border-border/50 pb-2">
@@ -215,20 +231,20 @@ const TurismMedicalPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-charcoal text-ivory">
+      <section className="py-16 md:py-24 bg-foreground text-background">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6">
             Pregătită Să Faci Primul Pas?
           </h2>
-          <p className="text-ivory/70 max-w-2xl mx-auto mb-8">
+          <p className="text-background/70 max-w-2xl mx-auto mb-8">
             Programează o consultație video gratuită și discutăm toate detaliile. 
             Te ajutăm cu tot ce ai nevoie pentru vizita ta.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-rose-gold hover:bg-rose-gold/90 text-white" asChild>
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
               <Link to="/contact">Consultație Video Gratuită</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-ivory/30 text-ivory hover:bg-ivory/10" asChild>
+            <Button size="lg" variant="outline" className="border-background/30 text-background hover:bg-background/10" asChild>
               <a href="tel:+40721234567">
                 <Phone className="w-4 h-4 mr-2" />
                 0721 234 567

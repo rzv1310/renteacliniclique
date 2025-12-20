@@ -1,9 +1,11 @@
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Calculator, CreditCard, CheckCircle, Phone, FileText, Clock, Shield, Percent } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import heroImage from "@/assets/heroes/hero-finantare.jpg";
 
 const FinantarePage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState(24);
@@ -83,36 +85,50 @@ const FinantarePage = () => {
 
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-blush/30 to-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-2 bg-rose-gold/10 text-rose-gold rounded-full text-sm font-medium mb-6">
-              Finanțare Flexibilă
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-foreground mb-6 leading-tight">
-              Implant Mamar <span className="text-rose-gold">în Rate</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-4 leading-relaxed">
-              Rate lunare accesibile de la <span className="text-rose-gold font-semibold">{calculateMonthlyRate(48)}€/lună</span>
-            </p>
-            <p className="text-muted-foreground mb-8">
-              Aprobare rapidă în 15 minute • Fără avans • Dobândă fixă
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-rose-gold hover:bg-rose-gold/90 text-white" asChild>
-                <Link to="/contact">Solicită Finanțare</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="tel:+40721234567">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Consultanță Gratuită
-                </a>
-              </Button>
-            </div>
+      {/* Hero Section - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Finanțare"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-4 pt-20">
+          <span className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4 block animate-fade-in">
+            Finanțare Flexibilă
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
+            Implant Mamar
+            <br />
+            <span className="text-gradient-gold">în Rate</span>
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-4 animate-fade-in-up animation-delay-100">
+            Rate lunare accesibile de la <span className="text-primary font-semibold">{calculateMonthlyRate(48)}€/lună</span>
+          </p>
+          <p className="text-muted-foreground mb-8 animate-fade-in-up animation-delay-100">
+            Aprobare rapidă în 15 minute • Fără avans • Dobândă fixă
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-200">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+              <Link to="/contact">Solicită Finanțare</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href="tel:+40721234567">
+                <Phone className="w-4 h-4 mr-2" />
+                Consultanță Gratuită
+              </a>
+            </Button>
           </div>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Calculator Section */}
       <section className="py-16 md:py-24">
@@ -127,11 +143,11 @@ const FinantarePage = () => {
               </p>
             </div>
 
-            <Card className="border-rose-gold/20">
+            <Card className="border-primary/20">
               <CardContent className="p-8">
                 <div className="flex items-center justify-center mb-8">
-                  <Calculator className="w-8 h-8 text-rose-gold mr-3" />
-                  <span className="text-2xl font-light">Pachet Standard: <span className="text-rose-gold font-medium">{totalPrice.toLocaleString()}€</span></span>
+                  <Calculator className="w-8 h-8 text-primary mr-3" />
+                  <span className="text-2xl font-light">Pachet Standard: <span className="text-primary font-medium">{totalPrice.toLocaleString()}€</span></span>
                 </div>
 
                 <div className="mb-8">
@@ -143,8 +159,8 @@ const FinantarePage = () => {
                         onClick={() => setSelectedPeriod(period)}
                         className={`px-6 py-3 rounded-lg border transition-all ${
                           selectedPeriod === period
-                            ? "bg-rose-gold text-white border-rose-gold"
-                            : "border-border hover:border-rose-gold/50"
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "border-border hover:border-primary/50"
                         }`}
                       >
                         {period} luni
@@ -153,9 +169,9 @@ const FinantarePage = () => {
                   </div>
                 </div>
 
-                <div className="bg-blush/30 rounded-xl p-8 text-center">
+                <div className="bg-secondary/30 rounded-xl p-8 text-center">
                   <p className="text-muted-foreground mb-2">Rata lunară estimată</p>
-                  <p className="text-5xl font-light text-rose-gold mb-2">
+                  <p className="text-5xl font-light text-primary mb-2">
                     {calculateMonthlyRate(selectedPeriod)}€
                   </p>
                   <p className="text-sm text-muted-foreground">
@@ -173,7 +189,7 @@ const FinantarePage = () => {
       </section>
 
       {/* Partners Section */}
-      <section className="py-16 md:py-24 bg-blush/20">
+      <section className="py-16 md:py-24 bg-secondary/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-light text-foreground mb-4">
@@ -186,23 +202,23 @@ const FinantarePage = () => {
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {partners.map((partner, index) => (
-              <Card key={index} className={`border-border/50 relative ${partner.highlight ? 'border-rose-gold/50' : ''}`}>
+              <Card key={index} className={`border-border/50 relative ${partner.highlight ? 'border-primary/50' : ''}`}>
                 {partner.highlight && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-rose-gold text-white text-xs px-3 py-1 rounded-full">
+                    <span className="bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full">
                       {partner.highlight}
                     </span>
                   </div>
                 )}
                 <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-charcoal/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-lg font-bold text-charcoal">{partner.logo}</span>
+                  <div className="w-16 h-16 bg-foreground/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-lg font-bold text-foreground">{partner.logo}</span>
                   </div>
                   <h3 className="text-lg font-medium text-foreground mb-4">{partner.name}</h3>
                   <ul className="space-y-2">
                     {partner.features.map((feature, idx) => (
                       <li key={idx} className="text-sm text-muted-foreground flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-rose-gold mr-2" />
+                        <CheckCircle className="w-4 h-4 text-primary mr-2" />
                         {feature}
                       </li>
                     ))}
@@ -227,8 +243,8 @@ const FinantarePage = () => {
             {steps.map((step, index) => (
               <Card key={index} className="border-border/50 text-center">
                 <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-rose-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <step.icon className="w-7 h-7 text-rose-gold" />
+                  <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <step.icon className="w-7 h-7 text-primary" />
                   </div>
                   <h3 className="text-lg font-medium text-foreground mb-2">{step.title}</h3>
                   <p className="text-muted-foreground text-sm">{step.description}</p>
@@ -240,12 +256,12 @@ const FinantarePage = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 md:py-24 bg-blush/20">
+      <section className="py-16 md:py-24 bg-secondary/20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-rose-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-rose-gold" />
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-lg font-medium text-foreground mb-2">Fără Risc</h3>
               <p className="text-muted-foreground text-sm">
@@ -253,8 +269,8 @@ const FinantarePage = () => {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-rose-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Percent className="w-8 h-8 text-rose-gold" />
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Percent className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-lg font-medium text-foreground mb-2">Dobândă Fixă</h3>
               <p className="text-muted-foreground text-sm">
@@ -262,8 +278,8 @@ const FinantarePage = () => {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-rose-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-rose-gold" />
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-lg font-medium text-foreground mb-2">Aprobare Rapidă</h3>
               <p className="text-muted-foreground text-sm">
@@ -299,20 +315,20 @@ const FinantarePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-charcoal text-ivory">
+      <section className="py-16 md:py-24 bg-foreground text-background">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6">
             Hai Să Discutăm Opțiunile Tale
           </h2>
-          <p className="text-ivory/70 max-w-2xl mx-auto mb-8">
+          <p className="text-background/70 max-w-2xl mx-auto mb-8">
             Consultanții noștri te pot ajuta să alegi cea mai bună variantă de finanțare 
             pentru situația ta. Consultația este gratuită și fără obligații.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-rose-gold hover:bg-rose-gold/90 text-white" asChild>
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
               <Link to="/contact">Programează Consultație</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-ivory/30 text-ivory hover:bg-ivory/10" asChild>
+            <Button size="lg" variant="outline" className="border-background/30 text-background hover:bg-background/10" asChild>
               <Link to="/tarife-finantare">Vezi Toate Tarifele</Link>
             </Button>
           </div>

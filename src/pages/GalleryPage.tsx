@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import GalleryLightbox from "@/components/GalleryLightbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -13,6 +14,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+
+// Import hero image
+import heroImage from "@/assets/heroes/hero-galerie.jpg";
 
 // Import gallery images
 import case1Before from "@/assets/gallery/case-1-before.jpg";
@@ -120,19 +124,19 @@ const BeforeAfterSlider = ({ caseData, onClick }: BeforeAfterSliderProps) => {
         style={{ left: `${sliderPosition}%` }}
       >
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-elegant flex items-center justify-center transition-transform group-hover:scale-110">
-          <ChevronLeft className="w-3 h-3 text-rose-gold -mr-1" />
-          <ChevronRight className="w-3 h-3 text-rose-gold -ml-1" />
+          <ChevronLeft className="w-3 h-3 text-primary -mr-1" />
+          <ChevronRight className="w-3 h-3 text-primary -ml-1" />
         </div>
       </div>
 
       {/* Labels */}
       <div className="absolute top-3 left-3 z-20">
-        <Badge variant="secondary" className="bg-white/90 text-deep-brown text-xs">
+        <Badge variant="secondary" className="bg-white/90 text-foreground text-xs">
           Înainte
         </Badge>
       </div>
       <div className="absolute top-3 right-3 z-20">
-        <Badge variant="secondary" className="bg-white/90 text-deep-brown text-xs">
+        <Badge variant="secondary" className="bg-white/90 text-foreground text-xs">
           După
         </Badge>
       </div>
@@ -145,7 +149,7 @@ const BeforeAfterSlider = ({ caseData, onClick }: BeforeAfterSliderProps) => {
         }}
         className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        <Badge className="bg-white/95 text-deep-brown hover:bg-white cursor-pointer flex items-center gap-1.5 py-1.5 px-3">
+        <Badge className="bg-white/95 text-foreground hover:bg-white cursor-pointer flex items-center gap-1.5 py-1.5 px-3">
           <ZoomIn className="w-3.5 h-3.5" />
           Vezi Detalii
         </Badge>
@@ -154,7 +158,7 @@ const BeforeAfterSlider = ({ caseData, onClick }: BeforeAfterSliderProps) => {
       {/* Case Info Overlay */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 z-20">
         <div className="flex flex-wrap gap-1.5">
-          <Badge className="bg-rose-gold/90 text-white text-xs">
+          <Badge className="bg-primary/90 text-primary-foreground text-xs">
             {caseData.size}cc
           </Badge>
           <Badge variant="outline" className="bg-white/20 border-white/30 text-white text-xs capitalize">
@@ -228,31 +232,45 @@ const GalleryPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-champagne-light/50 to-background">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-              Galerie Foto
+      {/* Hero Section - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Galerie Foto"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-4 pt-20">
+          <span className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4 block animate-fade-in">
+            Galerie Foto
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
+            Rezultate Reale,
+            <br />
+            <span className="text-gradient-gold">Filtrabile</span>
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8 animate-fade-in-up animation-delay-100">
+            Peste 500 de transformări documentate. Găsește cazuri similare cu profilul tău 
+            pentru a vizualiza rezultate realiste.
+          </p>
+          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary"></div>
+              {filteredGallery.length} cazuri afișate
             </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
-              Rezultate Reale, Filtrabile
-            </h1>
-            <p className="text-soft-brown text-lg leading-relaxed mb-8">
-              Peste 500 de transformări documentate. Găsește cazuri similare cu profilul tău 
-              pentru a vizualiza rezultate realiste.
-            </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-rose-gold"></div>
-                {filteredGallery.length} cazuri afișate
-              </span>
-              <span className="text-border">|</span>
-              <span>Click pentru detalii complete</span>
-            </div>
+            <span className="text-border">|</span>
+            <span>Click pentru detalii complete</span>
           </div>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Filter & Gallery Section */}
       <section className="py-12">
@@ -283,7 +301,7 @@ const GalleryPage = () => {
           {/* Filters Panel */}
           {showFilters && (
             <div className="bg-card rounded-2xl p-6 lg:p-8 mb-10 shadow-soft border border-border/50 animate-fade-in">
-              <h3 className="font-serif text-xl text-deep-brown mb-6">
+              <h3 className="font-serif text-xl text-foreground mb-6">
                 Filtrează după caracteristicile tale
               </h3>
               
@@ -292,7 +310,7 @@ const GalleryPage = () => {
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-foreground flex items-center justify-between">
                     <span>Înălțime</span>
-                    <span className="text-rose-gold">
+                    <span className="text-primary">
                       {filters.heightRange[0]} - {filters.heightRange[1]} cm
                     </span>
                   </label>
@@ -310,7 +328,7 @@ const GalleryPage = () => {
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-foreground flex items-center justify-between">
                     <span>Greutate</span>
-                    <span className="text-rose-gold">
+                    <span className="text-primary">
                       {filters.weightRange[0]} - {filters.weightRange[1]} kg
                     </span>
                   </label>
@@ -328,7 +346,7 @@ const GalleryPage = () => {
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-foreground flex items-center justify-between">
                     <span>Mărime Implant</span>
-                    <span className="text-rose-gold">
+                    <span className="text-primary">
                       {filters.sizeRange[0]} - {filters.sizeRange[1]} cc
                     </span>
                   </label>
@@ -389,7 +407,7 @@ const GalleryPage = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setFilters({ ...filters, style: "natural" })}
-                    className={filters.style === "natural" ? "bg-rose-gold/10 border-rose-gold text-rose-gold" : ""}
+                    className={filters.style === "natural" ? "bg-primary/10 border-primary text-primary" : ""}
                   >
                     Natural Look
                   </Button>
@@ -397,7 +415,7 @@ const GalleryPage = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setFilters({ ...filters, style: "voluptuous" })}
-                    className={filters.style === "voluptuous" ? "bg-rose-gold/10 border-rose-gold text-rose-gold" : ""}
+                    className={filters.style === "voluptuous" ? "bg-primary/10 border-primary text-primary" : ""}
                   >
                     Voluptuous
                   </Button>
@@ -405,25 +423,33 @@ const GalleryPage = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setFilters({ ...filters, style: "sporty" })}
-                    className={filters.style === "sporty" ? "bg-rose-gold/10 border-rose-gold text-rose-gold" : ""}
+                    className={filters.style === "sporty" ? "bg-primary/10 border-primary text-primary" : ""}
                   >
                     Sporty Look
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setFilters({ ...filters, sizeRange: [200, 350] })}
-                    className={filters.sizeRange[1] === 350 ? "bg-rose-gold/10 border-rose-gold text-rose-gold" : ""}
+                    onClick={() => setFilters({ ...filters, sizeRange: [200, 300] })}
+                    className={filters.sizeRange[0] === 200 && filters.sizeRange[1] === 300 ? "bg-primary/10 border-primary text-primary" : ""}
                   >
-                    Mărime Mică (200-350cc)
+                    Mărimi Mici (200-300cc)
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setFilters({ ...filters, sizeRange: [350, 550] })}
-                    className={filters.sizeRange[0] === 350 ? "bg-rose-gold/10 border-rose-gold text-rose-gold" : ""}
+                    onClick={() => setFilters({ ...filters, sizeRange: [300, 400] })}
+                    className={filters.sizeRange[0] === 300 && filters.sizeRange[1] === 400 ? "bg-primary/10 border-primary text-primary" : ""}
                   >
-                    Mărime Mare (350-550cc)
+                    Mărimi Medii (300-400cc)
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFilters({ ...filters, sizeRange: [400, 550] })}
+                    className={filters.sizeRange[0] === 400 && filters.sizeRange[1] === 550 ? "bg-primary/10 border-primary text-primary" : ""}
+                  >
+                    Mărimi Mari (400-550cc)
                   </Button>
                 </div>
               </div>
@@ -433,85 +459,41 @@ const GalleryPage = () => {
           {/* Gallery Grid */}
           {filteredGallery.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredGallery.map((item, index) => (
-                <div key={item.id} className="group">
-                  <BeforeAfterSlider 
-                    caseData={item} 
-                    onClick={() => openLightbox(index)}
-                  />
-                  <div className="mt-3 px-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-soft-brown">
-                        {item.height}cm · {item.weight}kg
-                      </span>
-                      <span className="text-muted-foreground capitalize">
-                        {item.style}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              {filteredGallery.map((caseData, index) => (
+                <BeforeAfterSlider
+                  key={caseData.id}
+                  caseData={caseData}
+                  onClick={() => openLightbox(index)}
+                />
               ))}
             </div>
           ) : (
-            <div className="text-center py-20">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
-                <Filter className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="font-serif text-2xl text-deep-brown mb-3">
-                Niciun rezultat găsit
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Încearcă să ajustezi filtrele pentru a vedea mai multe cazuri.
+            <div className="text-center py-16">
+              <p className="text-muted-foreground text-lg mb-4">
+                Nu am găsit cazuri care să corespundă filtrelor selectate.
               </p>
               <Button variant="outline" onClick={resetFilters}>
                 Resetează Filtrele
               </Button>
             </div>
           )}
-
-          {/* Load More */}
-          {filteredGallery.length > 0 && (
-            <div className="text-center mt-12">
-              <Button variant="hero" size="lg">
-                Încarcă Mai Multe Cazuri
-              </Button>
-              <p className="text-sm text-muted-foreground mt-3">
-                Afișăm {filteredGallery.length} din 500+ cazuri
-              </p>
-            </div>
-          )}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-b from-background to-champagne-light/30">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl text-deep-brown mb-4">
-              Vrei să vezi cum ai arăta?
-            </h2>
-            <p className="text-soft-brown mb-8">
-              Programează o consultație pentru o simulare 3D personalizată cu implanturile potrivite pentru corpul tău.
-            </p>
-            <Button variant="hero" size="xl">
-              Programează Simulare 3D
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Lightbox */}
+      {selectedCaseIndex !== null && (
+        <GalleryLightbox
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          caseData={filteredGallery[selectedCaseIndex]}
+          onNext={handleNext}
+          onPrev={handlePrev}
+          hasNext={selectedCaseIndex < filteredGallery.length - 1}
+          hasPrev={selectedCaseIndex > 0}
+        />
+      )}
 
       <Footer />
-
-      {/* Lightbox Modal */}
-      <GalleryLightbox
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-        caseData={selectedCaseIndex !== null ? filteredGallery[selectedCaseIndex] : null}
-        onNext={handleNext}
-        onPrev={handlePrev}
-        hasNext={selectedCaseIndex !== null && selectedCaseIndex < filteredGallery.length - 1}
-        hasPrev={selectedCaseIndex !== null && selectedCaseIndex > 0}
-      />
     </div>
   );
 };
