@@ -111,6 +111,10 @@ export default {
           from: { opacity: "0", transform: "translateX(30px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
+        "slow-pulse": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.4" },
+        },
         "glow-travel": {
           "0%": { top: "0%", opacity: "0" },
           "10%": { opacity: "1" },
@@ -231,6 +235,7 @@ export default {
         "glow-wave-1": "glow-wave-1 10s ease-in-out infinite",
         "glow-wave-2": "glow-wave-2 10s ease-in-out infinite",
         "glow-wave-3": "glow-wave-3 10s ease-in-out infinite",
+        "slow-pulse": "slow-pulse 1s ease-in-out infinite",
       },
     },
   },
