@@ -11,19 +11,22 @@ const ResourcesSection = () => {
 
   const resources = [
     {
-      title: "Implant Rotund vs. Anatomic: Care ți se potrivește?",
-      link: "/blog/implant-rotund-vs-anatomic",
+      title: "Implant Mamar București",
+      link: "/proceduri/implant-mamar-bucuresti",
       image: resource1Image,
+      buttonText: "Augmentare Mamară",
     },
     {
-      title: "Cât costă un implant mamar în București?",
-      link: "/preturi",
+      title: "Lifting Mamar",
+      link: "/proceduri/lifting-mamar-mastopexie-ridicare-sani",
       image: resource2Image,
+      buttonText: "Ridicare Sâni",
     },
     {
-      title: "Recuperarea după operație: Când poți merge la sală?",
-      link: "/blog/sport-dupa-augmentare-mamara",
+      title: "Reducție Mamară",
+      link: "/proceduri/micsorare-sani-reductie-mamara",
       image: resource3Image,
+      buttonText: "Micșorare Sâni",
     },
   ];
 
@@ -72,7 +75,7 @@ const ResourcesSection = () => {
                   {resource.title}
                 </h3>
                 <span className="inline-flex items-center gap-2 text-sm font-sans font-medium text-rose-gold group-hover:gap-3 transition-all">
-                  Citește Ghidul
+                  {resource.buttonText}
                   <MaterialIcon name="arrow_forward" className="text-base" />
                 </span>
               </div>
