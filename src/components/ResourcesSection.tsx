@@ -1,7 +1,7 @@
+import React, { useCallback, useEffect, useState } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState } from "react";
 
 // Import resource images
 import resource1Image from "@/assets/resources/resource-1.jpg";
