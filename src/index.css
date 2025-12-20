@@ -437,3 +437,46 @@
   99% { transform: scale(1.08); box-shadow: 0 0 20px 8px rgba(212, 175, 155, 0.55); }
   100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 155, 0); }
 }
+
+/* Glowing dot border animation */
+@keyframes border-glow-travel {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  25% {
+    top: 0;
+    left: 100%;
+  }
+  50% {
+    top: 100%;
+    left: 100%;
+  }
+  75% {
+    top: 100%;
+    left: 0;
+  }
+  100% {
+    top: 0;
+    left: 0;
+  }
+}
+
+.btn-glow-border {
+  position: relative;
+  overflow: visible;
+}
+
+.btn-glow-border::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, hsl(30 50% 70%) 0%, hsl(30 40% 53%) 40%, transparent 70%);
+  border-radius: 50%;
+  animation: border-glow-travel 3s linear infinite;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px 4px hsl(30 40% 53% / 0.6), 0 0 20px 8px hsl(30 40% 53% / 0.3);
+  pointer-events: none;
+}
