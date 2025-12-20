@@ -1,5 +1,5 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
-import doctorImage from "@/assets/doctor-portrait.jpg";
+import doctorImage from "@/assets/doctor-portrait.png";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const DoctorSection = () => {
