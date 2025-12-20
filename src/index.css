@@ -721,3 +721,31 @@
 .animate-text-glow-3 {
   animation: text-glow-wave-3 8s ease-in-out infinite;
 }
+
+/* Accessibility: High Contrast Mode */
+.high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  --muted-foreground: 0 0% 85%;
+  --border: 0 0% 40%;
+}
+
+.high-contrast img {
+  filter: contrast(1.1);
+}
+
+.high-contrast a,
+.high-contrast button {
+  text-decoration-thickness: 2px;
+}
+
+/* Accessibility: Reduced Motion */
+.reduce-motion,
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
