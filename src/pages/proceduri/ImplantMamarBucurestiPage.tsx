@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useCounterAnimation } from "@/hooks/use-counter-animation";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, ChevronDown, ZoomIn, X, Ruler, Phone } from "lucide-react";
+import { ArrowRight, Check, Clock, Syringe, Bed, Diamond, ChevronDown, ZoomIn, X, Ruler, Phone } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -422,12 +422,12 @@ const AugmentareMamaraPage = () => {
                 <p className="text-foreground font-medium">aprox. 2 ore</p>
               </div>
               <div className="bg-card rounded-xl p-6 text-center border border-border/50">
-                <Stethoscope className="w-6 h-6 text-primary mx-auto mb-3" />
+                <Syringe className="w-6 h-6 text-primary mx-auto mb-3" />
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Anestezie</p>
                 <p className="text-foreground font-medium">Generală</p>
               </div>
               <div className="bg-card rounded-xl p-6 text-center border border-border/50">
-                <Building2 className="w-6 h-6 text-primary mx-auto mb-3" />
+                <Bed className="w-6 h-6 text-primary mx-auto mb-3" />
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Internare</p>
                 <p className="text-foreground font-medium">1 Noapte</p>
               </div>
