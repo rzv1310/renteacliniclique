@@ -339,6 +339,14 @@ const AugmentareMamaraPage = () => {
                     <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
                     Orientare mai puțin critică
                   </div>
+                  <Link 
+                    to="/proceduri/implanturi-rotunde" 
+                    className="flex items-start gap-2 text-sm text-primary hover:underline mt-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Ghid implanturi mamare rotunde
+                  </Link>
                 </div>
               )}
             </div>
@@ -384,6 +392,14 @@ const AugmentareMamaraPage = () => {
                     <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
                     Poziționare mai atentă
                   </div>
+                  <Link 
+                    to="/proceduri/implanturi-anatomice" 
+                    className="flex items-start gap-2 text-sm text-primary hover:underline mt-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Ghid implanturi mamare anatomice
+                  </Link>
                 </div>
               )}
             </div>
