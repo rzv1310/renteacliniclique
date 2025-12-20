@@ -8,16 +8,16 @@ const ArticlePlasareImplant = () => {
   return (
     <PageLayout>
       {/* Hero Section */}
-      <section className="relative h-[40vh] min-h-[320px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="Plasarea implantului mamar" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-deep-brown mb-4">
+        <div className="container mx-auto px-4 lg:px-8 relative z-10 text-center">
+          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4 drop-shadow-lg">
             Plasarea implantului: Subglandular vs. Submuscular (Dual Plane)
           </h1>
-          <div className="flex items-center justify-center gap-4 text-sm text-soft-brown">
+          <div className="flex items-center justify-center gap-4 text-sm text-white/90">
             <span className="flex items-center gap-1"><Clock className="w-4 h-4" />9 min citire</span>
           </div>
         </div>
