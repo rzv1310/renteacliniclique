@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Phone, Mail, MapPin, Loader2, CheckCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -24,7 +25,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import heroImage from "@/assets/hero-image.jpg";
+import heroImage from "@/assets/heroes/hero-contact.jpg";
 
 // Zod validation schema with proper constraints
 const contactFormSchema = z.object({
@@ -152,24 +153,36 @@ const ContactPage = () => {
 
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
-        <div className="absolute inset-0 bg-background/70" />
-        <div className="relative z-10 text-center px-4">
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
-            <span className="font-normal">Contact</span>{" "}
+      {/* Hero Section - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Contact"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-4 pt-20">
+          <span className="text-sm uppercase tracking-[0.3em] text-primary font-medium mb-4 block animate-fade-in">
+            Contactează-ne
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
+            Contact{" "}
             <span className="italic text-primary">&</span>{" "}
-            <span className="italic text-primary">Programări</span>
+            <span className="text-gradient-gold">Programări</span>
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-base md:text-lg">
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-100">
             Suntem aici pentru tine. Completează formularul, sună-ne sau vino direct la clinică pentru a începe călătoria ta către frumusețe.
           </p>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Contact Cards Section */}
       <section className="py-16 lg:py-20 bg-background">
