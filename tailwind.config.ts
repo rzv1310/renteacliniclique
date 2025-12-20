@@ -116,8 +116,8 @@ export default {
           "50%": { opacity: "0.4" },
         },
         "text-glow": {
-          "0%, 100%": { textShadow: "0 0 4px rgba(212, 175, 155, 0.3)" },
-          "50%": { textShadow: "0 0 12px rgba(212, 175, 155, 0.8), 0 0 20px rgba(212, 175, 155, 0.4)" },
+          "0%, 100%": { textShadow: "0 0 8px rgba(212, 175, 155, 0.5)" },
+          "50%": { textShadow: "0 0 20px rgba(212, 175, 155, 1), 0 0 35px rgba(212, 175, 155, 0.7), 0 0 50px rgba(212, 175, 155, 0.4)" },
         },
         "glow-travel": {
           "0%": { top: "0%", opacity: "0" },
@@ -240,7 +240,7 @@ export default {
         "glow-wave-2": "glow-wave-2 10s ease-in-out infinite",
         "glow-wave-3": "glow-wave-3 10s ease-in-out infinite",
         "slow-pulse": "slow-pulse 1s ease-in-out infinite",
-        "text-glow": "text-glow 2s ease-in-out infinite",
+        "text-glow": "text-glow 3s ease-in-out infinite",
       },
     },
   },
