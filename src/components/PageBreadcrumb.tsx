@@ -53,6 +53,10 @@ const routeLabels: Record<string, string> = {
   "cicatrici-dupa-implant": "Cicatrici după Implant",
   // Cluster 4: Branduri
   "mentor-vs-motiva": "Mentor vs. Motiva",
+  // Legal
+  "cookies": "Politica de Cookies",
+  "gdpr": "Politica GDPR",
+  "termeni-si-conditii": "Termeni și Condiții",
 };
 
 const PageBreadcrumb = () => {
