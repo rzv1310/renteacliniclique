@@ -2,7 +2,9 @@ import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 // Import resource images
-import abstractFeminine from "@/assets/abstract-feminine.jpg";
+import resource1Image from "@/assets/resources/resource-1.jpg";
+import resource2Image from "@/assets/resources/resource-2.jpg";
+import resource3Image from "@/assets/resources/resource-3.jpg";
 
 const ResourcesSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -11,17 +13,17 @@ const ResourcesSection = () => {
     {
       title: "Implant Rotund vs. Anatomic: Care ți se potrivește?",
       link: "/blog/implant-rotund-vs-anatomic",
-      image: abstractFeminine,
+      image: resource1Image,
     },
     {
       title: "Cât costă un implant mamar în București?",
       link: "/preturi",
-      image: abstractFeminine,
+      image: resource2Image,
     },
     {
       title: "Recuperarea după operație: Când poți merge la sală?",
       link: "/blog/sport-dupa-augmentare-mamara",
-      image: abstractFeminine,
+      image: resource3Image,
     },
   ];
 
