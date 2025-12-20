@@ -17,9 +17,15 @@ const GallerySection = () => {
     { id: "sporty", label: "Sporty Look" },
   ];
 
-  const cases = [
-    { before: galleryAfter, after: galleryBefore, label: "Caz #1 - Natural 350cc" },
-  ];
+  const casesByFilter: Record<string, { before: string; after: string; label: string }[]> = {
+    natural: [
+      { before: galleryAfter, after: galleryBefore, label: "Caz #1 - Natural 350cc" },
+    ],
+    voluptuous: [],
+    sporty: [],
+  };
+
+  const cases = casesByFilter[activeFilter] || [];
 
   const handleSliderMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -74,48 +80,56 @@ const GallerySection = () => {
 
         {/* Before/After Comparison Slider */}
         <div className={`max-w-5xl mx-auto mb-6 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div
-            className="relative aspect-[3/4] max-w-md mx-auto rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
-            onMouseMove={handleSliderMove}
-            onTouchMove={handleTouchMove}
-          >
-            {/* Before Image */}
-            <img
-              src={cases[activeCase].before}
-              alt="Înainte"
-              className="absolute inset-0 w-full h-full object-cover object-[40%_center]"
-            />
-
-            {/* After Image */}
+          {cases.length > 0 ? (
             <div
-              className="absolute inset-0 overflow-hidden"
-              style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+              className="relative aspect-[3/4] max-w-md mx-auto rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
+              onMouseMove={handleSliderMove}
+              onTouchMove={handleTouchMove}
             >
+              {/* Before Image */}
               <img
-                src={cases[activeCase].after}
-                alt="După"
-                className="absolute inset-0 w-full h-full object-cover"
+                src={cases[activeCase]?.before}
+                alt="Înainte"
+                className="absolute inset-0 w-full h-full object-cover object-[40%_center]"
               />
-            </div>
 
-            {/* Labels */}
-            <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full border border-border">
-              <span className="text-sm font-sans font-medium text-foreground">Înainte</span>
-            </div>
-            <div className="absolute top-4 right-4 bg-rose-gold px-4 py-2 rounded-full">
-              <span className="text-sm font-sans font-medium text-primary-foreground">După (3 luni)</span>
-            </div>
+              {/* After Image */}
+              <div
+                className="absolute inset-0 overflow-hidden"
+                style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+              >
+                <img
+                  src={cases[activeCase]?.after}
+                  alt="După"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
 
-            {/* Slider Line */}
-            <div
-              className="absolute top-0 bottom-0 w-0.5 bg-foreground/50"
-              style={{ left: `${sliderPosition}%` }}
-            >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-card border border-border rounded-full shadow-elegant flex items-center justify-center">
-                <MaterialIcon name="code" className="text-xl text-rose-gold" />
+              {/* Labels */}
+              <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full border border-border">
+                <span className="text-sm font-sans font-medium text-foreground">Înainte</span>
+              </div>
+              <div className="absolute top-4 right-4 bg-rose-gold px-4 py-2 rounded-full">
+                <span className="text-sm font-sans font-medium text-primary-foreground">După (3 luni)</span>
+              </div>
+
+              {/* Slider Line */}
+              <div
+                className="absolute top-0 bottom-0 w-0.5 bg-foreground/50"
+                style={{ left: `${sliderPosition}%` }}
+              >
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-card border border-border rounded-full shadow-elegant flex items-center justify-center">
+                  <MaterialIcon name="code" className="text-xl text-rose-gold" />
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="relative aspect-[3/4] max-w-md mx-auto rounded-2xl overflow-hidden bg-card border border-border flex items-center justify-center">
+              <p className="text-muted-foreground font-sans text-center px-8">
+                Imagini pentru acest stil vor fi adăugate în curând.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Bottom CTA Text */}
