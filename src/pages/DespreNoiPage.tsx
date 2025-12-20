@@ -159,36 +159,6 @@ const DespreNoiPage = () => {
           </div>
         </div>
       </section>
-
-      {/* Clinica */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-6">
-              Clinica Noastră
-            </h2>
-            <p className="text-muted-foreground leading-relaxed mb-12 max-w-2xl mx-auto">
-              Situată în inima Bucureștiului, clinica noastră oferă un mediu intim și 
-              elegant, echipat cu cele mai moderne tehnologii pentru siguranța și 
-              confortul pacientelor.
-            </p>
-
-            <div className="grid sm:grid-cols-3 gap-6">
-              {[
-                { title: "Sală de Operație", desc: "Echipament de ultimă generație" },
-                { title: "Camere Private", desc: "Confort și intimitate" },
-                { title: "Simulare 3D", desc: "Vizualizează rezultatul" },
-              ].map((feature) => (
-                <div key={feature.title} className="bg-secondary rounded-xl p-6">
-                  <h3 className="font-medium text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
     </PageLayout>
   );
 };
