@@ -340,7 +340,7 @@ const AugmentareMamaraPage = () => {
                     Orientare mai puțin critică
                   </div>
                   <Link 
-                    to="/proceduri/implanturi-rotunde" 
+                    to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" 
                     className="flex items-start gap-2 text-sm text-primary hover:underline mt-2"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -393,7 +393,7 @@ const AugmentareMamaraPage = () => {
                     Poziționare mai atentă
                   </div>
                   <Link 
-                    to="/proceduri/implanturi-anatomice" 
+                    to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" 
                     className="flex items-start gap-2 text-sm text-primary hover:underline mt-2"
                     onClick={(e) => e.stopPropagation()}
                   >
