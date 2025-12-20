@@ -52,7 +52,7 @@
     --deep-bg: 0 0% 5%;
     --dark-neutral: 0 0% 10%;
     --light-grey: 0 0% 83%;
-    --luxury-brown: 20 25% 12%;
+    --luxury-brown: 20 20% 8%;
 
     /* Gradients */
     --gradient-hero: linear-gradient(90deg, hsl(0 0% 5%) 0%, transparent 100%);
