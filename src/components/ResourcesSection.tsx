@@ -51,7 +51,7 @@ const ResourcesSection = () => {
     },
     {
       title: "Preț Implant Mamar",
-      link: "/preturi",
+      link: "/implant-mamar-pret",
       image: resource4Image,
       buttonText: "Vezi Tarifele",
     },
