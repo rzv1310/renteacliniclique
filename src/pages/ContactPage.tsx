@@ -125,7 +125,7 @@ const ContactPage = () => {
       title: "Email",
       description: "Pentru întrebări detaliate sau trimiterea de documente medicale.",
       cta: "TRIMITE EMAIL",
-      href: "mailto:contact@rentea.ro",
+      href: "mailto:contact@implantmamarbucuresti.ro",
     },
     {
       icon: MapPin,
