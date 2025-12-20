@@ -20,6 +20,9 @@ const ResourcesSection = () => {
       loop: true, 
       align: "start",
       slidesToScroll: 1,
+      dragFree: false,
+      containScroll: "trimSnaps",
+      watchDrag: true,
     },
     [autoplayRef.current]
   );
