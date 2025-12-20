@@ -549,6 +549,14 @@ const AugmentareMamaraPage = () => {
                 </div>
               )}
             </div>
+
+            {/* CTA Button */}
+            <div className="flex justify-center mt-12">
+              <Button size="lg" className="btn-glow-border bg-transparent text-foreground border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
+                <Phone className="w-5 h-5 mr-2" />
+                Fă primul pas pentru transformare
+              </Button>
+            </div>
           </div>
         </div>
       </section>
