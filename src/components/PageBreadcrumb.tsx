@@ -24,7 +24,7 @@ const routeLabels: Record<string, string> = {
   "galerie": "Galerie Foto",
   "simulator-3d": "Simulator 3D",
   "implant-mamar-pret": "Prețuri Implant Mamar",
-  "ghid-recuperare": "Ghid Recuperare",
+  "recuperare-implant-mamar": "Recuperare după Implant",
   "despre-noi": "Despre Noi",
   "contact": "Contact",
   "turism-medical-intern": "Paciente din Provincie",
