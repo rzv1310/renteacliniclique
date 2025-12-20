@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Award, Heart, Users } from "lucide-react";
+import { ArrowRight, Award, Heart, Users, Phone } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-despre.jpg";
@@ -28,10 +28,14 @@ const DespreNoiPage = () => {
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground mb-6 animate-fade-in-up">
             Rentéa Aesthetic Clinique București
           </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-100">
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-100 mb-8">
             La Rentéa, ne dedicăm exclusiv chirurgiei estetice mamare. Această specializare 
             unică ne permite să oferim experiență și rezultate la cel mai înalt nivel.
           </p>
+          <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold animate-fade-in-up animation-delay-200">
+            <Phone className="w-5 h-5 mr-2" />
+            Fă primul pas pentru transformare
+          </Button>
         </div>
       </section>
 
