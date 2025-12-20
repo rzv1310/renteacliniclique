@@ -223,7 +223,7 @@ const AugmentareMamaraPage = () => {
   ];
 
   const recoverySteps = [
-    { day: "Zilele 1-3", desc: "Odihna este crucială. Disconfort ușor gestionat cu medicație. Bandajele rămân pe loc." },
+    { day: "Zilele 1-3", desc: "Odihnă obligatorie. Disconfort gestionat cu medicație. Bandajele rămân pe loc." },
     { day: "Ziua 7", desc: "Primul control. Majoritatea pacientelor revin la muncă ușoară de birou și condus." },
     { day: "Săptămânile 3-4", desc: "Edemul scade semnificativ. Exercițiile cardio ușoare pot fi reluate." },
     { day: "Săptămâna 6+", desc: "Recuperare completă. Fără restricții la ridicarea greutăților sau exerciții intense." }
