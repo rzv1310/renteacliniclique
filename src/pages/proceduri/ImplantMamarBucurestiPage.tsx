@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useCounterAnimation } from "@/hooks/use-counter-animation";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Clock, Stethoscope, Building2, Diamond, ChevronDown, ZoomIn, X, Ruler, Phone } from "lucide-react";
@@ -27,6 +28,12 @@ const AugmentareMamaraPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Counter animations for stats
+  const { count: yearsCount, ref: yearsRef } = useCounterAnimation({ end: 25, duration: 2000 });
+  const { count: proceduresCount, ref: proceduresRef } = useCounterAnimation({ end: 1000, duration: 2500 });
+  const { count: certifiedCount, ref: certifiedRef } = useCounterAnimation({ end: 100, duration: 1800 });
+  const { count: ratingCount, ref: ratingRef } = useCounterAnimation({ end: 49, duration: 2000 });
 
   const galleryCases = [
     {
@@ -691,20 +698,20 @@ const AugmentareMamaraPage = () => {
       <section className="py-16 bg-card border-y border-border/30">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
-            <div>
-              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">25+</p>
+            <div ref={yearsRef}>
+              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{yearsCount}+</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Ani Experiență</p>
             </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">1000+</p>
+            <div ref={proceduresRef}>
+              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{proceduresCount}+</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Proceduri</p>
             </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">100%</p>
+            <div ref={certifiedRef}>
+              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{certifiedCount}%</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Board Certified</p>
             </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">4.9</p>
+            <div ref={ratingRef}>
+              <p className="text-4xl md:text-5xl font-light text-gradient-gold mb-2">{(ratingCount / 10).toFixed(1)}</p>
               <p className="text-sm text-muted-foreground uppercase tracking-wider">Rating Pacienți</p>
             </div>
           </div>
