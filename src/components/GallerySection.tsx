@@ -75,7 +75,7 @@ const GallerySection = () => {
         {/* Before/After Comparison Slider */}
         <div className={`max-w-5xl mx-auto mb-6 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div
-            className="relative aspect-[16/7] rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
+            className="relative aspect-[3/4] max-w-md mx-auto rounded-2xl overflow-hidden bg-card border border-border cursor-ew-resize select-none"
             onMouseMove={handleSliderMove}
             onTouchMove={handleTouchMove}
           >
