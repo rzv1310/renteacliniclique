@@ -7,8 +7,9 @@ import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAugmentare";
 
-// Import hero image
+// Import hero images
 import heroImage from "@/assets/heroes/hero-augmentation.jpg";
+import heroNaturalBeauty from "@/assets/heroes/hero-natural-beauty.jpg";
 
 // Import implant images
 import implantRound from "@/assets/implants/implant-round.png";
@@ -815,8 +816,16 @@ const AugmentareMamaraPage = () => {
       </section>
 
       {/* Art of Natural Enhancement */}
-      <section className="py-12 bg-luxury-brown silk-folds">
-        <div className="container mx-auto px-4 lg:px-8">
+      <section className="py-16 relative overflow-hidden">
+        {/* Background image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroNaturalBeauty})` }}
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/80" />
+        
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <Diamond className="w-12 h-12 text-primary mx-auto mb-8" />
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-6">
