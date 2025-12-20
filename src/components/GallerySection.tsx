@@ -2,12 +2,8 @@ import { useState } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
-import case1Before from "@/assets/gallery/case-1-before.jpg";
-import case1After from "@/assets/gallery/case-1-after.jpg";
-import case2Before from "@/assets/gallery/case-2-before.jpg";
-import case2After from "@/assets/gallery/case-2-after.jpg";
-import case3Before from "@/assets/gallery/case-3-before.jpg";
-import case3After from "@/assets/gallery/case-3-after.jpg";
+import galleryBefore from "@/assets/gallery/gallery-before.png";
+import galleryAfter from "@/assets/gallery/gallery-after.png";
 
 const GallerySection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -22,9 +18,7 @@ const GallerySection = () => {
   ];
 
   const cases = [
-    { before: case1Before, after: case1After, label: "Caz #1 - Natural 350cc" },
-    { before: case2Before, after: case2After, label: "Caz #2 - Voluptuous 400cc" },
-    { before: case3Before, after: case3After, label: "Caz #3 - Sporty 300cc" },
+    { before: galleryBefore, after: galleryAfter, label: "Caz #1 - Natural 350cc" },
   ];
 
   const handleSliderMove = (e: React.MouseEvent<HTMLDivElement>) => {
