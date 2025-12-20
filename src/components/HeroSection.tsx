@@ -1,4 +1,6 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
+import { Button } from "@/components/ui/button";
+import { Phone } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 
 const HeroSection = () => {
@@ -32,6 +34,10 @@ const HeroSection = () => {
                   Simulator 3D
                 </button>
               </a>
+              <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
+                <Phone className="w-5 h-5 mr-2" />
+                Fă primul pas pentru transformare
+              </Button>
             </div>
           </div>
 
