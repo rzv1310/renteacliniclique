@@ -122,13 +122,6 @@ const App = () => (
           {/* Blog - Cluster 4: Branduri */}
           <Route path="/blog/mentor-vs-motiva" element={<ArticleMentorVsMotiva />} />
           
-          {/* Redirects pentru URL-uri vechi */}
-          
-          <Route path="/implanturi" element={<Navigate to="/proceduri/implant-mamar-bucuresti" replace />} />
-          <Route path="/turism-medical" element={<Navigate to="/turism-medical-intern" replace />} />
-          <Route path="/finantare" element={<Navigate to="/implant-mamar-in-rate" replace />} />
-          
-          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
