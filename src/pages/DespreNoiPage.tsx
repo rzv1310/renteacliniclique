@@ -117,9 +117,6 @@ const DespreNoiPage = () => {
                 Dr. Lucian Popa
               </h3>
               <p className="text-primary mb-4">Medic Primar Chirurgie Estetică, Plastică și Reconstructivă</p>
-              <p className="font-serif text-lg md:text-xl text-foreground/80 italic max-w-2xl mx-auto">
-                Medicină prin ochii unui artist. Precizie prin mâna unui chirurg.
-              </p>
             </div>
 
             {/* Introduction Card */}
