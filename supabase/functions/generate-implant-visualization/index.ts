@@ -239,41 +239,41 @@ Maintain proper proportions and natural body contours.`;
 
     const data = await response.json();
     console.log("AI Response structure:", JSON.stringify(data, null, 2).substring(0, 1000));
-    
+
     // Extract the generated image
     const generatedImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-    
+
     if (!generatedImage) {
-      console.error("No image in response. Full response:", JSON.stringify(data));
-      
-      // Check if model refused or couldn't process
-      const textContent = data.choices?.[0]?.message?.content;
-      const isRefusal = textContent && (
-        textContent.toLowerCase().includes("cannot") ||
-        textContent.toLowerCase().includes("sorry") ||
-        textContent.toLowerCase().includes("unable") ||
-        textContent.toLowerCase().includes("can't")
+      const nativeFinishReason = data.choices?.[0]?.native_finish_reason as string | undefined;
+      console.error(
+        "No image in response. native_finish_reason=",
+        nativeFinishReason,
+        "Full response:",
+        JSON.stringify(data)
       );
-      
-      const tips = [
-        "Folosiți o fotografie frontală clară",
-        "Asigurați iluminare bună și uniformă",
-        "Zona bustului să fie vizibilă",
-        "Evitați fundaluri aglomerate",
-        "Folosiți o fotografie recentă și de bună calitate"
-      ];
-      
-      const helpfulMessage = isRefusal 
-        ? "AI-ul nu a putut procesa această imagine. Încercați cu o fotografie diferită."
-        : "Nu s-a putut genera vizualizarea. Încercați cu o altă fotografie.";
-      
+
+      const tips = nativeFinishReason === "IMAGE_SAFETY"
+        ? [
+            "Folosiți o fotografie îmbrăcată (sutien/top) – fără nuditate",
+            "Evitați close-up foarte strâns pe zona bustului",
+            "Fotografie frontală clară, lumină bună, fundal simplu",
+            "Zona bustului să fie vizibilă, dar într-un context natural"
+          ]
+        : [
+            "Folosiți o fotografie frontală clară",
+            "Asigurați iluminare bună și uniformă",
+            "Zona bustului să fie vizibilă",
+            "Evitați fundaluri aglomerate"
+          ];
+
+      const helpfulMessage = nativeFinishReason === "IMAGE_SAFETY"
+        ? "AI-ul nu a putut genera imaginea (filtru de siguranță). Încercați cu o fotografie diferită."
+        : "AI-ul nu a generat o imagine. Încercați cu o fotografie diferită.";
+
+      // IMPORTANT: return 200 so the client can display tips (supabase.invoke treats non-2xx as error)
       return new Response(
-        JSON.stringify({ 
-          error: helpfulMessage,
-          tips: tips,
-          showTips: true
-        }),
-        { status: 422, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: helpfulMessage, tips, showTips: true, reason: nativeFinishReason ?? null }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -284,7 +284,7 @@ Maintain proper proportions and natural body contours.`;
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-    
+
   } catch (error) {
     console.error('Visualization error occurred:', error);
     return new Response(
