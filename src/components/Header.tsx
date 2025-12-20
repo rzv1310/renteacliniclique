@@ -48,8 +48,8 @@ const Header = () => {
     { name: "Ghid de Recuperare", href: "/ghid-recuperare" },
     { name: "Despre Noi", href: "/despre-noi" },
     { name: "Contact", href: "/contact" },
-    { name: "Turism Medical", href: "/turism-medical-intern" },
-    { name: "Finanțare", href: "/implant-mamar-in-rate" },
+    { name: "Paciente din Provincie", href: "/turism-medical-intern" },
+    { name: "Implant Mamar în Rate", href: "/implant-mamar-in-rate" },
     { name: "Blog", href: "/blog" },
   ];
 
