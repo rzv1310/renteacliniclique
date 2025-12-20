@@ -31,6 +31,11 @@ const TurismMedicalPage = lazy(() => import("./pages/TurismMedicalPage"));
 const FinantarePage = lazy(() => import("./pages/FinantarePage"));
 const Simulator3DPage = lazy(() => import("./pages/Simulator3DPage"));
 
+// Legal pages - Lazy loaded
+const CookiesPage = lazy(() => import("./pages/legal/CookiesPage"));
+const GDPRPage = lazy(() => import("./pages/legal/GDPRPage"));
+const TermeniConditiiPage = lazy(() => import("./pages/legal/TermeniConditiiPage"));
+
 // Blog - Lazy loaded
 const BlogIndex = lazy(() => import("./pages/blog/BlogIndex"));
 const ArticleRotundVsAnatomic = lazy(() => import("./pages/blog/ArticleRotundVsAnatomic"));
@@ -117,6 +122,11 @@ const App = () => (
             
             {/* Blog - Cluster 4: Branduri */}
             <Route path="/blog/mentor-vs-motiva" element={<ArticleMentorVsMotiva />} />
+            
+            {/* Pagini legale */}
+            <Route path="/cookies" element={<CookiesPage />} />
+            <Route path="/gdpr" element={<GDPRPage />} />
+            <Route path="/termeni-si-conditii" element={<TermeniConditiiPage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

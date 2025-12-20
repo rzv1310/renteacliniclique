@@ -200,17 +200,17 @@ const Footer = () => {
             <p className="text-muted-foreground text-xs">
               © 2026 Rentéa Aesthetic Clinique. Toate drepturile rezervate.
             </p>
-            <div className="flex gap-6">
-              <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+            <div className="flex flex-wrap gap-4 md:gap-6">
+              <Link to="/termeni-si-conditii" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
                 Termeni și Condiții
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+              </Link>
+              <Link to="/cookies" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
                 Cookies
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+              </Link>
+              <Link to="/gdpr" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
                 GDPR
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+              </Link>
+              <a href="https://anpc.ro" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
                 ANPC
               </a>
             </div>
