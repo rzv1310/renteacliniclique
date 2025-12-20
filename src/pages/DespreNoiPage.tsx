@@ -70,20 +70,6 @@ const DespreNoiPage = () => {
       <section className="py-20">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-6">
-                Filozofia Noastră
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                Credem că fiecare femeie merită să se simtă încrezătoare în propriul corp. 
-                Nu ne propunem să creăm un „ideal", ci să evidențiem frumusețea naturală 
-                și să aducem echilibru și armonie.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Abordarea noastră combină artă și știință - folosim cele mai avansate 
-                tehnici chirurgicale pentru a obține rezultate care arată și se simt naturale.
-              </p>
-            </div>
 
             <div>
               {/* Stats */}
