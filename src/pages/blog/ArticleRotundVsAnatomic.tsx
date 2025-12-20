@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-rotund-vs-anatomic.png";
@@ -51,6 +51,50 @@ const ArticleRotundVsAnatomic = () => {
 
               <h2 className="font-serif text-2xl text-deep-brown mt-8 mb-4">Concluzie</h2>
               <p>Alegerea depinde de obiectivele tale estetice și anatomia personală. O consultație te va ajuta să iei decizia corectă.</p>
+
+              {/* Recommended Section */}
+              <div className="mt-16 pt-8 border-t border-border">
+                <h3 className="font-serif text-2xl font-semibold text-deep-brown mb-8">
+                  Continuă să explorezi
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Service Recommendation */}
+                  <Link 
+                    to="/proceduri/implanturi-rotunde"
+                    className="group block bg-gradient-to-br from-rose-gold/10 to-secondary/50 rounded-2xl p-6 hover:shadow-elegant transition-all duration-300 no-underline"
+                  >
+                    <span className="text-xs uppercase tracking-wider text-rose-gold font-medium">Serviciu Recomandat</span>
+                    <h4 className="font-serif text-lg font-semibold text-deep-brown mt-2 mb-2 group-hover:text-rose-gold transition-colors">
+                      Implanturi Mamare Rotunde
+                    </h4>
+                    <p className="text-soft-brown text-sm mb-4">
+                      Descoperă avantajele implanturilor rotunde și află dacă sunt potrivite pentru tine.
+                    </p>
+                    <span className="text-rose-gold flex items-center gap-1 text-sm font-medium">
+                      Vezi detalii
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+
+                  {/* Related Article */}
+                  <Link 
+                    to="/blog/implant-mamar-250-ml-400ml"
+                    className="group block bg-card rounded-2xl p-6 shadow-soft hover:shadow-elegant transition-all duration-300 no-underline"
+                  >
+                    <span className="text-xs uppercase tracking-wider text-soft-brown font-medium">Articol Similar</span>
+                    <h4 className="font-serif text-lg font-semibold text-deep-brown mt-2 mb-2 group-hover:text-rose-gold transition-colors">
+                      Ghidul Mărimilor: Cum arată 250 ml vs 400 ml
+                    </h4>
+                    <p className="text-soft-brown text-sm mb-4">
+                      Vizualizează diferențele reale între volumele de implant.
+                    </p>
+                    <span className="text-rose-gold flex items-center gap-1 text-sm font-medium">
+                      Citește articolul
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

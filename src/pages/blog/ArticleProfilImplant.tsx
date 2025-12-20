@@ -1,33 +1,36 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import heroImage from "@/assets/heroes/hero-article-profil.jpg";
 
 const ArticleProfilImplant = () => {
   return (
     <PageLayout>
+      {/* Hero Section */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={heroImage} alt="Profil implant mamar" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        </div>
+        <div className="container mx-auto px-4 lg:px-8 relative z-10 text-center">
+          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4 drop-shadow-lg">
+            Profil Înalt vs. Profil Moderat: Ce înseamnă proiecția implantului?
+          </h1>
+          <div className="flex items-center justify-center gap-4 text-sm text-white/90">
+            <span className="flex items-center gap-1"><Clock className="w-4 h-4" />8 min citire</span>
+          </div>
+        </div>
+      </section>
+
       <PageBreadcrumb />
       <article className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 text-soft-brown hover:text-rose-gold transition-colors mb-8"
-            >
+            <Link to="/blog" className="inline-flex items-center gap-2 text-soft-brown hover:text-rose-gold transition-colors mb-8">
               <ArrowLeft className="w-4 h-4" />
               Înapoi la Blog
             </Link>
-
-            <div className="flex items-center gap-4 text-sm text-soft-brown mb-6">
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                8 min citire
-              </span>
-            </div>
-
-            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-deep-brown mb-8">
-              Profil Înalt vs. Profil Moderat: Ce înseamnă proiecția implantului?
-            </h1>
 
             <div className="prose prose-lg max-w-none">
               <p className="text-lg text-soft-brown leading-relaxed mb-8">
@@ -36,88 +39,26 @@ const ArticleProfilImplant = () => {
                 vă va ajuta să faceți o alegere informată.
               </p>
 
-              <h2 className="font-serif text-2xl font-semibold text-deep-brown mt-12 mb-4">
-                Ce este profilul implantului?
-              </h2>
+              <h2 className="font-serif text-2xl font-semibold text-deep-brown mt-12 mb-4">Ce este profilul implantului?</h2>
               <p className="text-soft-brown leading-relaxed mb-6">
                 Profilul se referă la gradul de proiecție al implantului - cât de mult "iese în față" 
                 de pe peretele toracic. Pentru același volum, un implant cu profil înalt va fi mai îngust 
                 la bază și mai proiectat, în timp ce unul cu profil moderat va fi mai lat și mai plat.
               </p>
 
-              <h2 className="font-serif text-2xl font-semibold text-deep-brown mt-12 mb-4">
-                Tipuri de profile disponibile
-              </h2>
+              <h2 className="font-serif text-2xl font-semibold text-deep-brown mt-12 mb-4">Tipuri de profile disponibile</h2>
               
-              <h3 className="font-serif text-xl font-medium text-deep-brown mt-8 mb-3">
-                Profil Moderat (Low Profile)
-              </h3>
+              <h3 className="font-serif text-xl font-medium text-deep-brown mt-8 mb-3">Profil Moderat (Low Profile)</h3>
               <p className="text-soft-brown leading-relaxed mb-6">
                 Implanturile cu profil moderat au o bază mai largă și o proiecție mai mică. 
                 Acestea sunt ideale pentru pacientele cu torace mai lat care doresc un aspect natural 
                 și o creștere subtilă a volumului.
               </p>
-              <ul className="list-disc pl-6 text-soft-brown space-y-2 mb-6">
-                <li>Aspect mai natural și mai puțin "rotund"</li>
-                <li>Potrivit pentru torace lat</li>
-                <li>Tranziție mai blândă între implant și țesutul natural</li>
-              </ul>
 
-              <h3 className="font-serif text-xl font-medium text-deep-brown mt-8 mb-3">
-                Profil Moderat Plus
-              </h3>
-              <p className="text-soft-brown leading-relaxed mb-6">
-                O opțiune intermediară care oferă un echilibru între proiecție și lățime. 
-                Este una dintre cele mai populare alegeri datorită versatilității sale.
-              </p>
-
-              <h3 className="font-serif text-xl font-medium text-deep-brown mt-8 mb-3">
-                Profil Înalt (High Profile)
-              </h3>
+              <h3 className="font-serif text-xl font-medium text-deep-brown mt-8 mb-3">Profil Înalt (High Profile)</h3>
               <p className="text-soft-brown leading-relaxed mb-6">
                 Implanturile cu profil înalt au o bază mai îngustă și o proiecție maximă. 
                 Acestea creează un bust mai plin și mai proeminent.
-              </p>
-              <ul className="list-disc pl-6 text-soft-brown space-y-2 mb-6">
-                <li>Proiecție maximă pentru un bust plin</li>
-                <li>Ideal pentru torace îngust</li>
-                <li>Creează mai mult "decolteu"</li>
-              </ul>
-
-              <h3 className="font-serif text-xl font-medium text-deep-brown mt-8 mb-3">
-                Profil Extra Înalt (Ultra High Profile)
-              </h3>
-              <p className="text-soft-brown leading-relaxed mb-6">
-                Cel mai proiectat tip de implant, recomandat în situații specifice, de obicei 
-                pentru paciente cu torace foarte îngust sau pentru reconstrucție mamară.
-              </p>
-
-              <h2 className="font-serif text-2xl font-semibold text-deep-brown mt-12 mb-4">
-                Cum alegem profilul potrivit?
-              </h2>
-              <p className="text-soft-brown leading-relaxed mb-6">
-                Alegerea profilului depinde de mai mulți factori:
-              </p>
-              <ul className="list-disc pl-6 text-soft-brown space-y-2 mb-6">
-                <li><strong>Lățimea toracelui</strong> - torace îngust → profil înalt; torace lat → profil moderat</li>
-                <li><strong>Lățimea bazei sânului</strong> - determinată de anatomia existentă</li>
-                <li><strong>Volumul dorit</strong> - pentru a obține un anumit volum pe un torace îngust, este necesar un profil mai înalt</li>
-                <li><strong>Stilul de viață</strong> - sportivele pot prefera un profil mai moderat</li>
-                <li><strong>Preferințele estetice</strong> - aspect natural vs. mai dramatic</li>
-              </ul>
-
-              <h2 className="font-serif text-2xl font-semibold text-deep-brown mt-12 mb-4">
-                Exemple practice
-              </h2>
-              <p className="text-soft-brown leading-relaxed mb-6">
-                <strong>Exemplu 1:</strong> O pacientă cu torace de 28 cm lățime care dorește 350 ml 
-                va obține un rezultat mai estetic cu un implant de profil înalt (bază ~11 cm) 
-                decât cu unul moderat (bază ~13 cm) care ar depăși limitele anatomice.
-              </p>
-              <p className="text-soft-brown leading-relaxed mb-6">
-                <strong>Exemplu 2:</strong> O pacientă cu torace de 34 cm care dorește 350 ml 
-                poate alege un profil moderat sau moderat plus pentru un aspect natural, 
-                fără a compromite proporțiile.
               </p>
 
               <div className="bg-secondary/50 rounded-2xl p-8 mt-12">
@@ -128,24 +69,26 @@ const ArticleProfilImplant = () => {
                   Alegerea corectă a profilului este esențială pentru un rezultat armonios. 
                   Programați o consultație pentru o evaluare personalizată.
                 </p>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 bg-rose-gold text-white px-6 py-3 rounded-full hover:bg-rose-gold/90 transition-colors"
-                >
+                <Link to="/contact" className="inline-flex items-center gap-2 bg-rose-gold text-white px-6 py-3 rounded-full hover:bg-rose-gold/90 transition-colors">
                   Programează consultația
                 </Link>
               </div>
 
-              <div className="mt-12 pt-8 border-t border-border">
-                <h3 className="font-serif text-lg font-semibold text-deep-brown mb-4">
-                  Articole similare
-                </h3>
-                <div className="flex flex-col gap-2">
-                  <Link to="/blog/implant-mamar-250-ml-400ml" className="text-rose-gold hover:underline">
-                    Ghidul Mărimilor: Cum arată 250 ml vs 400 ml pe corpul tău?
+              {/* Recommended Section */}
+              <div className="mt-16 pt-8 border-t border-border">
+                <h3 className="font-serif text-2xl font-semibold text-deep-brown mb-8">Continuă să explorezi</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Link to="/proceduri/implant-mamar-bucuresti" className="group block bg-gradient-to-br from-rose-gold/10 to-secondary/50 rounded-2xl p-6 hover:shadow-elegant transition-all duration-300 no-underline">
+                    <span className="text-xs uppercase tracking-wider text-rose-gold font-medium">Serviciu Recomandat</span>
+                    <h4 className="font-serif text-lg font-semibold text-deep-brown mt-2 mb-2 group-hover:text-rose-gold transition-colors">Augmentare Mamară București</h4>
+                    <p className="text-soft-brown text-sm mb-4">Descoperă procedura completă și programează o consultație.</p>
+                    <span className="text-rose-gold flex items-center gap-1 text-sm font-medium">Vezi detalii<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
                   </Link>
-                  <Link to="/blog/implanturi-rotunde-vs-anatomice" className="text-rose-gold hover:underline">
-                    Implanturi Rotunde vs. Anatomice: Ghid Complet
+                  <Link to="/blog/implant-mamar-250-ml-400ml" className="group block bg-card rounded-2xl p-6 shadow-soft hover:shadow-elegant transition-all duration-300 no-underline">
+                    <span className="text-xs uppercase tracking-wider text-soft-brown font-medium">Articol Similar</span>
+                    <h4 className="font-serif text-lg font-semibold text-deep-brown mt-2 mb-2 group-hover:text-rose-gold transition-colors">Ghidul Mărimilor: 250 ml vs 400 ml</h4>
+                    <p className="text-soft-brown text-sm mb-4">Vizualizează diferențele reale între volumele de implant.</p>
+                    <span className="text-rose-gold flex items-center gap-1 text-sm font-medium">Citește articolul<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></span>
                   </Link>
                 </div>
               </div>
