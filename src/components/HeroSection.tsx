@@ -26,9 +26,7 @@ const HeroSection = () => {
 
           {/* Subtitle */}
           <p className="text-body leading-relaxed mb-10 max-w-xl mx-auto animate-fade-in-up animation-delay-100">
-            Singura clinică din București dedicată exclusiv augmentării mamare.
-            <br />
-            Specializare 100% pentru siguranța și feminitatea ta.
+            Rentéa Aesthetic Clinique - Lider în chirurgia estetică din București, supra-specializați în augmentare mamară.
           </p>
 
           {/* CTA Buttons */}
