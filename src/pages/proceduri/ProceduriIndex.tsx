@@ -16,9 +16,9 @@ const procedures = [
     ],
   },
   {
-    title: "Augmentare cu Mastopexie",
+    title: "Lifting Mamar",
     description: "Combinația perfectă între mărirea sânilor și ridicarea lor pentru un rezultat complet și armonios.",
-    href: "/proceduri/augmentare-mamara-cu-mastopexie",
+    href: "/proceduri/lifting-mamar-mastopexie-ridicare-sani",
     subPages: [],
   },
   {
