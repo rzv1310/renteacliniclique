@@ -103,7 +103,7 @@ const DespreNoiPage = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground mb-12 text-center">
-              Echipa Noastră
+              Medicină prin ochii unui artist. Precizie prin mâna unui chirurg.
             </h2>
 
             {/* Doctor Header Card */}
