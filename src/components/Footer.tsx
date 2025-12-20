@@ -50,7 +50,7 @@ const Footer = () => {
             style={{ transform: `translateY(${parallaxOffset * -0.2}px)` }}
           >
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light mb-6 text-white">
-              O investiție în încrederea ta pe care o vei purta în fiecare zi.
+              O investiție în încrederea ta, pe care o vei purta în fiecare zi.
             </h2>
             <p className="text-zinc-400 text-lg mb-10">
               Primul pas către schimbare începe cu o simplă conversație.
