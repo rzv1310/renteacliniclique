@@ -73,7 +73,7 @@ const PageBreadcrumb = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/" className="flex items-center gap-1.5 text-soft-brown hover:text-rose-gold transition-colors">
+                <Link to="/" className="flex items-center gap-1.5 text-primary/80 hover:text-primary transition-colors">
                   <Home className="w-4 h-4" />
                   <span>Acasă</span>
                 </Link>
@@ -87,16 +87,16 @@ const PageBreadcrumb = () => {
               return (
                 <span key={segment} className="contents">
                   <BreadcrumbSeparator>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                    <ChevronRight className="w-4 h-4 text-primary/50" />
                   </BreadcrumbSeparator>
                   <BreadcrumbItem>
                     {isLast ? (
-                      <BreadcrumbPage className="text-deep-brown font-medium">
+                      <BreadcrumbPage className="text-primary font-medium">
                         {label}
                       </BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink asChild>
-                        <Link to={buildPath(index)} className="text-soft-brown hover:text-rose-gold transition-colors">
+                        <Link to={buildPath(index)} className="text-primary/80 hover:text-primary transition-colors">
                           {label}
                         </Link>
                       </BreadcrumbLink>
