@@ -7,7 +7,7 @@ const DoctorSection = () => {
 
   return (
     <section 
-      className="pt-4 pb-24 lg:pt-8 lg:pb-32 overflow-hidden bg-black"
+      className="pt-0 pb-24 lg:pt-0 lg:pb-32 overflow-hidden bg-black"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
