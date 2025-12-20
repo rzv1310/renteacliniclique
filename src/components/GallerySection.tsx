@@ -58,9 +58,6 @@ const GallerySection = () => {
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-4">
               <span className="italic">Rezultate Reale. Fără Filtre.</span>
             </h2>
-            <p className="text-body leading-relaxed">
-              Fiecare corp este unic și merită o atenție deosebită. Explorează peste 500 de cazuri rezolvate, ce subliniază măiestria noastră și armonia rezultatelor obținute.
-            </p>
           </div>
 
           {/* Right side - Filters */}
