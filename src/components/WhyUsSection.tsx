@@ -67,6 +67,7 @@ const WhyUsSection = () => {
                   <img 
                     src={feature.image} 
                     alt={feature.title}
+                    style={feature.imageBgClass ? { transform: 'scale(0.9)' } : undefined}
                     className={`w-full h-full object-cover scale-125 ${feature.imagePosition || 'object-center'}`}
                   />
                 ) : (
