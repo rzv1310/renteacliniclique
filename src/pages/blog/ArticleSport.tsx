@@ -1,33 +1,35 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import heroImage from "@/assets/heroes/hero-article-sport.jpg";
 
 const ArticleSport = () => {
   return (
     <PageLayout>
+      {/* Hero Section */}
+      <section className="relative h-[40vh] min-h-[320px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={heroImage} alt="Sport și implanturi mamare" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30" />
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-deep-brown mb-4">
+            Implanturile Mamare și Sportul: Când pot reveni la sală?
+          </h1>
+          <div className="flex items-center justify-center gap-4 text-sm text-soft-brown">
+            <span className="flex items-center gap-1"><Clock className="w-4 h-4" />7 min citire</span>
+          </div>
+        </div>
+      </section>
+
       <PageBreadcrumb />
       <article className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 text-soft-brown hover:text-rose-gold transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Înapoi la Blog
+            <Link to="/blog" className="inline-flex items-center gap-2 text-soft-brown hover:text-rose-gold transition-colors mb-8">
+              <ArrowLeft className="w-4 h-4" />Înapoi la Blog
             </Link>
-
-            <div className="flex items-center gap-4 text-sm text-soft-brown mb-6">
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                7 min citire
-              </span>
-            </div>
-
-            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-deep-brown mb-8">
-              Implanturile Mamare și Sportul: Când pot reveni la sală?
-            </h1>
 
             <div className="prose prose-lg max-w-none">
               <p className="text-lg text-soft-brown leading-relaxed mb-8">
@@ -164,24 +166,26 @@ const ArticleSport = () => {
                   Discutați cu noi despre rutina dumneavoastră de fitness. 
                   Vom adapta planul postoperator în funcție de activitățile preferate.
                 </p>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 bg-rose-gold text-white px-6 py-3 rounded-full hover:bg-rose-gold/90 transition-colors"
-                >
+                <Link to="/contact" className="inline-flex items-center gap-2 bg-rose-gold text-white px-6 py-3 rounded-full hover:bg-rose-gold/90 transition-colors">
                   Programează consultația
                 </Link>
               </div>
 
-              <div className="mt-12 pt-8 border-t border-border">
-                <h3 className="font-serif text-lg font-semibold text-deep-brown mb-4">
-                  Articole similare
-                </h3>
-                <div className="flex flex-col gap-2">
-                  <Link to="/blog/cat-timp-trebuie-sa-dormi-pe-spate-dupa-implant-mamar" className="text-rose-gold hover:underline">
-                    Cât timp să dormi pe spate după implant mamar?
+              {/* Recommended Section */}
+              <div className="mt-16 pt-8 border-t border-border">
+                <h3 className="font-serif text-2xl font-semibold text-deep-brown mb-8">Resurse Recomandate</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Link to="/ghid-recuperare" className="group block bg-secondary/30 rounded-2xl p-6 hover:bg-secondary/50 transition-colors">
+                    <span className="text-xs uppercase tracking-wider text-rose-gold font-medium">Ghid</span>
+                    <h4 className="font-serif text-lg font-semibold text-deep-brown mt-2 group-hover:text-rose-gold transition-colors">Ghid Complet de Recuperare</h4>
+                    <p className="text-soft-brown text-sm mt-2">Tot ce trebuie să știi despre perioada postoperatorie.</p>
+                    <span className="inline-flex items-center gap-1 text-rose-gold text-sm mt-4">Află mai multe <ArrowRight className="w-4 h-4" /></span>
                   </Link>
-                  <Link to="/blog/in-cat-timp-se-aseaza-implantul-mamar" className="text-rose-gold hover:underline">
-                    În cât timp se așază implantul mamar?
+                  <Link to="/blog/cat-timp-trebuie-sa-dormi-pe-spate-dupa-implant-mamar" className="group block bg-secondary/30 rounded-2xl p-6 hover:bg-secondary/50 transition-colors">
+                    <span className="text-xs uppercase tracking-wider text-rose-gold font-medium">Articol</span>
+                    <h4 className="font-serif text-lg font-semibold text-deep-brown mt-2 group-hover:text-rose-gold transition-colors">Cât timp să dormi pe spate?</h4>
+                    <p className="text-soft-brown text-sm mt-2">Recomandări pentru somnul în perioada de recuperare.</p>
+                    <span className="inline-flex items-center gap-1 text-rose-gold text-sm mt-4">Citește articolul <ArrowRight className="w-4 h-4" /></span>
                   </Link>
                 </div>
               </div>
