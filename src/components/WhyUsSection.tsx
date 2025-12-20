@@ -1,6 +1,7 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import maestruImage from "@/assets/maestru-doctor.png";
+import sigurantaImage from "@/assets/siguranta-doctor.png";
 
 const WhyUsSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -24,6 +25,7 @@ const WhyUsSection = () => {
       title: "Siguranță Neclintită",
       description:
         "Datorită specializării noastre stricte și a protocoalelor riguroase, rata de complicații este minimă. Ne angajăm să oferim cea mai sigură și ușoară recuperare din industrie.",
+      image: sigurantaImage,
     },
   ];
 
