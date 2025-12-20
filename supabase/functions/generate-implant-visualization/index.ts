@@ -238,16 +238,42 @@ Maintain proper proportions and natural body contours.`;
     }
 
     const data = await response.json();
-    console.log("AI Response structure:", JSON.stringify(data, null, 2).substring(0, 500));
+    console.log("AI Response structure:", JSON.stringify(data, null, 2).substring(0, 1000));
     
     // Extract the generated image
     const generatedImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     
     if (!generatedImage) {
       console.error("No image in response. Full response:", JSON.stringify(data));
+      
+      // Check if model refused or couldn't process
+      const textContent = data.choices?.[0]?.message?.content;
+      const isRefusal = textContent && (
+        textContent.toLowerCase().includes("cannot") ||
+        textContent.toLowerCase().includes("sorry") ||
+        textContent.toLowerCase().includes("unable") ||
+        textContent.toLowerCase().includes("can't")
+      );
+      
+      const tips = [
+        "Folosiți o fotografie frontală clară",
+        "Asigurați iluminare bună și uniformă",
+        "Zona bustului să fie vizibilă",
+        "Evitați fundaluri aglomerate",
+        "Folosiți o fotografie recentă și de bună calitate"
+      ];
+      
+      const helpfulMessage = isRefusal 
+        ? "AI-ul nu a putut procesa această imagine. Încercați cu o fotografie diferită."
+        : "Nu s-a putut genera vizualizarea. Încercați cu o altă fotografie.";
+      
       return new Response(
-        JSON.stringify({ error: 'Modelul AI nu a generat o imagine. Încercați cu o altă fotografie.' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ 
+          error: helpfulMessage,
+          tips: tips,
+          showTips: true
+        }),
+        { status: 422, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
