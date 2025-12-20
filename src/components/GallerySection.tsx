@@ -40,7 +40,7 @@ const GallerySection = () => {
   const imagePositions: Record<string, { before: string; after: string }> = {
     natural: { before: "object-[40%_center]", after: "object-[30%_center]" },
     voluptuous: { before: "object-[40%_center]", after: "object-[30%_center]" },
-    sporty: { before: "object-center", after: "object-[40%_center]" },
+    sporty: { before: "object-center", after: "object-[35%_center]" },
   };
 
   const handleSliderMove = (e: React.MouseEvent<HTMLDivElement>) => {
