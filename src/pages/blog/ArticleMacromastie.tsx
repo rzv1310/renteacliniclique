@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 const ArticleMacromastie = () => {
   return (
     <PageLayout>
+      <PageBreadcrumb />
       <article className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-3xl mx-auto">

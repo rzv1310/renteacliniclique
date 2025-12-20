@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-implants-anatomic.jpg";
 
 const ImplanturiAnatomicePage = () => {
@@ -39,6 +40,9 @@ const ImplanturiAnatomicePage = () => {
           </Button>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Details */}
       <section className="py-16 bg-gradient-soft">

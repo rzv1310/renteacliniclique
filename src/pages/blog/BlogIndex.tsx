@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Calendar, Ruler, Stethoscope, Shield, Award } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 const clusterMarimeForma = [
   {
@@ -206,7 +207,7 @@ const BlogIndex = () => {
     <PageLayout>
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="max-w-3xl mx-auto text-center mb-8">
             <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
               Blog
             </span>
@@ -216,6 +217,11 @@ const BlogIndex = () => {
             <p className="text-lg text-soft-brown">
               Informații verificate despre augmentarea mamară, organizate pe teme pentru a te ajuta să iei cele mai bune decizii.
             </p>
+          </div>
+
+          {/* Breadcrumb */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <PageBreadcrumb />
           </div>
 
           <div className="max-w-5xl mx-auto">

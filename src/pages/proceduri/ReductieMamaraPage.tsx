@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Check, Clock, Shield, Heart, Users, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-reduction.jpg";
 
 const ReductieMamaraPage = () => {
@@ -101,6 +102,9 @@ const ReductieMamaraPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* What is it Section */}
       <section className="py-16 lg:py-24 bg-secondary/30">
