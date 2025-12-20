@@ -29,8 +29,7 @@ const DespreNoiPage = () => {
             Rentéa Aesthetic Clinique București
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto animate-fade-in-up animation-delay-100 mb-8">
-            La Rentéa, ne dedicăm exclusiv chirurgiei estetice mamare. Această specializare 
-            unică ne permite să oferim experiență și rezultate la cel mai înalt nivel.
+            Fiecare femeie merită să se simtă încrezătoare în propriul corp. Nu ne propunem să creăm un „ideal", ci să evidențiem frumusețea naturală și să aducem echilibru și armonie.
           </p>
           <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold animate-fade-in-up animation-delay-200">
             <Phone className="w-5 h-5 mr-2" />
