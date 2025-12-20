@@ -1,7 +1,7 @@
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
-import heroImage from "@/assets/hero-image.jpg";
+import heroImage from "@/assets/hero-image.webp";
 
 const HeroSection = () => {
   return (
