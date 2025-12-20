@@ -2,6 +2,7 @@ import { useState } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 import galleryBefore from "@/assets/gallery/gallery-before.png";
 import galleryAfter from "@/assets/gallery/gallery-after.png";
@@ -153,12 +154,12 @@ const GallerySection = () => {
           </a>
           
           {/* Simulator 3D Button */}
-          <div className="mt-8">
+          <div className="mt-8 flex justify-center">
             <Link to="/simulator-3d">
-              <button className="btn-primary-rose-gold">
-                <MaterialIcon name="3d_rotation" className="text-xl" />
+              <Button size="lg" className="btn-glow-border bg-transparent text-foreground border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
+                <MaterialIcon name="3d_rotation" className="text-xl mr-2" />
                 Simulator 3D
-              </button>
+              </Button>
             </Link>
           </div>
         </div>
