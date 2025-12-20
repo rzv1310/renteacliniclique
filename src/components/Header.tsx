@@ -112,7 +112,7 @@ const Header = () => {
                   to={link.href}
                   className={`text-sm font-medium transition-colors duration-300 tracking-wide ${
                     link.name === "Simulator 3D" 
-                      ? "text-foreground animate-slow-pulse"
+                      ? "text-foreground animate-text-glow"
                       : "text-muted-foreground hover:text-rose-gold"
                   }`}
                 >
