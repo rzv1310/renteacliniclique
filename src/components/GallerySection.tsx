@@ -106,10 +106,10 @@ const GallerySection = () => {
                 className="absolute inset-0 overflow-hidden"
                 style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
               >
-                <img
+              <img
                   src={cases[activeCase]?.after}
                   alt="După"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover object-[30%_center]"
                 />
               </div>
 
