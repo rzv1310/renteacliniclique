@@ -75,7 +75,7 @@ const PageBreadcrumb = () => {
               <BreadcrumbLink asChild>
                 <Link to="/" className="flex items-center gap-1.5 text-primary/80 hover:text-primary transition-colors">
                   <Home className="w-4 h-4" />
-                  <span>Acasă</span>
+                  <span>RENTÉA</span>
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
