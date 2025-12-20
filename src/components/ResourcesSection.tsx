@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import useEmblaCarousel from "embla-carousel-react";
@@ -7,20 +7,25 @@ import Autoplay from "embla-carousel-autoplay";
 // Import resource images
 import resource1Image from "@/assets/resources/resource-1.jpg";
 import resource2Image from "@/assets/resources/resource-2.jpg";
-import resource3Image from "@/assets/resources/resource-3.jpg";
+import resourceReductionImage from "@/assets/resources/resource-reduction.jpg";
 import resource4Image from "@/assets/resources/resource-4.jpg";
+
+const AUTOPLAY_DELAY = 4000;
 
 const ResourcesSection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const autoplayRef = useRef(Autoplay({ delay: AUTOPLAY_DELAY, stopOnInteraction: false, stopOnMouseEnter: true }));
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
       align: "start",
       slidesToScroll: 1,
     },
-    [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })]
+    [autoplayRef.current]
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const resources = [
     {
@@ -38,7 +43,7 @@ const ResourcesSection = () => {
     {
       title: "Reducție Mamară",
       link: "/proceduri/micsorare-sani-reductie-mamara",
-      image: resource3Image,
+      image: resourceReductionImage,
       buttonText: "Micșorare Sâni",
     },
     {
@@ -57,10 +62,25 @@ const ResourcesSection = () => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  const startProgress = useCallback(() => {
+    setProgress(0);
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+    }
+    const step = 100 / (AUTOPLAY_DELAY / 50);
+    progressIntervalRef.current = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) return 100;
+        return prev + step;
+      });
+    }, 50);
+  }, []);
+
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+    startProgress();
+  }, [emblaApi, startProgress]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -68,6 +88,9 @@ const ResourcesSection = () => {
     emblaApi.on("select", onSelect);
     return () => {
       emblaApi.off("select", onSelect);
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
     };
   }, [emblaApi, onSelect]);
 
@@ -142,19 +165,23 @@ const ResourcesSection = () => {
             </div>
           </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-8">
+          {/* Progress Dots */}
+          <div className="flex justify-center gap-3 mt-8">
             {resources.map((_, index) => (
               <button
                 key={index}
                 onClick={() => emblaApi?.scrollTo(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  selectedIndex === index 
-                    ? 'bg-rose-gold w-6' 
-                    : 'bg-border hover:bg-rose-gold/50'
-                }`}
+                className="relative w-8 h-1.5 rounded-full bg-border overflow-hidden"
                 aria-label={`Go to slide ${index + 1}`}
-              />
+              >
+                <div 
+                  className="absolute inset-0 bg-rose-gold rounded-full transition-all duration-100 ease-linear"
+                  style={{ 
+                    width: selectedIndex === index ? `${progress}%` : index < selectedIndex ? '100%' : '0%',
+                    opacity: selectedIndex === index || index < selectedIndex ? 1 : 0 
+                  }}
+                />
+              </button>
             ))}
           </div>
         </div>
