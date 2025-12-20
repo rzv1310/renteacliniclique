@@ -192,7 +192,7 @@ Maintain proper proportions and natural body contours.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
+        model: "google/gemini-2.5-flash-image",
         messages: [
           {
             role: "user",
@@ -238,15 +238,15 @@ Maintain proper proportions and natural body contours.`;
     }
 
     const data = await response.json();
-    console.log("Visualization generated successfully");
+    console.log("AI Response structure:", JSON.stringify(data, null, 2).substring(0, 500));
     
     // Extract the generated image
     const generatedImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
     
     if (!generatedImage) {
-      console.error("No image in response");
+      console.error("No image in response. Full response:", JSON.stringify(data));
       return new Response(
-        JSON.stringify({ error: 'Nu s-a putut genera imaginea. Încercați din nou.' }),
+        JSON.stringify({ error: 'Modelul AI nu a generat o imagine. Încercați cu o altă fotografie.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
