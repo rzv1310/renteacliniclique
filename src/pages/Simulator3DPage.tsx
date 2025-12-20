@@ -232,7 +232,7 @@ const Simulator3DPage = () => {
                 ))}
               </ul>
             </div>,
-            { duration: 8000 }
+            { duration: 20000 }
           );
         } else {
           throw new Error(data.error);
@@ -257,7 +257,7 @@ const Simulator3DPage = () => {
           <p>{error instanceof Error ? error.message : 'Eroare la generarea vizualizării AI'}</p>
           <p className="text-xs text-muted-foreground">Încercați cu o fotografie frontală clară.</p>
         </div>,
-        { duration: 6000 }
+        { duration: 12000 }
       );
       // Refresh rate limits on error too (in case it was a rate limit error)
       fetchRateLimits();
