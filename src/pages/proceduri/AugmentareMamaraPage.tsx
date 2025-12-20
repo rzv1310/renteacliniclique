@@ -6,6 +6,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAugmentare";
 
+// Import hero image
+import heroImage from "@/assets/heroes/hero-augmentation.jpg";
+
 // Import gallery images
 import case1Before from "@/assets/gallery/case-1-before.jpg";
 import case1After from "@/assets/gallery/case-1-after.jpg";
@@ -218,33 +221,37 @@ const AugmentareMamaraPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted" />
-        
-        {/* Decorative elements */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+      {/* Hero Section - Full Screen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Femeie elegantă"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
         
         <div className="container mx-auto px-4 lg:px-8 relative z-10 text-center pt-24">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
             <Check className="w-4 h-4 text-primary" />
             <span className="text-sm text-primary font-medium uppercase tracking-wider">Premium Breast Augmentation</span>
           </div>
 
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light text-foreground mb-6">
+          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light text-foreground mb-6 animate-fade-in-up">
             Redefinește-ți
             <br />
             <span className="italic text-gradient-gold">Silueta</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-light">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-light animate-fade-in-up animation-delay-100">
             Augmentare Mamară expertă, concepută pentru rezultate personalizate și de boutique. 
             Combinăm precizia medicală cu o viziune artistică.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-200">
             <Button variant="hero" size="lg" className="group">
               Programează Consultația
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -255,9 +262,6 @@ const AugmentareMamaraPage = () => {
             </Button>
           </div>
         </div>
-
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Art of Natural Enhancement */}
