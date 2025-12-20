@@ -3,6 +3,7 @@ import { ArrowRight, Award, Heart, Users } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-despre.jpg";
+import doctorImage from "@/assets/dr-lucian-popa.webp";
 
 const DespreNoiPage = () => {
   return (
@@ -107,9 +108,11 @@ const DespreNoiPage = () => {
 
             {/* Doctor Header Card */}
             <div className="bg-card rounded-2xl p-8 lg:p-12 shadow-elegant mb-8 text-center">
-              <div className="w-32 h-32 rounded-full bg-secondary mx-auto mb-6 flex items-center justify-center">
-                <span className="text-4xl">👨‍⚕️</span>
-              </div>
+              <img 
+                src={doctorImage} 
+                alt="Dr. Lucian Popa" 
+                className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover object-top mx-auto mb-6 border-4 border-primary/20"
+              />
               <h3 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
                 Dr. Lucian Popa
               </h3>
