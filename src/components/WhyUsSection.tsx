@@ -28,13 +28,13 @@ const WhyUsSection = () => {
   return (
     <section 
       id="despre" 
-      className="py-24 lg:py-32 bg-background"
+      className="py-24 lg:py-32 bg-card"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-label mb-4 block">De ce noi?</span>
+          <span className="text-label mb-4 block">DE CE NOI?</span>
           <h2 className="h2-section text-foreground mb-6">
             De ce să alegi un superspecialist?
           </h2>
@@ -48,19 +48,23 @@ const WhyUsSection = () => {
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className={`group bg-card rounded-2xl p-8 lg:p-10 border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group bg-background rounded-2xl overflow-hidden border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              {/* Icon */}
-              <div className="w-14 h-14 rounded-xl bg-rose-gold/10 flex items-center justify-center mb-6 group-hover:bg-rose-gold/20 transition-colors duration-300">
-                <MaterialIcon name={feature.icon} className="text-2xl text-rose-gold" />
+              {/* Image with Icon */}
+              <div className="relative aspect-[4/3] bg-gradient-to-br from-rose-gold/5 to-rose-gold/10 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full bg-rose-gold/20 flex items-center justify-center group-hover:bg-rose-gold/30 transition-colors duration-300">
+                  <MaterialIcon name={feature.icon} className="text-4xl text-rose-gold" />
+                </div>
               </div>
 
               {/* Content */}
-              <h3 className="font-display text-xl font-medium text-foreground mb-4">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed text-sm font-sans">{feature.description}</p>
+              <div className="p-6">
+                <h3 className="font-display text-xl font-medium text-foreground mb-4 text-center">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed text-sm font-sans text-center">{feature.description}</p>
+              </div>
             </div>
           ))}
         </div>

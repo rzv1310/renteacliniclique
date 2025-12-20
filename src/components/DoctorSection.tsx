@@ -31,20 +31,15 @@ const DoctorSection = () => {
           {/* Content Side */}
           <div className={`lg:pl-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <span className="text-label mb-4 block">
-              Artizan al Frumuseții
+              ARHITECTUL VIZIUNII TALE
             </span>
             <h2 className="h2-section text-foreground mb-8 leading-tight">
               Arhitectul viziunii tale.
             </h2>
 
-            <div className="bg-background rounded-2xl p-6 md:p-8 border border-border mb-8">
-              <MaterialIcon name="format_quote" className="text-4xl text-rose-gold/30 mb-4" />
-              <blockquote className="text-lg md:text-xl text-muted-foreground leading-relaxed italic font-display">
-                "Cred că augmentarea mamară nu este doar despre volum, ci despre proporții
-                și armonie. M-am dedicat acestei singure proceduri pentru a oferi pacientelor mele
-                nu doar un rezultat estetic, ci o experiență de siguranță totală."
-              </blockquote>
-            </div>
+            <p className="text-body leading-relaxed mb-6">
+              Dr. Andrei Rentea este un chirurg estetician renumit, dedicat în mod exclusiv chirurgiei mamare. Cu o experiență vastă și o pasiune pentru perfecțiune, el a transformat viețile a sute de femei prin proceduri atent personalizate.
+            </p>
 
             <p className="text-body leading-relaxed mb-8">
               Dr. Andrei Rentea nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, el aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.

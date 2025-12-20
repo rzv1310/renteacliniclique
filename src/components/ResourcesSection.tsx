@@ -28,14 +28,14 @@ const ResourcesSection = () => {
   return (
     <section 
       id="resurse" 
-      className="py-24 lg:py-32 bg-card"
+      className="py-24 lg:py-32 bg-background"
       ref={ref as React.RefObject<HTMLElement>}
     >
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
-            Cunoștințe Aprofundate
+            CUNOȘTINȚE APROFUNDATE
           </span>
           <h2 className="h2-section text-foreground mb-6">
             Tot ce trebuie să știi despre Augmentarea Mamară
@@ -51,7 +51,7 @@ const ResourcesSection = () => {
             <a
               key={resource.title}
               href={resource.link}
-              className={`group bg-background rounded-2xl overflow-hidden border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group bg-card rounded-2xl overflow-hidden border border-border hover:border-rose-gold/30 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               {/* Image */}
@@ -61,7 +61,7 @@ const ResourcesSection = () => {
                   alt={resource.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-60" />
               </div>
 
               {/* Content */}
