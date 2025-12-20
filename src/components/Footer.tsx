@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import MaterialIcon from "@/components/ui/MaterialIcon";
 import { Button } from "@/components/ui/button";
+import { Facebook, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 
 const Footer = () => {
   const parallaxRef = useRef<HTMLDivElement>(null);
@@ -80,18 +81,24 @@ const Footer = () => {
             <p className="text-muted-foreground text-sm leading-relaxed mb-6">
               Clinică medicală premium în inima Bucureștiului, lideri în chirurgie estetică mamară.
             </p>
-            <div className="flex gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300"
-              >
-                <MaterialIcon name="photo_camera" className="text-xl" />
+            <div className="flex gap-3">
+              <a href="#" className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300">
+                <Facebook className="w-4 h-4" />
               </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300"
-              >
-                <MaterialIcon name="group" className="text-xl" />
+              <a href="#" className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300">
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300">
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300">
+                <Twitter className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-rose-gold hover:text-primary-foreground transition-colors duration-300">
+                <Youtube className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -191,21 +198,23 @@ const Footer = () => {
         <div className="container mx-auto px-4 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-muted-foreground text-xs">
-              © 2024 Rentéa Aesthetic Clinique. Toate drepturile rezervate.
+              © 2026 Rentéa Aesthetic Clinique. Toate drepturile rezervate.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
-                Politica de Confidențialitate
+                Termeni și Condiții
               </a>
               <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
-                Termeni și Condiții
+                Cookies
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+                GDPR
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+                ANPC
               </a>
             </div>
           </div>
-          <p className="text-muted-foreground/50 text-xs mt-4 text-center md:text-left">
-            Clinica Rentéa – Lider în chirurgie estetică București, specializați exclusiv în
-            implant mamar, augmentare mamară cu silicon și ridicare sâni.
-          </p>
         </div>
       </div>
     </footer>
