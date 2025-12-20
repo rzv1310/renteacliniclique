@@ -220,7 +220,25 @@ const Simulator3DPage = () => {
       }
 
       if (data?.error) {
-        throw new Error(data.error);
+        // Show tips if available
+        if (data?.tips && data?.showTips) {
+          toast.error(
+            <div className="space-y-2">
+              <p className="font-medium">{data.error}</p>
+              <p className="text-sm text-muted-foreground">Sfaturi pentru o vizualizare reușită:</p>
+              <ul className="text-sm list-disc pl-4 space-y-1">
+                {data.tips.slice(0, 3).map((tip: string, i: number) => (
+                  <li key={i}>{tip}</li>
+                ))}
+              </ul>
+            </div>,
+            { duration: 8000 }
+          );
+        } else {
+          throw new Error(data.error);
+        }
+        fetchRateLimits();
+        return;
       }
 
       if (data?.generatedImage) {
@@ -234,7 +252,13 @@ const Simulator3DPage = () => {
       }
     } catch (error) {
       console.error('Error generating AI visualization:', error);
-      toast.error(error instanceof Error ? error.message : 'Eroare la generarea vizualizării AI');
+      toast.error(
+        <div className="space-y-2">
+          <p>{error instanceof Error ? error.message : 'Eroare la generarea vizualizării AI'}</p>
+          <p className="text-xs text-muted-foreground">Încercați cu o fotografie frontală clară.</p>
+        </div>,
+        { duration: 6000 }
+      );
       // Refresh rate limits on error too (in case it was a rate limit error)
       fetchRateLimits();
     } finally {
