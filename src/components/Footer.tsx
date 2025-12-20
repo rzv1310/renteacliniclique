@@ -109,7 +109,7 @@ const Footer = () => {
                 { label: "Tarife", href: "/implant-mamar-pret" },
                 { label: "Implant Mamar în Rate", href: "/implant-mamar-in-rate" },
                 { label: "Paciente din Provincie", href: "/turism-medical-intern" },
-                { label: "Ghid Recuperare", href: "/ghid-recuperare" },
+                { label: "Recuperare după Implant", href: "/recuperare-implant-mamar" },
                 { label: "Blog", href: "/blog" },
                 { label: "Contact", href: "/contact" },
               ].map((link) => (

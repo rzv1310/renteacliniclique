@@ -45,7 +45,7 @@ const Header = () => {
   ];
 
   const utileLinks = [
-    { name: "Ghid de Recuperare", href: "/ghid-recuperare" },
+    { name: "Recuperare după Implant", href: "/recuperare-implant-mamar" },
     { name: "Despre Noi", href: "/despre-noi" },
     { name: "Contact", href: "/contact" },
     { name: "Paciente din Provincie", href: "/turism-medical-intern" },
