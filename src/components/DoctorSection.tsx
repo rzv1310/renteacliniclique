@@ -7,13 +7,10 @@ const DoctorSection = () => {
 
   return (
     <section 
-      className="py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 relative"
+      className="py-24 lg:py-32 overflow-hidden bg-black"
       ref={ref as React.RefObject<HTMLElement>}
     >
-      {/* Glossy overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-black/20 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.1),transparent_50%)] pointer-events-none" />
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image Side */}
           <div className={`relative transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
