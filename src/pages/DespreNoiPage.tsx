@@ -202,23 +202,6 @@ const DespreNoiPage = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-gradient-soft">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl font-semibold text-foreground mb-4">
-              Vino să ne cunoști
-            </h2>
-            <p className="text-muted-foreground mb-8">
-              Programează o consultație pentru a discuta cu echipa noastră și a vizita clinica.
-            </p>
-            <Button variant="hero" size="xl" className="group">
-              Programează Vizita
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </div>
-      </section>
     </PageLayout>
   );
 };
