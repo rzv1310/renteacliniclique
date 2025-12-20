@@ -802,6 +802,17 @@ const AugmentareMamaraPage = () => {
         />
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-background/60 pointer-events-none" />
+        {/* CTA Button */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <a
+            href="https://maps.google.com/?q=44.439663,26.096306"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-colors duration-300 shadow-lg"
+          >
+            Vezi pe Google Maps
+          </a>
+        </div>
       </section>
 
       {/* FAQ Section */}
