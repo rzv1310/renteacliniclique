@@ -40,7 +40,7 @@ const HeroSection = () => {
             <a href="/simulator-3d">
               <button className="btn-secondary-rose-gold">
                 <MaterialIcon name="3d_rotation" className="text-xl" />
-                Solicită Simulare 3D
+                Simulator 3D
               </button>
             </a>
           </div>
