@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Clock, AlertCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
+import heroRecovery from "@/assets/heroes/hero-recovery.jpg";
 
 const timeline = [
   {
@@ -68,25 +70,35 @@ const timeline = [
 const GhidRecuperarePage = () => {
   return (
     <PageLayout>
-      {/* Hero */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-              Ghid Complet
-            </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
-              Ghid de Recuperare
-              <br />
-              <span className="text-gradient-gold">Post-Operatorie</span>
-            </h1>
-            <p className="text-lg text-soft-brown leading-relaxed">
-              Tot ce trebuie să știi despre perioada de recuperare după augmentarea mamară. 
-              Un ghid detaliat zi de zi pentru cele mai bune rezultate.
-            </p>
-          </div>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={heroRecovery} 
+            alt="Ghid Recuperare Post-Operatorie" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+        
+        <div className="relative container mx-auto px-4 lg:px-8 text-center">
+          <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
+            Ghid Complet
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
+            Ghid de Recuperare
+            <br />
+            <span className="text-gradient-gold">Post-Operatorie</span>
+          </h1>
+          <p className="text-lg text-soft-brown leading-relaxed max-w-2xl mx-auto">
+            Tot ce trebuie să știi despre perioada de recuperare după augmentarea mamară. 
+            Un ghid detaliat zi de zi pentru cele mai bune rezultate.
+          </p>
         </div>
       </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
 
       {/* Timeline */}
       <section className="py-16">

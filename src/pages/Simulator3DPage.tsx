@@ -4,7 +4,9 @@ import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sp
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import heroSimulator from "@/assets/heroes/hero-simulator.jpg";
 
 interface RateLimits {
   limits: {
@@ -88,7 +90,6 @@ const Simulator3DPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
 
-  const heroAnimation = useScrollAnimation();
   const controlsAnimation = useScrollAnimation();
   const visualAnimation = useScrollAnimation();
 
@@ -261,24 +262,34 @@ const Simulator3DPage = () => {
   return (
     <PageLayout>
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-background">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div ref={heroAnimation.ref as React.RefObject<HTMLDivElement>} className={`text-center max-w-3xl mx-auto scroll-animate ${heroAnimation.isVisible ? 'visible' : ''}`}>
-            <span className="text-label mb-6 inline-block">
-              Simulator 3D Interactiv cu AI
-            </span>
-            <h1 className="h2-section text-foreground mb-6">
-              Vizualizează-ți <span className="text-gradient-gold">Transformarea</span>
-            </h1>
-            <p className="text-body">
-              Încarcă o poză și folosește AI pentru a vedea rezultate realiste cu diferite tipuri și mărimi de implanturi.
-            </p>
-          </div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={heroSimulator} 
+            alt="Simulator 3D cu Inteligență Artificială" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+        
+        <div className="relative container mx-auto px-4 lg:px-8 text-center">
+          <span className="text-label mb-6 inline-block">
+            Simulator 3D Interactiv cu AI
+          </span>
+          <h1 className="h2-section text-foreground mb-6">
+            Vizualizează-ți <span className="text-gradient-gold">Transformarea</span>
+          </h1>
+          <p className="text-body max-w-2xl mx-auto">
+            Încarcă o poză și folosește AI pentru a vedea rezultate realiste cu diferite tipuri și mărimi de implanturi.
+          </p>
         </div>
       </section>
 
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
+
       {/* Simulator Section */}
-      <section className="pb-24 bg-background">
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Left Panel - Controls */}
@@ -417,169 +428,116 @@ const Simulator3DPage = () => {
                   />
                   
                   <div className="flex justify-center">
-                    <div className="inline-flex items-center gap-2 px-6 py-3 bg-rose-gold/10 rounded-full transition-all duration-300">
-                      <span className="text-2xl font-display font-semibold text-rose-gold transition-all duration-300">{selectedSize}</span>
-                      <span className="text-muted-foreground">cc</span>
+                    <div className="bg-rose-gold/10 border border-rose-gold/30 rounded-xl px-6 py-3 text-center">
+                      <p className="text-2xl font-bold text-rose-gold">{selectedSize}cc</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedSize <= 275 ? "Subtil & Natural" : 
+                         selectedSize <= 375 ? "Moderat & Feminin" : 
+                         "Dramatic & Voluptuos"}
+                      </p>
                     </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-5 gap-2 mt-4">
-                    {implantSizes.map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                          selectedSize === size
-                            ? "bg-rose-gold text-white"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
                   </div>
                 </div>
               </div>
 
               {/* Rate Limits Display */}
-              <div className="bg-card rounded-2xl p-4 shadow-elegant border border-border/30">
-                <div className="flex items-center gap-2 mb-3">
-                  <Clock className="w-4 h-4 text-rose-gold" />
-                  <h4 className="font-medium text-foreground text-sm">Încercări disponibile</h4>
-                </div>
-                
-                {isLoadingLimits ? (
-                  <div className="flex items-center justify-center py-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                  </div>
-                ) : rateLimits ? (
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="bg-muted/50 rounded-lg p-2">
-                      <p className={`text-lg font-semibold ${rateLimits.limits.minute.remaining > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {rateLimits.limits.minute.remaining}
-                      </p>
-                      <p className="text-xs text-muted-foreground">/ minut</p>
+              {!isLoadingLimits && rateLimits && (
+                <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/30">
+                  <h3 className="font-display text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-rose-gold" />
+                    Limite Generare AI
+                  </h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Pe minut:</span>
+                      <span className={rateLimits.limits.minute.remaining === 0 ? "text-destructive font-medium" : "text-foreground"}>
+                        {rateLimits.limits.minute.remaining} / {rateLimits.limits.minute.limit}
+                      </span>
                     </div>
-                    <div className="bg-muted/50 rounded-lg p-2">
-                      <p className={`text-lg font-semibold ${rateLimits.limits.hour.remaining > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {rateLimits.limits.hour.remaining}
-                      </p>
-                      <p className="text-xs text-muted-foreground">/ oră</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Pe oră:</span>
+                      <span className={rateLimits.limits.hour.remaining === 0 ? "text-destructive font-medium" : "text-foreground"}>
+                        {rateLimits.limits.hour.remaining} / {rateLimits.limits.hour.limit}
+                      </span>
                     </div>
-                    <div className="bg-muted/50 rounded-lg p-2">
-                      <p className={`text-lg font-semibold ${rateLimits.limits.day.remaining > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {rateLimits.limits.day.remaining}
-                      </p>
-                      <p className="text-xs text-muted-foreground">/ zi</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Pe zi:</span>
+                      <span className={rateLimits.limits.day.remaining === 0 ? "text-destructive font-medium" : "text-foreground"}>
+                        {rateLimits.limits.day.remaining} / {rateLimits.limits.day.limit}
+                      </span>
                     </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center">Nu s-au putut încărca limitele</p>
-                )}
-                
-                {rateLimits && !rateLimits.canGenerate && (
-                  <div className="mt-3 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
-                    <p className="text-xs text-red-500 text-center">
-                      {rateLimits.limitType === 'minute' && (
-                        <>
-                          Limită de minut atinsă. 
-                          {resetTimer > 0 && (
-                            <span className="font-semibold ml-1">
-                              Se resetează în {resetTimer}s
-                            </span>
-                          )}
-                        </>
-                      )}
-                      {rateLimits.limitType === 'hour' && 'Ați atins limita pe oră. Încercați mai târziu.'}
-                      {rateLimits.limitType === 'day' && 'Ați atins limita zilnică. Reveniți mâine.'}
-                    </p>
-                    {resetTimer > 0 && rateLimits.limitType === 'minute' && (
-                      <div className="mt-2 w-full bg-muted rounded-full h-1.5 overflow-hidden">
-                        <div 
-                          className="h-full bg-rose-gold transition-all duration-1000 ease-linear"
-                          style={{ width: `${((60 - resetTimer) / 60) * 100}%` }}
-                        />
-                      </div>
+                    {resetTimer > 0 && (
+                      <p className="text-xs text-rose-gold mt-2">
+                        Limita pe minut se resetează în {resetTimer}s
+                      </p>
                     )}
                   </div>
-                )}
-              </div>
-
-              {/* AI Generate Button */}
-              {uploadedImage && (
-                <Button
-                  className="w-full btn-primary-rose-gold h-14 text-lg"
-                  onClick={generateAIVisualization}
-                  disabled={isGenerating || (rateLimits && !rateLimits.canGenerate)}
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Se generează...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5 mr-2" />
-                      Generează Vizualizare AI
-                    </>
-                  )}
-                </Button>
+                </div>
               )}
+
+              {/* Generate Button */}
+              <Button
+                className="w-full btn-primary-rose-gold py-6 text-lg"
+                onClick={generateAIVisualization}
+                disabled={isGenerating || !uploadedImage || (rateLimits && !rateLimits.canGenerate)}
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Se generează...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Generează cu AI
+                  </>
+                )}
+              </Button>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={resetSimulator}
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Resetează
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={downloadGeneratedImage}
+                  disabled={!generatedImage}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Descarcă
+                </Button>
+              </div>
             </div>
 
             {/* Right Panel - Visualization */}
-            <div ref={visualAnimation.ref as React.RefObject<HTMLDivElement>} className={`lg:sticky lg:top-24 scroll-animate ${visualAnimation.isVisible ? 'visible' : ''}`}>
-              <div className="bg-card rounded-2xl overflow-hidden shadow-elegant border border-border/30">
-                {/* Toolbar */}
-                <div className="flex items-center justify-between p-4 border-b border-border/30">
+            <div ref={visualAnimation.ref as React.RefObject<HTMLDivElement>} className={`scroll-animate ${visualAnimation.isVisible ? 'visible' : ''}`}>
+              <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/30 sticky top-24">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-display text-xl font-semibold text-foreground">
+                    Previzualizare
+                  </h3>
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="icon"
                       onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
-                      className="text-muted-foreground hover:text-foreground"
                     >
                       <ZoomOut className="w-4 h-4" />
                     </Button>
-                    <span className="text-sm text-muted-foreground w-16 text-center">
-                      {Math.round(zoom * 100)}%
-                    </span>
+                    <span className="text-sm text-muted-foreground">{Math.round(zoom * 100)}%</span>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="icon"
                       onClick={() => setZoom(Math.min(2, zoom + 0.1))}
-                      className="text-muted-foreground hover:text-foreground"
                     >
                       <ZoomIn className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  <Button
-                    variant={showComparison ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setShowComparison(!showComparison)}
-                    disabled={!generatedImage && !uploadedImage}
-                    className={showComparison ? "bg-rose-gold hover:bg-rose-gold/90" : "border-border/50 text-muted-foreground"}
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    <ChevronRight className="w-4 h-4 -ml-2" />
-                    <span className="ml-1">Comparare</span>
-                  </Button>
-
-                  <div className="flex items-center gap-1">
-                    {generatedImage && (
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={downloadGeneratedImage} 
-                        className="text-rose-gold hover:text-rose-gold/80 hover:bg-rose-gold/10"
-                        title="Descarcă imaginea"
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                    )}
-                    <Button variant="ghost" size="sm" onClick={resetSimulator} className="text-muted-foreground hover:text-foreground">
-                      <RotateCcw className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
@@ -587,218 +545,102 @@ const Simulator3DPage = () => {
                 {/* Visualization Area */}
                 <div 
                   ref={comparisonRef}
-                  className="relative aspect-[3/4] bg-gradient-to-b from-muted to-background overflow-hidden cursor-ew-resize"
+                  className="relative aspect-[3/4] bg-muted rounded-xl overflow-hidden cursor-ew-resize"
                   onMouseMove={showComparison ? handleComparisonMove : undefined}
                   onTouchMove={showComparison ? handleComparisonMove : undefined}
                 >
-                  {/* Loading Overlay */}
-                  {isGenerating && (
-                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
-                      <Loader2 className="w-12 h-12 text-rose-gold animate-spin mb-4" />
-                      <p className="text-foreground font-medium">Se generează vizualizarea AI...</p>
-                      <p className="text-sm text-muted-foreground mt-2">Acest proces poate dura câteva secunde</p>
-                    </div>
-                  )}
-
-                  {/* Before View (Left) */}
-                  <div 
-                    className="absolute inset-0 flex items-center justify-center"
-                    style={{ 
-                      clipPath: showComparison ? `inset(0 ${100 - comparisonPosition}% 0 0)` : "none",
-                      transform: `scale(${zoom})`,
-                      transition: "transform 0.2s ease"
-                    }}
-                  >
-                    {uploadedImage ? (
-                      <img 
-                        src={uploadedImage} 
-                        alt="Înainte" 
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    ) : (
-                      <div className="relative">
-                        {/* Avatar Silhouette - Before */}
-                        <svg viewBox="0 0 200 300" className="w-48 h-72">
-                          <defs>
-                            <linearGradient id="skinGradientBefore" x1="0%" y1="0%" x2="0%" y2="100%">
-                              <stop offset="0%" stopColor="hsl(var(--rose-gold))" stopOpacity="0.3" />
-                              <stop offset="100%" stopColor="hsl(var(--muted))" stopOpacity="0.5" />
-                            </linearGradient>
-                          </defs>
-                          <ellipse cx="100" cy="60" rx="35" ry="45" fill="url(#skinGradientBefore)" />
-                          <path 
-                            d="M 60 100 Q 50 120 45 160 Q 40 200 50 250 L 80 300 L 120 300 L 150 250 Q 160 200 155 160 Q 150 120 140 100 Z" 
-                            fill="url(#skinGradientBefore)"
-                          />
-                          <ellipse cx="75" cy="140" rx="18" ry="15" fill="hsl(var(--rose-gold))" opacity="0.2" />
-                          <ellipse cx="125" cy="140" rx="18" ry="15" fill="hsl(var(--rose-gold))" opacity="0.2" />
-                        </svg>
-                        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-muted-foreground whitespace-nowrap">
-                          Înainte
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* After View (Right / Full when not comparing) */}
-                  <div 
-                    className="absolute inset-0 flex items-center justify-center"
-                    style={{ 
-                      clipPath: showComparison ? `inset(0 0 0 ${comparisonPosition}%)` : "none",
-                      transform: `scale(${zoom})`,
-                      transition: "transform 0.2s ease"
-                    }}
-                  >
-                    {generatedImage ? (
-                      <img 
-                        src={generatedImage} 
-                        alt="După - AI Generated" 
-                        className="max-w-full max-h-full object-contain transition-opacity duration-500"
-                      />
-                    ) : uploadedImage ? (
-                      <div className="relative">
+                  {uploadedImage ? (
+                    <>
+                      {/* Original Image */}
+                      <div 
+                        className="absolute inset-0 overflow-hidden"
+                        style={{ 
+                          clipPath: showComparison ? `inset(0 ${100 - comparisonPosition}% 0 0)` : 'none',
+                          transform: `scale(${zoom})`,
+                          transformOrigin: 'center'
+                        }}
+                      >
                         <img 
                           src={uploadedImage} 
-                          alt="După" 
-                          className="max-w-full max-h-full object-contain"
+                          alt="Original" 
+                          className="w-full h-full object-cover"
                         />
+                      </div>
+
+                      {/* Generated Image */}
+                      {generatedImage && showComparison && (
                         <div 
-                          className="absolute inset-0 pointer-events-none transition-all duration-500 ease-out"
-                          style={{
-                            background: `radial-gradient(ellipse ${40 + (selectedType === "rotund" ? 5 : 0)}% ${30 + (selectedSize - 200) / 20}% at 35% 45%, hsla(var(--rose-gold), ${selectedType === "ergonomic" ? 0.2 : 0.15}) 0%, transparent 70%),
-                                         radial-gradient(ellipse ${40 + (selectedType === "rotund" ? 5 : 0)}% ${30 + (selectedSize - 200) / 20}% at 65% 45%, hsla(var(--rose-gold), ${selectedType === "ergonomic" ? 0.2 : 0.15}) 0%, transparent 70%)`,
-                            transform: `scaleY(${transform.scale})`,
-                            transformOrigin: "center 45%"
+                          className="absolute inset-0 overflow-hidden"
+                          style={{ 
+                            clipPath: `inset(0 0 0 ${comparisonPosition}%)`,
+                            transform: `scale(${zoom})`,
+                            transformOrigin: 'center'
                           }}
-                        />
-                      </div>
-                    ) : (
-                      <div className="relative">
-                        {/* Avatar Silhouette - After with implants */}
-                        <svg viewBox="0 0 200 300" className="w-48 h-72">
-                          <defs>
-                            <linearGradient id="skinGradientAfter" x1="0%" y1="0%" x2="0%" y2="100%">
-                              <stop offset="0%" stopColor="hsl(var(--rose-gold))" stopOpacity="0.4" />
-                              <stop offset="100%" stopColor="hsl(var(--muted))" stopOpacity="0.6" />
-                            </linearGradient>
-                            <filter id="glow">
-                              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                              <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                              </feMerge>
-                            </filter>
-                          </defs>
-                          <ellipse cx="100" cy="60" rx="35" ry="45" fill="url(#skinGradientAfter)" />
-                          <path 
-                            d="M 60 100 Q 50 120 45 160 Q 40 200 50 250 L 80 300 L 120 300 L 150 250 Q 160 200 155 160 Q 150 120 140 100 Z" 
-                            fill="url(#skinGradientAfter)"
+                        >
+                          <img 
+                            src={generatedImage} 
+                            alt="Rezultat AI" 
+                            className="w-full h-full object-cover"
                           />
-                          <ellipse 
-                            cx="75" 
-                            cy={140 + (selectedType === "anatomic" ? 3 : 0)} 
-                            rx={18 + (selectedSize - 200) / 25} 
-                            ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : selectedType === "rotund" ? -1 : 1)} 
-                            fill="hsl(var(--rose-gold))" 
-                            opacity={selectedType === "ergonomic" ? 0.4 : 0.35}
-                            filter="url(#glow)"
-                            className="transition-all duration-500 ease-out"
-                          />
-                          <ellipse 
-                            cx="125" 
-                            cy={140 + (selectedType === "anatomic" ? 3 : 0)} 
-                            rx={18 + (selectedSize - 200) / 25} 
-                            ry={15 + (selectedSize - 200) / 30 + (selectedType === "anatomic" ? 3 : selectedType === "rotund" ? -1 : 1)} 
-                            fill="hsl(var(--rose-gold))" 
-                            opacity={selectedType === "ergonomic" ? 0.4 : 0.35}
-                            filter="url(#glow)"
-                            className="transition-all duration-500 ease-out"
-                          />
-                          <ellipse 
-                            cx={70 + (selectedType === "rotund" ? 2 : 0)} 
-                            cy={135 + (selectedType === "anatomic" ? 2 : 0)} 
-                            rx={8 + (selectedSize - 200) / 50} 
-                            ry={6 + (selectedSize - 200) / 60} 
-                            fill="white" 
-                            opacity="0.3"
-                            className="transition-all duration-500 ease-out"
-                          />
-                          <ellipse 
-                            cx={120 + (selectedType === "rotund" ? 2 : 0)} 
-                            cy={135 + (selectedType === "anatomic" ? 2 : 0)} 
-                            rx={8 + (selectedSize - 200) / 50} 
-                            ry={6 + (selectedSize - 200) / 60} 
-                            fill="white" 
-                            opacity="0.3"
-                            className="transition-all duration-500 ease-out"
-                          />
-                        </svg>
-                        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-rose-gold whitespace-nowrap">
-                          După - {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} {selectedSize}cc
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                        </div>
+                      )}
 
-                  {/* Comparison Slider Line */}
-                  {showComparison && (
-                    <div 
-                      className="absolute top-0 bottom-0 w-1 bg-foreground shadow-lg cursor-ew-resize z-10"
-                      style={{ left: `${comparisonPosition}%`, transform: "translateX(-50%)" }}
-                    >
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card shadow-lg flex items-center justify-center border border-border/30">
-                        <ChevronLeft className="w-4 h-4 text-rose-gold" />
-                        <ChevronRight className="w-4 h-4 text-rose-gold -ml-1" />
-                      </div>
-                    </div>
-                  )}
+                      {/* Comparison Slider */}
+                      {showComparison && generatedImage && (
+                        <div 
+                          className="absolute top-0 bottom-0 w-1 bg-white shadow-lg cursor-ew-resize z-10"
+                          style={{ left: `${comparisonPosition}%` }}
+                        >
+                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center">
+                            <ChevronLeft className="w-4 h-4 text-muted-foreground absolute -left-0.5" />
+                            <ChevronRight className="w-4 h-4 text-muted-foreground absolute -right-0.5" />
+                          </div>
+                        </div>
+                      )}
 
-                  {/* Labels when comparing */}
-                  {showComparison && (
-                    <>
-                      <div className="absolute top-4 left-4 px-3 py-1 bg-muted/80 backdrop-blur-sm rounded-full text-sm font-medium text-foreground">
-                        Înainte
-                      </div>
-                      <div className="absolute top-4 right-4 px-3 py-1 bg-rose-gold/80 backdrop-blur-sm rounded-full text-sm font-medium text-white">
-                        {generatedImage ? "După (AI)" : "După"}
-                      </div>
+                      {/* Labels */}
+                      {showComparison && generatedImage && (
+                        <>
+                          <div className="absolute top-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-xs">
+                            Înainte
+                          </div>
+                          <div className="absolute top-4 right-4 bg-rose-gold text-white px-3 py-1 rounded-full text-xs">
+                            După (AI)
+                          </div>
+                        </>
+                      )}
                     </>
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
+                      <User className="w-24 h-24 mb-4 opacity-30" />
+                      <p className="text-sm">Încarcă o fotografie pentru a începe</p>
+                    </div>
+                  )}
+
+                  {/* Loading Overlay */}
+                  {isGenerating && (
+                    <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center z-20">
+                      <Loader2 className="w-12 h-12 text-rose-gold animate-spin mb-4" />
+                      <p className="text-foreground font-medium">Se generează vizualizarea AI...</p>
+                      <p className="text-sm text-muted-foreground mt-2">Aceasta poate dura până la 30 de secunde</p>
+                    </div>
                   )}
                 </div>
 
-                {/* Info Panel */}
-                <div className="p-4 bg-muted/50 border-t border-border/30">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="transition-all duration-300">
-                      <span className="text-muted-foreground">Tip selectat:</span>
-                      <span className="ml-2 font-semibold text-foreground transition-colors duration-300">
-                        {implantTypes.find(t => t.type === selectedType)?.name}
-                      </span>
+                {/* Selected Options Summary */}
+                <div className="mt-6 p-4 bg-muted/50 rounded-xl">
+                  <h4 className="text-sm font-medium text-foreground mb-2">Selecție curentă:</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Tip:</span>
+                      <span className="ml-2 text-foreground font-medium capitalize">{selectedType}</span>
                     </div>
-                    <div className="transition-all duration-300">
+                    <div>
                       <span className="text-muted-foreground">Mărime:</span>
-                      <span className="ml-2 font-semibold text-rose-gold transition-all duration-300">{selectedSize}cc</span>
+                      <span className="ml-2 text-foreground font-medium">{selectedSize}cc</span>
                     </div>
                   </div>
-                  {generatedImage && (
-                    <div className="mt-2 pt-2 border-t border-border/30">
-                      <span className="text-xs text-green-500 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        Vizualizare generată cu AI
-                      </span>
-                    </div>
-                  )}
                 </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="mt-6 text-center">
-                <Button className="w-full sm:w-auto btn-primary-rose-gold h-14 px-8 text-base">
-                  Programează Consultație pentru Simulare 3D Profesională
-                </Button>
-                <p className="text-sm text-muted-foreground mt-3">
-                  Simularea finală se realizează în cabinet cu echipament profesional
-                </p>
               </div>
             </div>
           </div>
@@ -808,44 +650,35 @@ const Simulator3DPage = () => {
       {/* FAQ Section */}
       <section className="py-20 bg-card">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-label mb-4 inline-block">
-              <HelpCircle className="w-4 h-4 inline mr-2" />
-              Întrebări Frecvente
-            </span>
-            <h2 className="h2-section text-foreground">
-              Ai întrebări despre <span className="text-gradient-gold">simulator</span>?
-            </h2>
-          </div>
-
           <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-rose-gold/10 mb-4">
+                <HelpCircle className="w-6 h-6 text-rose-gold" />
+              </div>
+              <h2 className="font-display text-3xl font-semibold text-foreground mb-4">
+                Întrebări Frecvente
+              </h2>
+              <p className="text-muted-foreground">
+                Răspunsuri la cele mai comune întrebări despre simulatorul AI
+              </p>
+            </div>
+
             <Accordion type="single" collapsible className="space-y-4">
               {faqItems.map((item, index) => (
-                <AccordionItem
-                  key={index}
+                <AccordionItem 
+                  key={index} 
                   value={`item-${index}`}
-                  className="bg-background rounded-xl border border-border/30 px-6 overflow-hidden"
+                  className="bg-background rounded-xl border border-border/30 px-6"
                 >
-                  <AccordionTrigger className="text-left font-display text-lg font-medium text-foreground hover:text-rose-gold hover:no-underline py-5">
+                  <AccordionTrigger className="text-left font-medium text-foreground hover:text-rose-gold py-4">
                     {item.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
+                  <AccordionContent className="text-muted-foreground pb-4">
                     {item.answer}
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
-          </div>
-
-          <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-4">
-              Nu ai găsit răspunsul căutat?
-            </p>
-            <a href="/contact">
-              <Button className="btn-secondary-rose-gold">
-                Contactează-ne
-              </Button>
-            </a>
           </div>
         </div>
       </section>

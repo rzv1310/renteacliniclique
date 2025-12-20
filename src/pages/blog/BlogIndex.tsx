@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Calendar, Ruler, Stethoscope, Shield, Award } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import heroBlog from "@/assets/heroes/hero-blog.jpg";
 
 const clusterMarimeForma = [
   {
@@ -205,25 +206,36 @@ const ClusterSection = ({
 const BlogIndex = () => {
   return (
     <PageLayout>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={heroBlog} 
+            alt="Blog - Resurse și Articole" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+        </div>
+        
+        <div className="relative container mx-auto px-4 lg:px-8 text-center">
+          <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
+            Blog
+          </span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
+            Resurse și <span className="text-gradient-gold">Articole</span>
+          </h1>
+          <p className="text-lg text-soft-brown max-w-2xl mx-auto">
+            Informații verificate despre augmentarea mamară, organizate pe teme pentru a te ajuta să iei cele mai bune decizii.
+          </p>
+        </div>
+      </section>
+
+      {/* Breadcrumb */}
+      <PageBreadcrumb />
+
+      {/* Articles */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center mb-8">
-            <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-              Blog
-            </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
-              Resurse și <span className="text-gradient-gold">Articole</span>
-            </h1>
-            <p className="text-lg text-soft-brown">
-              Informații verificate despre augmentarea mamară, organizate pe teme pentru a te ajuta să iei cele mai bune decizii.
-            </p>
-          </div>
-
-          {/* Breadcrumb */}
-          <div className="max-w-5xl mx-auto mb-8">
-            <PageBreadcrumb />
-          </div>
-
           <div className="max-w-5xl mx-auto">
             <ClusterSection
               icon={Ruler}
