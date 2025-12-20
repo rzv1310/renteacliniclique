@@ -810,7 +810,7 @@ const AugmentareMamaraPage = () => {
             rel="noopener noreferrer"
             className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-colors duration-300 shadow-lg"
           >
-            Vezi pe Google Maps
+            Vezi în Google Maps
           </a>
         </div>
       </section>
