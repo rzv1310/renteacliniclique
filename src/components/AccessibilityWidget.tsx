@@ -76,7 +76,7 @@ const AccessibilityWidget = () => {
       {isOpen && (
         <div className="absolute bottom-16 left-0 bg-card border border-border rounded-xl shadow-2xl p-4 w-64 animate-in slide-in-from-bottom-2 duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-medium text-foreground text-sm">Accesibilitate</h3>
+            <h3 className="font-medium text-foreground text-sm uppercase tracking-wider">Accesibilitate</h3>
             <button
               onClick={resetAll}
               className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
