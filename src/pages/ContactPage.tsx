@@ -5,7 +5,8 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Phone, Mail, MapPin, Clock, Loader2, CheckCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowRight, Phone, Mail, MapPin, Loader2, CheckCircle, ChevronDown } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -17,20 +18,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import heroImage from "@/assets/hero-image.jpg";
 
 // Zod validation schema with proper constraints
 const contactFormSchema = z.object({
-  firstName: z
-    .string()
-    .trim()
-    .min(2, "Prenumele trebuie să aibă cel puțin 2 caractere")
-    .max(50, "Prenumele nu poate depăși 50 de caractere")
-    .regex(/^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/, "Prenumele poate conține doar litere"),
-  lastName: z
+  fullName: z
     .string()
     .trim()
     .min(2, "Numele trebuie să aibă cel puțin 2 caractere")
-    .max(50, "Numele nu poate depăși 50 de caractere")
+    .max(100, "Numele nu poate depăși 100 de caractere")
     .regex(/^[a-zA-ZăâîșțĂÂÎȘȚ\s-]+$/, "Numele poate conține doar litere"),
   email: z
     .string()
@@ -47,8 +49,11 @@ const contactFormSchema = z.object({
   message: z
     .string()
     .trim()
-    .min(10, "Mesajul trebuie să aibă cel puțin 10 caractere")
-    .max(1000, "Mesajul nu poate depăși 1000 de caractere"),
+    .max(1000, "Mesajul nu poate depăși 1000 de caractere")
+    .optional(),
+  consent: z.boolean().refine((val) => val === true, {
+    message: "Trebuie să fii de acord cu politica de confidențialitate",
+  }),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -60,11 +65,11 @@ const ContactPage = () => {
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      fullName: "",
       email: "",
       phone: "",
       message: "",
+      consent: false,
     },
   });
 
@@ -73,7 +78,13 @@ const ContactPage = () => {
     
     try {
       const { data: responseData, error } = await supabase.functions.invoke('contact-form', {
-        body: data,
+        body: {
+          firstName: data.fullName.split(' ')[0] || data.fullName,
+          lastName: data.fullName.split(' ').slice(1).join(' ') || '',
+          email: data.email,
+          phone: data.phone,
+          message: data.message || '',
+        },
       });
 
       if (error) {
@@ -89,9 +100,8 @@ const ContactPage = () => {
 
       setIsSuccess(true);
       form.reset();
-      toast.success("Mesajul a fost trimis cu succes!");
+      toast.success("Programarea a fost trimisă cu succes!");
       
-      // Reset success state after 5 seconds
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -101,127 +111,137 @@ const ContactPage = () => {
     }
   };
 
+  const contactCards = [
+    {
+      icon: Phone,
+      title: "Telefon",
+      description: "Echipa noastră este disponibilă Luni-Vineri, între orele 09:00 - 18:00.",
+      cta: "SUNĂ ACUM",
+      href: "tel:+40700000000",
+    },
+    {
+      icon: Mail,
+      title: "Email",
+      description: "Pentru întrebări detaliate sau trimiterea de documente medicale.",
+      cta: "TRIMITE EMAIL",
+      href: "mailto:contact@rentea.ro",
+    },
+    {
+      icon: MapPin,
+      title: "Locație",
+      description: "Strada Primăverii, Nr. 24, Sector 1, București, România.",
+      cta: "INDICAȚII RUTIERE",
+      href: "https://maps.google.com/?q=Bulevardul+Primaverii+Bucuresti",
+    },
+  ];
+
+  const faqItems = [
+    {
+      question: "Cât costă consultația inițială?",
+      answer: "Consultația inițială detaliată costă 300 RON. Această sumă se deduce integral din prețul operației dacă decideți să continuați procedura în clinica noastră.",
+    },
+    {
+      question: "Trebuie să plătesc totul înainte?",
+      answer: "Nu, plata se poate face și eșalonat. Pentru rezervarea datei intervenției se achită un avans de 20%, iar restul sumei cu o săptămână înainte de operație sau în ziua internării.",
+    },
+    {
+      question: "Cât timp durează până la programare?",
+      answer: "Timpul de așteptare pentru o consultație este în medie de 1-2 săptămâni. Pentru intervenții chirurgicale, vă recomandăm să programați cu cel puțin o lună în avans.",
+    },
+  ];
+
   return (
     <PageLayout>
-      {/* Hero */}
-      <section className="py-16 lg:py-24">
+      {/* Hero Section */}
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        />
+        <div className="absolute inset-0 bg-background/70" />
+        <div className="relative z-10 text-center px-4">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
+            <span className="font-normal">Contact</span>{" "}
+            <span className="italic text-primary">&</span>{" "}
+            <span className="italic text-primary">Programări</span>
+          </h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-base md:text-lg">
+            Suntem aici pentru tine. Completează formularul, sună-ne sau vino direct la clinică pentru a începe călătoria ta către frumusețe.
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Cards Section */}
+      <section className="py-16 lg:py-20 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="text-sm uppercase tracking-[0.3em] text-rose-gold font-medium mb-4 block">
-              Contact
-            </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-deep-brown mb-6">
-              Suntem Aici
-              <br />
-              <span className="text-gradient-gold">Pentru Tine</span>
-            </h1>
-            <p className="text-lg text-soft-brown leading-relaxed">
-              Ai întrebări? Vrei să programezi o consultație? Contactează-ne și îți vom răspunde în cel mai scurt timp.
-            </p>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {contactCards.map((card, index) => (
+              <div 
+                key={index}
+                className="bg-card border border-border rounded-lg p-8 text-center hover:border-primary/30 transition-colors"
+              >
+                <div className="w-16 h-16 rounded-full border border-border flex items-center justify-center mx-auto mb-6">
+                  <card.icon className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="font-display text-xl text-foreground mb-3">{card.title}</h3>
+                <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                  {card.description}
+                </p>
+                <a 
+                  href={card.href}
+                  className="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-foreground hover:text-primary transition-colors"
+                >
+                  {card.cta}
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Info + Form */}
-      <section className="pb-24">
+      {/* Form + Location Section */}
+      <section className="py-16 lg:py-20 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <div>
-              <h2 className="font-serif text-2xl font-semibold text-deep-brown mb-8">
-                Informații de Contact
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Left - Form */}
+            <div className="bg-card border border-border rounded-lg p-8 lg:p-10">
+              <span className="text-xs uppercase tracking-widest text-primary font-medium mb-2 block">
+                Primul pas
+              </span>
+              <h2 className="font-display text-2xl md:text-3xl text-foreground mb-4">
+                Programări Online
               </h2>
-
-              <div className="space-y-6 mb-12">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-champagne-light flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5 text-rose-gold" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-deep-brown mb-1">Adresă</h3>
-                    <p className="text-soft-brown">
-                      Str. Exemplu nr. 123<br />
-                      Sector 1, București
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-champagne-light flex items-center justify-center shrink-0">
-                    <Phone className="w-5 h-5 text-rose-gold" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-deep-brown mb-1">Telefon</h3>
-                    <a href="tel:+40721000000" className="text-soft-brown hover:text-rose-gold transition-colors">
-                      +40 721 000 000
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-champagne-light flex items-center justify-center shrink-0">
-                    <Mail className="w-5 h-5 text-rose-gold" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-deep-brown mb-1">Email</h3>
-                    <a href="mailto:contact@rentea.ro" className="text-soft-brown hover:text-rose-gold transition-colors">
-                      contact@rentea.ro
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-champagne-light flex items-center justify-center shrink-0">
-                    <Clock className="w-5 h-5 text-rose-gold" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-deep-brown mb-1">Program</h3>
-                    <p className="text-soft-brown">
-                      Luni - Vineri: 09:00 - 18:00<br />
-                      Sâmbătă: 10:00 - 14:00
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Map placeholder */}
-              <div className="bg-champagne-light rounded-2xl h-64 flex items-center justify-center">
-                <p className="text-soft-brown">Hartă interactivă</p>
-              </div>
-            </div>
-
-            {/* Contact Form */}
-            <div className="bg-card rounded-2xl p-8 lg:p-10 shadow-elegant">
-              <h2 className="font-serif text-2xl font-semibold text-deep-brown mb-6">
-                Trimite-ne un Mesaj
-              </h2>
+              <p className="text-muted-foreground text-sm mb-8">
+                Completează formularul de mai jos și te vom contacta în cel mai scurt timp pentru a confirma programarea.
+              </p>
 
               {isSuccess ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
-                  <h3 className="font-serif text-xl font-semibold text-deep-brown mb-2">
-                    Mulțumim pentru mesaj!
+                  <h3 className="font-display text-xl text-foreground mb-2">
+                    Mulțumim pentru programare!
                   </h3>
-                  <p className="text-soft-brown">
+                  <p className="text-muted-foreground">
                     Vom reveni cu un răspuns în cel mai scurt timp.
                   </p>
                 </div>
               ) : (
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="lastName"
+                        name="fullName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium text-deep-brown">
-                              Nume
+                            <FormLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+                              Nume Complet
                             </FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Numele tău" 
-                                className="bg-background" 
+                                placeholder="Ex: Ana Popescu" 
+                                className="bg-muted border-border h-11"
                                 {...field} 
                               />
                             </FormControl>
@@ -231,16 +251,17 @@ const ContactPage = () => {
                       />
                       <FormField
                         control={form.control}
-                        name="firstName"
+                        name="phone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium text-deep-brown">
-                              Prenume
+                            <FormLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+                              Telefon
                             </FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Prenumele tău" 
-                                className="bg-background" 
+                                type="tel"
+                                placeholder="07xx xxx xxx" 
+                                className="bg-muted border-border h-11"
                                 {...field} 
                               />
                             </FormControl>
@@ -255,35 +276,14 @@ const ContactPage = () => {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-deep-brown">
-                            Email
+                          <FormLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+                            Adresă Email
                           </FormLabel>
                           <FormControl>
                             <Input 
                               type="email" 
-                              placeholder="email@exemplu.ro" 
-                              className="bg-background" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-deep-brown">
-                            Telefon
-                          </FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="tel" 
-                              placeholder="+40721000000" 
-                              className="bg-background" 
+                              placeholder="nume@email.com" 
+                              className="bg-muted border-border h-11"
                               {...field} 
                             />
                           </FormControl>
@@ -297,14 +297,14 @@ const ContactPage = () => {
                       name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-deep-brown">
-                            Mesaj
+                          <FormLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+                            Mesaj (Opțional)
                           </FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Cum te putem ajuta?" 
-                              rows={5}
-                              className="bg-background resize-none"
+                              placeholder="Detaliază motivul programării sau procedura dorită..." 
+                              rows={4}
+                              className="bg-muted border-border resize-none"
                               {...field}
                             />
                           </FormControl>
@@ -313,11 +313,35 @@ const ContactPage = () => {
                       )}
                     />
 
+                    <FormField
+                      control={form.control}
+                      name="consent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="mt-0.5"
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-xs text-muted-foreground font-normal cursor-pointer">
+                              Sunt de acord cu{" "}
+                              <a href="/politica-confidentialitate" className="text-primary underline hover:no-underline">
+                                Politica de Confidențialitate
+                              </a>{" "}
+                              și prelucrarea datelor.
+                            </FormLabel>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
                     <Button 
                       type="submit" 
-                      variant="hero" 
-                      size="lg" 
-                      className="w-full group"
+                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium uppercase tracking-wide"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -326,15 +350,72 @@ const ContactPage = () => {
                           Se trimite...
                         </>
                       ) : (
-                        <>
-                          Trimite Mesajul
-                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </>
+                        "Trimite Programarea"
                       )}
                     </Button>
                   </form>
                 </Form>
               )}
+            </div>
+
+            {/* Right - Location + FAQ */}
+            <div className="space-y-12">
+              {/* Location */}
+              <div>
+                <span className="text-xs uppercase tracking-widest text-primary font-medium mb-2 block">
+                  Locație
+                </span>
+                <h2 className="font-display text-2xl md:text-3xl text-foreground mb-4">
+                  Unde ne găsești
+                </h2>
+                <p className="text-muted-foreground text-sm mb-6">
+                  Clinica RENTÉA este situată în inima Bucureștiului, într-o zonă accesibilă și discretă. Dispunem de parcare privată pentru pacienți.
+                </p>
+
+                {/* Map Embed */}
+                <div className="rounded-lg overflow-hidden mb-4 h-64 bg-muted">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.1234567890!2d26.0833!3d44.4500!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBulevardul%20Prim%C4%83verii%2C%20Bucure%C8%99ti!5e0!3m2!1sro!2sro!4v1234567890"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Locație Clinica RENTÉA"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className="text-primary">♿</span>
+                  Acces complet pentru persoane cu dizabilități.
+                </div>
+              </div>
+
+              {/* FAQ */}
+              <div>
+                <h2 className="font-display text-2xl md:text-3xl text-foreground mb-6">
+                  Întrebări Frecvente
+                </h2>
+
+                <Accordion type="single" collapsible className="space-y-3">
+                  {faqItems.map((item, index) => (
+                    <AccordionItem 
+                      key={index} 
+                      value={`item-${index}`}
+                      className="bg-card border border-border rounded-lg px-6 data-[state=open]:border-primary/30"
+                    >
+                      <AccordionTrigger className="text-sm text-foreground hover:no-underline py-4 [&[data-state=open]>svg]:rotate-180">
+                        {item.question}
+                        <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+                      </AccordionTrigger>
+                      <AccordionContent className="text-sm text-muted-foreground pb-4 leading-relaxed">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
             </div>
           </div>
         </div>
