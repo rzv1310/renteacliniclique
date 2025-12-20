@@ -10,6 +10,10 @@ import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAug
 // Import hero image
 import heroImage from "@/assets/heroes/hero-augmentation.jpg";
 
+// Import implant images
+import implantRound from "@/assets/implants/implant-round.png";
+import implantAnatomic from "@/assets/implants/implant-anatomic.png";
+
 // Import gallery images
 import case1Before from "@/assets/gallery/case-1-before.jpg";
 import case1After from "@/assets/gallery/case-1-after.jpg";
@@ -286,7 +290,7 @@ const AugmentareMamaraPage = () => {
               Personalizare
             </span>
             <h2 className="font-display text-3xl md:text-4xl font-light text-foreground mb-4">
-              Alege Forma Ta
+              Alege Forma
             </h2>
             <p className="text-muted-foreground">
               Selectează un profil de implant pentru a înțelege diferența estetică.
@@ -308,8 +312,12 @@ const AugmentareMamaraPage = () => {
                   <Check className="w-6 h-6 text-primary" />
                 </div>
               )}
-              <div className="aspect-[4/3] bg-gradient-to-br from-muted to-muted/50 rounded-xl mb-6 flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 border border-primary/20" />
+              <div className="aspect-[4/3] bg-gradient-to-br from-[#f5e6d3] to-[#e8d4c0] rounded-xl mb-6 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={implantRound} 
+                  alt="Implant rotund" 
+                  className="w-3/4 h-3/4 object-contain"
+                />
               </div>
               <h3 className="font-display text-xl font-medium text-foreground mb-2">
                 Implanturi Rotunde
@@ -317,16 +325,22 @@ const AugmentareMamaraPage = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Oferă plenitudine în polul superior al sânului pentru un aspect mai ridicat și tineresc.
               </p>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  Decolteu îmbunătățit
+              {selectedShape === "round" && (
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Volum evident în partea superioară
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Formă simetrică 360°
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Orientare mai puțin critică
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  Formă simetrică
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Anatomical Implants */}
@@ -343,8 +357,12 @@ const AugmentareMamaraPage = () => {
                   <Check className="w-6 h-6 text-primary" />
                 </div>
               )}
-              <div className="aspect-[4/3] bg-gradient-to-br from-muted to-muted/50 rounded-xl mb-6 flex items-center justify-center">
-                <div className="w-24 h-28 rounded-[40%_40%_50%_50%] bg-gradient-to-br from-primary/30 to-primary/10 border border-primary/20" />
+              <div className="aspect-[4/3] bg-gradient-to-br from-[#f5e6d3] to-[#e8d4c0] rounded-xl mb-6 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={implantAnatomic} 
+                  alt="Implant anatomic" 
+                  className="w-3/4 h-3/4 object-contain"
+                />
               </div>
               <h3 className="font-display text-xl font-medium text-foreground mb-2">
                 Anatomice (Lacrimă)
@@ -352,16 +370,22 @@ const AugmentareMamaraPage = () => {
               <p className="text-muted-foreground text-sm mb-4">
                 Imită panta naturală a sânului, cu mai mult volum în partea inferioară.
               </p>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  Profil natural
+              {selectedShape === "anatomical" && (
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Contur tip „pantă", natural (mai mult volum inferior)
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Formă direcțională (sus/jos)
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    Poziționare mai atentă
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  Pol superior subtil
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
