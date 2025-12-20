@@ -23,7 +23,7 @@ const routeLabels: Record<string, string> = {
   "lipofilling-mamar": "Lipofilling Mamar",
   "galerie": "Galerie Foto",
   "simulator-3d": "Simulator 3D",
-  "tarife-finantare": "Tarife & Finanțare",
+  "implant-mamar-pret": "Prețuri Implant Mamar",
   "ghid-recuperare": "Ghid Recuperare",
   "despre-noi": "Despre Noi",
   "contact": "Contact",

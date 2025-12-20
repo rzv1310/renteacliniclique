@@ -556,7 +556,7 @@ const AugmentareMamaraPage = () => {
                 <Phone className="w-5 h-5 mr-2" />
                 Vreau o evaluare personalizată
               </Button>
-              <Link to="/tarife">
+              <Link to="/implant-mamar-pret">
                 <Button size="lg" variant="outline" className="w-full border-foreground/30 hover:bg-foreground/5">
                   Vezi Tarife
                 </Button>
