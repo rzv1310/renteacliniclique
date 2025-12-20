@@ -76,11 +76,7 @@ const App = () => (
           <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" element={<ImplanturiAnatomicePage />} />
           <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" element={<ImplanturiErgonomicePage />} />
           <Route path="/proceduri/lifting-mamar-mastopexie-ridicare-sani" element={<MastopexiePage />} />
-          {/* Redirect old mastopexie URL to new */}
-          <Route path="/proceduri/augmentare-mamara-cu-mastopexie" element={<Navigate to="/proceduri/lifting-mamar-mastopexie-ridicare-sani" replace />} />
           <Route path="/proceduri/schimbare-inlocuire-implant-mamar-revizie" element={<ReviziePage />} />
-          {/* Redirect old revizie URL to new */}
-          <Route path="/proceduri/revizie-implant-mamar" element={<Navigate to="/proceduri/schimbare-inlocuire-implant-mamar-revizie" replace />} />
           <Route path="/proceduri/micsorare-sani-reductie-mamara" element={<ReductieMamaraPage />} />
           <Route path="/proceduri/lipofilling-mamar" element={<LipofillingMamarPage />} />
           
@@ -127,11 +123,6 @@ const App = () => (
           {/* Redirects pentru URL-uri vechi */}
           <Route path="/preturi" element={<Navigate to="/tarife-finantare" replace />} />
           <Route path="/implanturi" element={<Navigate to="/proceduri/implant-mamar-bucuresti" replace />} />
-          <Route path="/proceduri/augmentare-mamara" element={<Navigate to="/proceduri/implant-mamar-bucuresti" replace />} />
-          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-rotunde" element={<Navigate to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" replace />} />
-          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-anatomice" element={<Navigate to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" replace />} />
-          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" element={<Navigate to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" replace />} />
-          <Route path="/blog/alaptare-dupa-augmentare-mamara" element={<Navigate to="/blog/alaptarea-cu-implanturi-mamare" replace />} />
           <Route path="/turism-medical" element={<Navigate to="/turism-medical-intern" replace />} />
           <Route path="/finantare" element={<Navigate to="/implant-mamar-in-rate" replace />} />
           
