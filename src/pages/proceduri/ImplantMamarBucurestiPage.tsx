@@ -808,7 +808,7 @@ const AugmentareMamaraPage = () => {
             href="https://maps.google.com/?q=44.439663,26.096306"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-colors duration-300 shadow-lg"
+            className="px-8 py-4 bg-background/90 text-foreground rounded-full font-medium hover:bg-background transition-colors duration-300 shadow-lg border border-border/50"
           >
             Deschide în Google Maps
           </a>
