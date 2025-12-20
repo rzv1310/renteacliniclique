@@ -1,11 +1,11 @@
 # Robots.txt for Rentéa Aesthetic Clinique
-# https://rentea.ro
+# https://implantmamarbucuresti.ro
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://rentea.ro/sitemap.xml
+Sitemap: https://implantmamarbucuresti.ro/sitemap.xml
 
 # Disallow admin and private paths
 Disallow: /api/

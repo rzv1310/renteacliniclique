@@ -175,10 +175,10 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <MaterialIcon name="mail" className="text-xl text-rose-gold shrink-0" />
                 <a
-                  href="mailto:contact@rentea.ro"
+                  href="mailto:contact@implantmamarbucuresti.ro"
                   className="text-muted-foreground hover:text-rose-gold transition-colors text-sm"
                 >
-                  contact@rentea.ro
+                  contact@implantmamarbucuresti.ro
                 </a>
               </li>
             </ul>
