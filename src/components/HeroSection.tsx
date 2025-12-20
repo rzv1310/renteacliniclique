@@ -26,14 +26,8 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="/galerie">
-                <button className="btn-primary-rose-gold">
-                  <MaterialIcon name="grid_view" className="text-xl" />
-                  Vezi Galeria Foto
-                </button>
-              </a>
               <a href="/simulator-3d">
-                <button className="btn-secondary-rose-gold">
+                <button className="btn-primary-rose-gold">
                   <MaterialIcon name="3d_rotation" className="text-xl" />
                   Simulator 3D
                 </button>
