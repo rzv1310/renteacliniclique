@@ -78,7 +78,9 @@ const App = () => (
           <Route path="/proceduri/lifting-mamar-mastopexie-ridicare-sani" element={<MastopexiePage />} />
           {/* Redirect old mastopexie URL to new */}
           <Route path="/proceduri/augmentare-mamara-cu-mastopexie" element={<Navigate to="/proceduri/lifting-mamar-mastopexie-ridicare-sani" replace />} />
-          <Route path="/proceduri/revizie-implant-mamar" element={<ReviziePage />} />
+          <Route path="/proceduri/schimbare-inlocuire-implant-mamar-revizie" element={<ReviziePage />} />
+          {/* Redirect old revizie URL to new */}
+          <Route path="/proceduri/revizie-implant-mamar" element={<Navigate to="/proceduri/schimbare-inlocuire-implant-mamar-revizie" replace />} />
           <Route path="/proceduri/micsorare-sani-reductie-mamara" element={<ReductieMamaraPage />} />
           <Route path="/proceduri/lipofilling-mamar" element={<LipofillingMamarPage />} />
           

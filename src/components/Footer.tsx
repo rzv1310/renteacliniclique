@@ -135,7 +135,7 @@ const Footer = () => {
                 { label: "Implanturi Anatomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" },
                 { label: "Implanturi Ergonomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" },
                 { label: "Lifting Mamar", href: "/proceduri/lifting-mamar-mastopexie-ridicare-sani" },
-                { label: "Revizie Implant", href: "/proceduri/revizie-implant-mamar" },
+                { label: "Revizie Implant", href: "/proceduri/schimbare-inlocuire-implant-mamar-revizie" },
                 { label: "Reducție Mamară", href: "/proceduri/micsorare-sani-reductie-mamara" },
                 { label: "Lipofilling Mamar", href: "/proceduri/lipofilling-mamar" },
               ].map((service) => (
