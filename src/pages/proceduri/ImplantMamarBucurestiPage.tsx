@@ -341,10 +341,10 @@ const AugmentareMamaraPage = () => {
                   </div>
                   <Link 
                     to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" 
-                    className="flex items-start gap-2 text-sm text-primary hover:underline mt-2"
+                    className="flex items-center gap-2 text-sm text-primary hover:underline mt-3 font-medium group"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
                     Ghid implanturi mamare rotunde
                   </Link>
                 </div>
@@ -394,10 +394,10 @@ const AugmentareMamaraPage = () => {
                   </div>
                   <Link 
                     to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" 
-                    className="flex items-start gap-2 text-sm text-primary hover:underline mt-2"
+                    className="flex items-center gap-2 text-sm text-primary hover:underline mt-3 font-medium group"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
                     Ghid implanturi mamare anatomice
                   </Link>
                 </div>
