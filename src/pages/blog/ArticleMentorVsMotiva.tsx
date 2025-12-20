@@ -8,9 +8,9 @@ const ArticleMentorVsMotiva = () => {
   return (
     <PageLayout>
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Mentor vs Motiva implanturi" className="w-full h-full object-cover" />
+          <img src={heroImage} alt="Mentor vs Motiva implanturi" className="w-full h-full object-cover object-top" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
         <div className="container mx-auto px-4 lg:px-8 relative z-10 text-center">
