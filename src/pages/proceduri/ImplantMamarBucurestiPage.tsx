@@ -265,22 +265,6 @@ const AugmentareMamaraPage = () => {
       {/* Breadcrumb */}
       <PageBreadcrumb />
 
-      {/* Art of Natural Enhancement */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <Diamond className="w-12 h-12 text-primary mx-auto mb-8" />
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-6">
-              Arta Îmbunătățirii Naturale
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Credem în estetica personalizată. Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel. 
-              Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, 
-              proiecție și un rezultat care se simte autentic tu.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Choose Your Shape */}
       <section className="py-24 bg-muted/30">
@@ -826,6 +810,23 @@ const AugmentareMamaraPage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Art of Natural Enhancement */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <Diamond className="w-12 h-12 text-primary mx-auto mb-8" />
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-6">
+              Arta Îmbunătățirii Naturale
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Credem în estetica personalizată. Corpul tău este unic, iar îmbunătățirea ta ar trebui să fie la fel. 
+              Abordarea noastră evită mentalitatea "o mărime pentru toți", concentrându-se în schimb pe proporție, 
+              proiecție și un rezultat care se simte autentic tu.
+            </p>
           </div>
         </div>
       </section>
