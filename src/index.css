@@ -592,3 +592,116 @@
   box-shadow: 0 0 12px 4px hsl(30 40% 53% / 0.6), 0 0 20px 8px hsl(30 40% 53% / 0.3);
   pointer-events: none;
 }
+
+/* ===== Text Glow Wave Animations ===== */
+/* 10s total cycle, each number glows for ~1.5s with smooth transitions */
+/* Rose gold color: rgba(183, 110, 121, X) */
+
+@keyframes text-glow-wave-0 {
+  0%, 20%, 100% { 
+    text-shadow: 0 0 0 transparent;
+    opacity: 0.5;
+  }
+  3% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+  6%, 12% { 
+    text-shadow: 0 0 25px rgba(183, 110, 121, 0.8),
+                 0 0 50px rgba(183, 110, 121, 0.5),
+                 0 0 80px rgba(183, 110, 121, 0.3);
+    opacity: 1;
+  }
+  15% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+}
+
+@keyframes text-glow-wave-1 {
+  0%, 25%, 45%, 100% { 
+    text-shadow: 0 0 0 transparent;
+    opacity: 0.5;
+  }
+  28% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+  31%, 37% { 
+    text-shadow: 0 0 25px rgba(183, 110, 121, 0.8),
+                 0 0 50px rgba(183, 110, 121, 0.5),
+                 0 0 80px rgba(183, 110, 121, 0.3);
+    opacity: 1;
+  }
+  40% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+}
+
+@keyframes text-glow-wave-2 {
+  0%, 50%, 70%, 100% { 
+    text-shadow: 0 0 0 transparent;
+    opacity: 0.5;
+  }
+  53% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+  56%, 62% { 
+    text-shadow: 0 0 25px rgba(183, 110, 121, 0.8),
+                 0 0 50px rgba(183, 110, 121, 0.5),
+                 0 0 80px rgba(183, 110, 121, 0.3);
+    opacity: 1;
+  }
+  65% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+}
+
+@keyframes text-glow-wave-3 {
+  0%, 75%, 95%, 100% { 
+    text-shadow: 0 0 0 transparent;
+    opacity: 0.5;
+  }
+  78% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+  81%, 87% { 
+    text-shadow: 0 0 25px rgba(183, 110, 121, 0.8),
+                 0 0 50px rgba(183, 110, 121, 0.5),
+                 0 0 80px rgba(183, 110, 121, 0.3);
+    opacity: 1;
+  }
+  90% { 
+    text-shadow: 0 0 15px rgba(183, 110, 121, 0.5),
+                 0 0 30px rgba(183, 110, 121, 0.3);
+    opacity: 0.75;
+  }
+}
+
+/* Text glow animation classes */
+.animate-text-glow-0 {
+  animation: text-glow-wave-0 10s ease-in-out infinite;
+}
+
+.animate-text-glow-1 {
+  animation: text-glow-wave-1 10s ease-in-out infinite;
+}
+
+.animate-text-glow-2 {
+  animation: text-glow-wave-2 10s ease-in-out infinite;
+}
+
+.animate-text-glow-3 {
+  animation: text-glow-wave-3 10s ease-in-out infinite;
+}
