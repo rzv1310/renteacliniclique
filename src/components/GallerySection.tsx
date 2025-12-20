@@ -83,7 +83,7 @@ const GallerySection = () => {
             <img
               src={cases[activeCase].before}
               alt="Înainte"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover object-[40%_center]"
             />
 
             {/* After Image */}
