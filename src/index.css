@@ -349,6 +349,68 @@
   pointer-events: none;
 }
 
+/* Silk texture with folds */
+.silk-folds {
+  position: relative;
+  overflow: hidden;
+}
+
+.silk-folds::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    /* Vertical subtle folds */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 2px,
+      transparent 80px,
+      rgba(0, 0, 0, 0.08) 81px,
+      transparent 82px,
+      transparent 160px
+    ),
+    /* Diagonal silk sheen */
+    linear-gradient(
+      135deg,
+      transparent 0%,
+      rgba(212, 175, 155, 0.03) 20%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.02) 60%,
+      transparent 80%,
+      rgba(212, 175, 155, 0.02) 100%
+    ),
+    /* Soft wave folds */
+    repeating-linear-gradient(
+      95deg,
+      transparent 0px,
+      rgba(255, 255, 255, 0.008) 200px,
+      rgba(0, 0, 0, 0.04) 400px,
+      rgba(255, 255, 255, 0.01) 600px,
+      transparent 800px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.silk-folds::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 30%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.02) 70%,
+    transparent 100%
+  );
+  animation: silk-shimmer 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
 /* Timeline sequential glow animations - 9s total loop, 3s per segment */
 /* Horizontal (desktop) */
 @keyframes glow-travel-seg-0 {
