@@ -4,6 +4,8 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 import galleryBefore from "@/assets/gallery/gallery-before.png";
 import galleryAfter from "@/assets/gallery/gallery-after.png";
+import voluptuousBefore from "@/assets/gallery/voluptuous-before.png";
+import voluptuousAfter from "@/assets/gallery/voluptuous-after.png";
 
 const GallerySection = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -21,7 +23,9 @@ const GallerySection = () => {
     natural: [
       { before: galleryAfter, after: galleryBefore, label: "Caz #1 - Natural 350cc" },
     ],
-    voluptuous: [],
+    voluptuous: [
+      { before: voluptuousBefore, after: voluptuousAfter, label: "Caz #1 - Voluptuous 450cc" },
+    ],
     sporty: [],
   };
 
