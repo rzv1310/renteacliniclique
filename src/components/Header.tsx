@@ -46,8 +46,8 @@ const Header = () => {
 
   const utileLinks = [
     { name: "Ghid de Recuperare", href: "/ghid-recuperare" },
-    { name: "Turism Medical", href: "/turism-medical" },
-    { name: "Finanțare", href: "/finantare" },
+    { name: "Turism Medical", href: "/turism-medical-intern" },
+    { name: "Finanțare", href: "/implant-mamar-in-rate" },
     { name: "Blog", href: "/blog" },
   ];
 
