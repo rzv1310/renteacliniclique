@@ -550,12 +550,17 @@ const AugmentareMamaraPage = () => {
               )}
             </div>
 
-            {/* CTA Button */}
-            <div className="flex justify-center mt-12">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
               <Button size="lg" className="btn-glow-border bg-transparent text-foreground border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
                 <Phone className="w-5 h-5 mr-2" />
                 Vreau o evaluare personalizată
               </Button>
+              <Link to="/tarife">
+                <Button size="lg" variant="outline" className="w-full border-foreground/30 hover:bg-foreground/5">
+                  Vezi Tarife
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
