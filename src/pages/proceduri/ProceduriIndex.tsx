@@ -6,13 +6,13 @@ import heroImage from "@/assets/heroes/hero-proceduri.jpg";
 
 const procedures = [
   {
-    title: "Augmentare Mamară",
+    title: "Implant Mamar București",
     description: "Procedura principală pentru mărirea sânilor cu implanturi. Descoperă toate tipurile de implanturi disponibile.",
-    href: "/proceduri/augmentare-mamara",
+    href: "/proceduri/implant-mamar-bucuresti",
     subPages: [
-      { name: "Implanturi Rotunde", href: "/proceduri/augmentare-mamara/implanturi-mamare-rotunde" },
-      { name: "Implanturi Anatomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-anatomice" },
-      { name: "Implanturi Ergonomice", href: "/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" },
+      { name: "Implanturi Rotunde", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" },
+      { name: "Implanturi Anatomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" },
+      { name: "Implanturi Ergonomice", href: "/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" },
     ],
   },
   {

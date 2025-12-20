@@ -13,7 +13,7 @@ import {
 const routeLabels: Record<string, string> = {
   "": "Acasă",
   "proceduri": "Proceduri",
-  "augmentare-mamara": "Augmentare Mamară",
+  "implant-mamar-bucuresti": "Implant Mamar București",
   "implanturi-mamare-rotunde": "Implanturi Mamare Rotunde",
   "implanturi-mamare-anatomice": "Implanturi Mamare Anatomice",
   "implanturi-mamare-ergonomice": "Implanturi Mamare Ergonomice",

@@ -71,10 +71,10 @@ const App = () => (
           
           {/* Proceduri */}
           <Route path="/proceduri" element={<ProceduriIndex />} />
-          <Route path="/proceduri/augmentare-mamara" element={<AugmentareMamaraPage />} />
-          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-rotunde" element={<ImplanturiRotundePage />} />
-          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-anatomice" element={<ImplanturiAnatomicePage />} />
-          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" element={<ImplanturiErgonomicePage />} />
+          <Route path="/proceduri/implant-mamar-bucuresti" element={<AugmentareMamaraPage />} />
+          <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" element={<ImplanturiRotundePage />} />
+          <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" element={<ImplanturiAnatomicePage />} />
+          <Route path="/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" element={<ImplanturiErgonomicePage />} />
           <Route path="/proceduri/augmentare-mamara-cu-mastopexie" element={<MastopexiePage />} />
           <Route path="/proceduri/revizie-implant-mamar" element={<ReviziePage />} />
           <Route path="/proceduri/micsorare-sani-reductie-mamara" element={<ReductieMamaraPage />} />
@@ -122,7 +122,11 @@ const App = () => (
           
           {/* Redirects pentru URL-uri vechi */}
           <Route path="/preturi" element={<Navigate to="/tarife-finantare" replace />} />
-          <Route path="/implanturi" element={<Navigate to="/proceduri/augmentare-mamara" replace />} />
+          <Route path="/implanturi" element={<Navigate to="/proceduri/implant-mamar-bucuresti" replace />} />
+          <Route path="/proceduri/augmentare-mamara" element={<Navigate to="/proceduri/implant-mamar-bucuresti" replace />} />
+          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-rotunde" element={<Navigate to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde" replace />} />
+          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-anatomice" element={<Navigate to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice" replace />} />
+          <Route path="/proceduri/augmentare-mamara/implanturi-mamare-ergonomice" element={<Navigate to="/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice" replace />} />
           <Route path="/blog/alaptare-dupa-augmentare-mamara" element={<Navigate to="/blog/alaptarea-cu-implanturi-mamare" replace />} />
           <Route path="/turism-medical" element={<Navigate to="/turism-medical-intern" replace />} />
           <Route path="/finantare" element={<Navigate to="/implant-mamar-in-rate" replace />} />
