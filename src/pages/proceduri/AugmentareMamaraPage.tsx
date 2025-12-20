@@ -238,18 +238,15 @@ const AugmentareMamaraPage = () => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
             <Check className="w-4 h-4 text-primary" />
-            <span className="text-sm text-primary font-medium uppercase tracking-wider">Premium Breast Augmentation</span>
+            <span className="text-sm text-primary font-medium uppercase tracking-wider">Redefinește-ți Silueta</span>
           </div>
 
           <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light text-foreground mb-6 animate-fade-in-up">
-            Redefinește-ți
-            <br />
-            <span className="italic text-gradient-gold">Silueta</span>
+            Implant Mamar București
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-light animate-fade-in-up animation-delay-100">
-            Augmentare Mamară expertă, concepută pentru rezultate personalizate și de boutique. 
-            Combinăm precizia medicală cu o viziune artistică.
+            Augmentare Mamară în București - precizie medicală combinată cu o viziune artistică.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-200">
