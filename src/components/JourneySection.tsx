@@ -50,7 +50,7 @@ const JourneySection = () => {
             <span className="italic">De la Vis la Realitate în 4 Pași</span>
           </h2>
           <p className="text-body leading-relaxed">
-            Transformarea dumneavoastră este o călătorie atent orchestrată, concepută pentru a fi discretă, confortabilă și excepțională la fiecare pas.
+            Transformarea ta este o călătorie atent orchestrată, concepută pentru a fi discretă, confortabilă și excepțională la fiecare pas!
           </p>
         </div>
 
