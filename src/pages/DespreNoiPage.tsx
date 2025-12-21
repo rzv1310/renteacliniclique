@@ -140,7 +140,7 @@ const DespreNoiPage = () => {
                 Astăzi, îmi dedic expertiza pacienților mei în două locații de top: la Omini Clinic în Iași și la <span className="text-foreground font-medium">Rentéa Aesthetic Clinique în București.</span>
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Sunt membru activ al celor mai prestigioase societăți de profil (Societatea Română de Chirurgie Estetică, de Microchirurgie și de Chirurgie Plastică Reconstructivă), ceea ce îmi permite să rămân conectat la cele mai noi tehnici globale.
+                Sunt membru activ al celor mai prestigioase societăți de profil (<span className="text-foreground">Societatea Română de Chirurgie Estetică, de Microchirurgie și de Chirurgie Plastică Reconstructivă</span>), ceea ce îmi permite să rămân conectat la cele mai noi tehnici globale.
               </p>
             </div>
 
