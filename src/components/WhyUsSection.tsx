@@ -49,7 +49,7 @@ const WhyUsSection = () => {
             De ce să alegi un superspecialist?
           </h2>
           <p className="text-body leading-relaxed">
-            La RENTÉA, angajamentul nostru față de excelență se reflectă în fiecare detaliu. Experiența, precizia și dedicarea noastră exclusivă îți garantează rezultate sublime și o liniște absolută.
+            La RENTÉA, incercăm să reflectăm perfecțiunea în fiecare detaliu, pentru rezultate sublime și o liniște absolută.
           </p>
         </div>
 
