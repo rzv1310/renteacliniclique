@@ -10,9 +10,9 @@ const WhyUsSection = () => {
   const features = [
     {
       icon: "diamond",
-      title: "Maestru, nu Generalist",
+      title: "Perfecțiune prin Repetiție",
       description:
-        "În timp ce alți chirurgi abordează o gamă variată de proceduri, noi ne dedicăm exclusiv augmentării mamare, zi de zi. Această specializare profundă este cheia perfecțiunii tehnice și artistice.",
+        "Practicând augmentarea mamară ca procedură principală, investesc fiecare moment în rafinarea tehnicilor mele. Pentru mine, aceasta este singura cale spre excelența și armonia artistică a rezultatului final.",
       image: maestruImage,
       imagePosition: "object-[center_3%]",
     },
@@ -20,7 +20,7 @@ const WhyUsSection = () => {
       icon: "verified",
       title: "Implanturi de Excepție",
       description:
-        "Colaborăm exclusiv cu branduri de elită precum Mentor și Motiva, utilizând cele mai avansate tehnici, inclusiv Dual Plane și protocoale de recuperare rapidă, pentru rezultate de durată și aspect natural.",
+        "Colaborăm exclusiv cu branduri de elită - Mentor și Motiva - utilizând cele mai avansate tehnici, (Dual Plane) și protocoale de recuperare rapidă, pentru rezultate de durată și aspect natural.",
       image: implantImage,
       imagePosition: "object-center",
       imageBgClass: "bg-black",
@@ -29,7 +29,7 @@ const WhyUsSection = () => {
       icon: "shield_lock",
       title: "Siguranță Neclintită",
       description:
-        "Datorită specializării noastre stricte și a protocoalelor riguroase, rata de complicații este minimă. Ne angajăm să oferim cea mai sigură și ușoară recuperare din industrie.",
+        "Datorită protocoalelor riguroase, rata de complicații este minimă. Ne angajăm să oferim cea mai sigură și ușoară recuperare din industrie.",
       image: sigurantaImage,
       imagePosition: "object-[center_15%]",
     },
