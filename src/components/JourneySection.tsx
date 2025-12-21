@@ -8,9 +8,9 @@ const JourneySection = () => {
     {
       step: "01",
       icon: "calendar_month",
-      title: "Consultația & Simulare 3D",
+      title: "Consultația",
       description:
-        "O discuție personalizată, măsurători precise și o simulare 3D avansată vă vor dezvălui rezultatul înainte de intervenție.",
+        "O discuție personalizată, măsurători precise și o simulare avansată îți vor dezvălui rezultatul înainte de intervenție.",
     },
     {
       step: "02",
@@ -22,16 +22,16 @@ const JourneySection = () => {
     {
       step: "03",
       icon: "healing",
-      title: "Recuperare Expediată",
+      title: "Recuperarea",
       description:
-        "Protocolul nostru post-operator este conceput pentru o recuperare rapidă, cu disconfort minim, permițându-vă să reveniți la activitățile zilnice.",
+        "Protocolul nostru post-operator este conceput pentru o recuperare rapidă, ușoară, cu disconfort minim.",
     },
     {
       step: "04",
       icon: "self_improvement",
       title: "Noua Tu",
       description:
-        "După aproximativ 3 luni, veți celebra forma finală a transformării dumneavoastră, însoțită de o nouă încredere și armonie.",
+        "După aproximativ 3 luni, vei celebra forma finală a transformării tale, însoțită de o nouă încredere și armonie.",
     },
   ];
 
