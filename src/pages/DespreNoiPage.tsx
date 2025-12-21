@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Award, Heart, Users, Phone, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, Award, Heart, Users, Phone, Shield, Sparkles, Instagram } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-despre.jpg";
@@ -96,9 +96,19 @@ const DespreNoiPage = () => {
                 alt="Dr. Lucian Popa" 
                 className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover object-top mx-auto mb-6 border-4 border-primary/20"
               />
-              <h3 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
-                Dr. Lucian Popa
-              </h3>
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <h3 className="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+                  Dr. Lucian Popa
+                </h3>
+                <a 
+                  href="https://www.instagram.com/drlucianpopa/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80 transition-colors"
+                >
+                  <Instagram className="w-6 h-6" />
+                </a>
+              </div>
               <p className="text-primary mb-4">Medic Primar Chirurgie Estetică, Plastică și Reconstructivă</p>
             </div>
 
@@ -177,9 +187,19 @@ const DespreNoiPage = () => {
 
                 {/* Content */}
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
-                    Dr. Larisa Rentea
-                  </h2>
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                    <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+                      Dr. Larisa Rentea
+                    </h2>
+                    <a 
+                      href="https://www.instagram.com/dr.rentea/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 transition-colors"
+                    >
+                      <Instagram className="w-6 h-6" />
+                    </a>
+                  </div>
                   <p className="text-primary mb-6">medic specialist estetică</p>
                   <p className="text-muted-foreground leading-relaxed">
                     Am fondat Rentéa Aesthetic Clinique dintr-o singură convingere: estetica adevărată este cea care nu se vede. <br className="hidden md:block" />
@@ -206,9 +226,19 @@ const DespreNoiPage = () => {
 
                 {/* Content */}
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
-                    Dr. Gina Wafi
-                  </h2>
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                    <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+                      Dr. Gina Wafi
+                    </h2>
+                    <a 
+                      href="https://www.instagram.com/dr.ginawafi/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 transition-colors"
+                    >
+                      <Instagram className="w-6 h-6" />
+                    </a>
+                  </div>
                   <p className="text-primary mb-6">medic specialist dermatolog</p>
                   <p className="text-muted-foreground leading-relaxed">
                     Pielea este cea mai sinceră oglindă a sănătății noastre. Eu nu tratez doar simptomele, ci restabilesc echilibrul de la interior, pentru o frumusețe care să fie mereu a ta, autentică și rezistentă în timp.
