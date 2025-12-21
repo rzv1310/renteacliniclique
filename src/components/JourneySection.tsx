@@ -82,11 +82,11 @@ const JourneySection = () => {
               <div className="px-6 pb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <MaterialIcon name={step.icon} className="text-xl text-rose-gold" />
-                  <h3 className="font-display text-base font-medium text-foreground">
+                  <h3 className="font-display text-base md:text-base font-medium text-foreground">
                     {step.title}
                   </h3>
                 </div>
-                <p className="text-muted-foreground leading-relaxed text-sm font-sans">
+                <p className="text-muted-foreground leading-relaxed text-[15px] md:text-sm font-sans">
                   {step.description}
                 </p>
               </div>

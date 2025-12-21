@@ -24,14 +24,14 @@ const HeroSection = () => {
       <div className="relative container mx-auto px-4 lg:px-8 pb-16 lg:pb-24">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-end">
           {/* Left - Text and Buttons */}
-          <div className="animate-fade-in-up order-2 lg:order-1">
-            <p className="text-body leading-relaxed mb-6 max-w-md">
+          <div className="animate-fade-in-up order-2 lg:order-1 text-center lg:text-left">
+            <p className="text-body leading-relaxed mb-6 max-w-md mx-auto lg:mx-0">
               Rentéa Aesthetic Clinique - Lider în chirurgia estetică din București, supra-specializați în augmentare mamară.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold w-full sm:w-auto">
                 <Phone className="w-5 h-5 mr-2" />
                 Fă primul pas pentru transformare
               </Button>
@@ -40,7 +40,7 @@ const HeroSection = () => {
 
           {/* Right - Title */}
           <div className="animate-fade-in-up animation-delay-100 order-1 lg:order-2">
-            <h1 className="h1-hero text-foreground lg:text-right">
+            <h1 className="h1-hero text-foreground text-center lg:text-right">
               Nu facem "de toate".
               <br />
               <span className="text-gradient-gold italic">Facem sâni perfecți.</span>

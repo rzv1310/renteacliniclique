@@ -43,8 +43,8 @@ const DoctorSection = () => {
               Abordez augmentarea mamară cu aceeași rigoare și delicatețe necesară în cele mai complexe reconstrucții, asigurându-ți un parcurs medical sigur și un rezultat impecabil.
             </p>
 
-            <a href="/despre-noi">
-              <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold group">
+            <a href="/despre-noi" className="block text-center lg:text-left">
+              <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold group w-full sm:w-auto">
                 Citește povestea medicului
                 <MaterialIcon name="arrow_forward" className="text-xl ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
