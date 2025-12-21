@@ -38,17 +38,14 @@ const DoctorSection = () => {
               Arhitectul viziunii tale.
             </h2>
 
-            <p className="text-body leading-relaxed mb-6">
-              Dr. Lucian Popa este un chirurg estetician renumit, dedicat în mod exclusiv chirurgiei mamare. Cu o experiență vastă și o pasiune pentru perfecțiune, el a transformat viețile a sute de femei prin proceduri atent personalizate.
-            </p>
-
             <p className="text-body leading-relaxed mb-8">
-              Dr. Lucian Popa nu este doar un chirurg, ci un artizan dedicat perfecțiunii. Cu o specializare exclusivă în augmentarea mamară, el aduce o măiestrie rară și o înțelegere profundă a anatomiei și esteticii feminine, transformând viziuni în realitate cu o precizie excepțională.
+              Pentru tine, anii mei de practică în microchirurgie se traduc într-o mână formată pentru detalii fine.<br />
+              Abordez augmentarea mamară cu aceeași rigoare și delicatețe necesară în cele mai complexe reconstrucții, asigurându-ți un parcurs medical sigur și un rezultat impecabil.
             </p>
 
             <a href="/despre-noi">
               <Button size="lg" className="btn-glow-border bg-transparent text-white border border-rose-gold/60 hover:bg-rose-gold/10 hover:border-rose-gold group">
-                Citește povestea completă
+                Citește povestea medicului
                 <MaterialIcon name="arrow_forward" className="text-xl ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </a>
