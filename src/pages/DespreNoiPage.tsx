@@ -5,6 +5,7 @@ import PageBreadcrumb from "@/components/PageBreadcrumb";
 import heroImage from "@/assets/heroes/hero-despre.jpg";
 import doctorImage from "@/assets/dr-lucian-popa.webp";
 import larisaImage from "@/assets/dr-larisa-rentea.webp";
+import ginaImage from "@/assets/dr-gina-wafi.webp";
 import { useCounterAnimation } from "@/hooks/use-counter-animation";
 
 const DespreNoiPage = () => {
@@ -184,6 +185,33 @@ const DespreNoiPage = () => {
                     Am fondat Rentéa Aesthetic Clinique dintr-o singură convingere: estetica adevărată este cea care nu se vede. <br className="hidden md:block" />
                     Viziunea mea este centrată pe echilibru și naturalețe, oferind fiecărei paciente nu doar o procedură, ci o îngrijire plină de empatie. <br className="hidden md:block" />
                     Scopul meu? Să îți pun în valoare frumusețea, cu rezultate subtile care îți redau încrederea.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Dr. Gina Wafi Card */}
+            <div className="bg-card rounded-2xl p-8 lg:p-12 shadow-elegant mt-8">
+              <div className="flex flex-col md:flex-row items-center gap-8 lg:gap-12">
+                {/* Medallion Image */}
+                <div className="flex-shrink-0">
+                  <div className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-primary/20 shadow-elegant">
+                    <img 
+                      src={ginaImage} 
+                      alt="Dr. Gina Wafi" 
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 text-center md:text-left">
+                  <h2 className="font-serif text-2xl md:text-3xl font-semibold text-foreground mb-2">
+                    Dr. Gina Wafi
+                  </h2>
+                  <p className="text-primary mb-6">medic specialist dermatolog</p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Pielea este cea mai sinceră oglindă a sănătății noastre. Eu nu tratez doar simptomele, ci restabilesc echilibrul de la interior, pentru o frumusețe care să fie mereu a ta, autentică și rezistentă în timp.
                   </p>
                 </div>
               </div>
