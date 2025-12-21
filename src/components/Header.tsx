@@ -69,10 +69,10 @@ const Header = () => {
         }`}
       >
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between h-8 xl:h-auto">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <span className="font-display text-2xl lg:text-3xl font-semibold tracking-tight text-foreground">
+              <span className="font-display text-2xl lg:text-3xl font-semibold tracking-tight text-foreground leading-none">
                 Rentéa
               </span>
               <span className="hidden sm:block text-xs uppercase tracking-[0.3em] text-muted-foreground font-sans">
@@ -150,10 +150,10 @@ const Header = () => {
 
             {/* Mobile Menu Toggle */}
             <button
-              className="xl:hidden p-2 text-foreground z-50"
+              className="xl:hidden p-2 text-foreground z-50 flex items-center justify-center"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <MaterialIcon name={isMobileMenuOpen ? "close" : "menu"} className="text-2xl" />
+              <MaterialIcon name={isMobileMenuOpen ? "close" : "menu"} className="text-2xl leading-none" />
             </button>
           </div>
         </div>

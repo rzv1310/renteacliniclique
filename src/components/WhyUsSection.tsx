@@ -82,7 +82,7 @@ const WhyUsSection = () => {
                 <h3 className="font-display text-xl font-medium text-foreground mb-4 text-center">
                   {feature.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed text-sm font-sans text-center">{feature.description}</p>
+                <p className="text-muted-foreground leading-relaxed text-[15px] md:text-sm font-sans text-center">{feature.description}</p>
               </div>
             </div>
           ))}
