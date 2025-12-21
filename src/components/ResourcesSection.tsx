@@ -107,13 +107,13 @@ const ResourcesSection = () => {
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="text-label mb-4 block">
-            GHID
+            INFO
           </span>
           <h2 className="h2-section text-foreground mb-6">
             Totul despre Augmentarea Mamară
           </h2>
           <p className="text-body leading-relaxed">
-            Navigați prin informații esențiale și ghiduri detaliate, create pentru a vă oferi claritate și încredere în decizia dumneavoastră.
+            Servicii oferite și ghiduri detaliate, create pentru claritate și încredere în decizia ta.
           </p>
         </div>
 
