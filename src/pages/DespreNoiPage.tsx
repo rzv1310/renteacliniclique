@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Award, Heart, Users, Phone, Shield, Sparkles, Instagram } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import heroImage from "@/assets/heroes/hero-despre.jpg";
+import heroImage from "@/assets/heroes/hero-despre-echipa.png";
 import doctorImage from "@/assets/dr-lucian-popa.webp";
 import larisaImage from "@/assets/dr-larisa-rentea.webp";
 import ginaImage from "@/assets/dr-gina-wafi.webp";
