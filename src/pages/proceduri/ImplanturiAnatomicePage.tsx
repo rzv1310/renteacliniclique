@@ -2,11 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-implants-anatomic.jpg";
 
 const ImplanturiAnatomicePage = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Implanturi Mamare Anatomice București | Formă Naturală | Rentéa"
+        description="Implanturi anatomice tip lacrimă pentru rezultate naturale. Formă care imită sânul natural cu volum în partea inferioară."
+        keywords="implanturi anatomice bucuresti, implant lacrima, implanturi forma naturala, augmentare naturala"
+        canonical="/proceduri/implant-mamar-bucuresti/implanturi-mamare-anatomice"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

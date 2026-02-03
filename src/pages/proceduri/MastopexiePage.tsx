@@ -2,11 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-mastopexy.jpg";
 
 const MastopexiePage = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Lifting Mamar cu Implanturi | Mastopexie București | Rentéa Aesthetic"
+        description="Augmentare mamară cu mastopexie în București. Combinația perfectă pentru mărirea și ridicarea sânilor. Rezultate naturale și durabile."
+        keywords="lifting mamar bucuresti, mastopexie, ridicare sani, augmentare cu lifting, ptoza mamara"
+        canonical="/proceduri/lifting-mamar-mastopexie-ridicare-sani"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

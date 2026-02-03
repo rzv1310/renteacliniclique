@@ -3,6 +3,7 @@ import { ArrowRight, Check, Clock, Shield, Heart, Users, Activity } from "lucide
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-reduction.jpg";
 
 const ReductieMamaraPage = () => {
@@ -63,6 +64,12 @@ const ReductieMamaraPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Reducție Mamară București | Micșorare Sâni | Rentéa Aesthetic"
+        description="Reducție mamară profesională în București. Ameliorarea durerilor de spate, îmbunătățirea posturii și calității vieții. Rezultate naturale."
+        keywords="reductie mamara bucuresti, micsorare sani, macromastie, chirurgie reducere san"
+        canonical="/proceduri/micsorare-sani-reductie-mamara"
+      />
       {/* Hero Section - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

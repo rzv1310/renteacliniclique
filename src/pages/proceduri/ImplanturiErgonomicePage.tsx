@@ -2,11 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Star } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-ergonomic.jpg";
 
 const ImplanturiErgonomicePage = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Implanturi Ergonomice Motiva București | Tehnologie Premium | Rentéa"
+        description="Implanturi ergonomice Motiva - cea mai avansată tehnologie. Se adaptează la mișcare pentru un rezultat natural în orice poziție."
+        keywords="implanturi ergonomice bucuresti, motiva ergonomix, implanturi premium, augmentare motiva"
+        canonical="/proceduri/implant-mamar-bucuresti/implanturi-mamare-ergonomice"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

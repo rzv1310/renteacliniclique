@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Clock, AlertCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroRecovery from "@/assets/heroes/hero-recovery.jpg";
 
 const timeline = [
@@ -70,6 +71,12 @@ const timeline = [
 const GhidRecuperarePage = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Ghid Recuperare Post-Operatorie | Augmentare Mamară | Rentéa Aesthetic București"
+        description="Ghid complet pentru recuperarea după augmentare mamară. Timeline zi de zi, sfaturi și indicații pentru cele mai bune rezultate."
+        keywords="recuperare implant mamar, vindecare dupa augmentare, sfaturi post operatorie, ghid recuperare sani"
+        canonical="/recuperare-implant-mamar"
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">

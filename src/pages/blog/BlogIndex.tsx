@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Ruler, Stethoscope, Shield, Award } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroBlog from "@/assets/heroes/hero-blog.jpg";
 
 const clusterMarimeForma = [
@@ -202,6 +203,12 @@ const ClusterSection = ({
 const BlogIndex = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Blog Augmentare Mamară | Ghiduri și Articole | Rentéa Aesthetic București"
+        description="Articole și ghiduri complete despre augmentare mamară. Informații despre tipuri de implanturi, recuperare, siguranță și rezultate."
+        keywords="blog augmentare mamara, articole implant mamar, ghid marire sani, informatii implanturi"
+        canonical="/blog"
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-proceduri.jpg";
 
 const procedures = [
@@ -44,6 +45,12 @@ const procedures = [
 const ProceduriIndex = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Proceduri Augmentare Mamară București | Implant, Lifting, Reducție | Rentéa"
+        description="Toate procedurile de chirurgie estetică mamară disponibile la Rentéa Aesthetic Clinique București. Augmentare, lifting, reducție, lipofilling și revizie."
+        keywords="proceduri augmentare mamara, lifting sani bucuresti, reductie mamara, lipofilling mamar, revizie implant"
+        canonical="/proceduri"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

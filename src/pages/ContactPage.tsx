@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Phone, Mail, MapPin, Loader2, CheckCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -153,6 +154,12 @@ const ContactPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Contact & Programări | Augmentare Mamară București | Rentéa Aesthetic Clinique"
+        description="Programează o consultație pentru augmentare mamară în București. Telefon, email sau formular online. Clinica Rentéa - specialiști în implanturi mamare."
+        keywords="contact clinica estetica bucuresti, programare augmentare mamara, consultatie implant mamar"
+        canonical="/contact"
+      />
       {/* Hero Section - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

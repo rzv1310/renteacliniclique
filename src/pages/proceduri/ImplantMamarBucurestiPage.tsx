@@ -6,6 +6,7 @@ import { ArrowRight, Check, Clock, Syringe, Moon, Diamond, ChevronDown, ZoomIn, 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import GalleryLightboxAugmentare from "@/components/proceduri/GalleryLightboxAugmentare";
 
 // Import hero images
@@ -231,6 +232,12 @@ const AugmentareMamaraPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Implant Mamar București | Augmentare Mamară | Implanturi Mentor, Motiva | Rentéa"
+        description="Augmentare mamară profesională în București cu implanturi premium Mentor și Motiva. Tehnici moderne, rezultate naturale. Consultație gratuită disponibilă."
+        keywords="implant mamar bucuresti, augmentare mamara, marire sani, implanturi mamare, chirurgie estetica sani"
+        canonical="/proceduri/implant-mamar-bucuresti"
+      />
       <Header />
       
       {/* Hero Section - Full Screen */}
