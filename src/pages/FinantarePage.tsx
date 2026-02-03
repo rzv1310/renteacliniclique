@@ -1,5 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calculator, CreditCard, CheckCircle, Phone, FileText, Clock, Shield, Percent } from "lucide-react";
@@ -85,6 +86,12 @@ const FinantarePage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Finanțare Implant Mamar în Rate | Augmentare Mamară București | Rentéa"
+        description="Plătește augmentarea mamară în rate de la 67€/lună. Finanțare fără avans, aprobare rapidă în 15 minute. Parteneri: TBI Credit, BRD, Alpha Bank."
+        keywords="implant mamar in rate, finantare augmentare mamara, marire sani rate, credit implant mamar"
+        canonical="/implant-mamar-in-rate"
+      />
       {/* Hero Section - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

@@ -2,11 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-implants-round.jpg";
 
 const ImplanturiRotundePage = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Implanturi Mamare Rotunde București | Augmentare Mamară | Rentéa"
+        description="Implanturi mamare rotunde pentru un decolteu plin și volum uniform. Rezultate vizibile și durabile. Consultație gratuită în București."
+        keywords="implanturi rotunde bucuresti, implant mamar rotund, marire sani rotunde, augmentare rotunda"
+        canonical="/proceduri/implant-mamar-bucuresti/implanturi-mamare-rotunde"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

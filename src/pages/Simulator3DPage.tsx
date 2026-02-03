@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import heroSimulator from "@/assets/heroes/hero-simulator.jpg";
 
@@ -285,6 +286,12 @@ const Simulator3DPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Simulator 3D Implanturi Mamare AI | Vizualizare Rezultate | Rentéa București"
+        description="Simulator AI pentru vizualizarea rezultatelor de augmentare mamară. Încarcă o poză și vezi cum vei arăta cu diferite tipuri de implanturi."
+        keywords="simulator implant mamar, vizualizare augmentare, simulator 3d sani, preview implant"
+        canonical="/simulator-3d"
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">

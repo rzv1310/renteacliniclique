@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Award, Heart, Users, Phone, Shield, Sparkles, Instagram } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-despre-echipa.png";
 import doctorImage from "@/assets/dr-lucian-popa.webp";
 import larisaImage from "@/assets/dr-larisa-rentea.webp";
@@ -14,6 +15,12 @@ const DespreNoiPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Despre Noi | Dr. Lucian Popa | Echipa Rentéa Aesthetic Clinique București"
+        description="Cunoaște echipa Rentéa Aesthetic Clinique din București. Dr. Lucian Popa - 25+ ani experiență în chirurgie plastică și estetică. Specializare în augmentare mamară."
+        keywords="dr lucian popa, clinica estetica bucuresti, chirurg plastician bucuresti, echipa rentea"
+        canonical="/despre-noi"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

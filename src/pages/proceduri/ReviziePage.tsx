@@ -2,11 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, AlertCircle } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-revision.jpg";
 
 const ReviziePage = () => {
   return (
     <PageLayout>
+      <SEOHead
+        title="Revizie Implant Mamar | Schimbare Implanturi București | Rentéa Aesthetic"
+        description="Revizie și schimbare implanturi mamare în București. Corectarea complicațiilor, înlocuire sau îndepărtare implanturi. Specialiști în cazuri complexe."
+        keywords="revizie implant mamar, schimbare implanturi, inlocuire silicon sani, corectie augmentare"
+        canonical="/proceduri/schimbare-inlocuire-implant-mamar-revizie"
+      />
       {/* Hero - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

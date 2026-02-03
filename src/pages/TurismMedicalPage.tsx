@@ -1,5 +1,6 @@
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Hotel, Calendar, Car, Phone, CheckCircle, Clock, Heart } from "lucide-react";
@@ -72,6 +73,12 @@ const TurismMedicalPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Turism Medical Intern | Augmentare Mamară București | Rentéa Aesthetic"
+        description="Vino din provincie pentru augmentare mamară în București. Consultații online, transfer, cazare și asistență completă pentru paciente din afara capitalei."
+        keywords="turism medical bucuresti, augmentare mamara din provincie, implant mamar romania, cazare clinica estetica"
+        canonical="/turism-medical-intern"
+      />
       {/* Hero Section - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}

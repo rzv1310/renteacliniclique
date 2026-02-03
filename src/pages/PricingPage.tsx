@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Check, X, Heart, Send } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroPricing from "@/assets/heroes/hero-pricing.jpg";
 import {
   Accordion,
@@ -165,6 +166,12 @@ const PricingPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Prețuri Implant Mamar București | Tarife Augmentare Mamară | Rentéa Aesthetic"
+        description="Prețuri transparente pentru augmentare mamară în București. Pachet all-inclusive cu implanturi Mentor și Motiva. Finanțare în rate disponibilă."
+        keywords="pret implant mamar, tarife augmentare mamara bucuresti, cost marire sani, implant mamar pret"
+        canonical="/implant-mamar-pret"
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">

@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import GalleryLightbox from "@/components/GalleryLightbox";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
@@ -230,6 +231,12 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Galerie Foto Augmentare Mamară | Rezultate Înainte și După | Rentéa București"
+        description="Galerie cu peste 500 de rezultate reale de augmentare mamară. Filtrează după înălțime, greutate și tipul de implant pentru a vedea cazuri similare."
+        keywords="galerie augmentare mamara, poze inainte dupa implant, rezultate marire sani, galerie foto implanturi"
+        canonical="/galerie"
+      />
       <Header />
       
       {/* Hero Section - Full Screen */}

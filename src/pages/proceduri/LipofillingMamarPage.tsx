@@ -3,6 +3,7 @@ import { ArrowRight, Check, Sparkles, Leaf, Target, Clock, AlertCircle } from "l
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/heroes/hero-lipofilling.jpg";
 
 const LipofillingMamarPage = () => {
@@ -70,6 +71,12 @@ const LipofillingMamarPage = () => {
 
   return (
     <PageLayout>
+      <SEOHead
+        title="Lipofilling Mamar București | Augmentare cu Grăsime Proprie | Rentéa"
+        description="Lipofilling mamar în București - augmentare naturală cu grăsimea proprie, fără implanturi. Rezultat 100% natural și armonios."
+        keywords="lipofilling mamar bucuresti, augmentare grasime proprie, marire sani naturala, transfer grasime sani"
+        canonical="/proceduri/lipofilling-mamar"
+      />
       {/* Hero Section - Full Screen */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
