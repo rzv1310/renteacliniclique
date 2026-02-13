@@ -68,6 +68,7 @@ Client responsibilities:
 - Image intake:
   - file upload from browser
   - optional in-browser crop tool (canvas-based crop export to base64 PNG)
+  - full-frame crop selection preserves original image (no recrop rewrite)
 - User controls:
   - implant type (`rotund`, `anatomic`, `ergonomic`)
   - implant size (`200`, `275`, `350`, `425`, `500` cc)
@@ -77,6 +78,7 @@ Client responsibilities:
   - `POST /api/generate-implant-visualization`
 - UX:
   - comparison slider (before/after)
+  - image preview uses `object-contain` to avoid implicit viewport recropping
   - download generated image
   - lock overlay when client-side/server-side limits are exceeded
   - detailed console logging for debugging.
@@ -111,7 +113,9 @@ Server-side behavior:
 - Calls Gemini API:
   - endpoint: `v1beta/models/{model}:generateContent`
   - default model: `gemini-3-pro-image-preview`
+  - generation config: `responseModalities=["TEXT","IMAGE"]` + `imageConfig.imageSize`
   - returns one selected image part to client.
+  - structured request logging uses deep object inspection (no `[Object]` truncation).
 
 Environment variables used:
 
@@ -146,12 +150,21 @@ File: `vite.config.ts`
 - Registers frontend plugins:
   - React SWC plugin
   - optional development component tagger.
+- No API proxy is configured in Vite.
 
-### 6.2 Runtime modes
+### 6.2 API URL resolution (frontend)
+
+File: `src/lib/api.ts`
+
+- If `VITE_API_BASE_URL` is set, it is used as API base.
+- If empty and app runs in dev mode, API base defaults to `http://127.0.0.1:8787`.
+- If empty and app runs in production build, API calls remain same-origin (relative path).
+
+### 6.3 Runtime modes
 
 - `npm run dev`:
   - starts Vite frontend dev server.
-  - proxies `/api` to `http://127.0.0.1:8787` when frontend uses relative API paths.
+  - frontend API calls default to `http://127.0.0.1:8787` directly when `VITE_API_BASE_URL` is not set.
 - `npm run api:setup`:
   - installs dependencies for `server/` package.
 - `npm run api:dev`:
@@ -192,7 +205,7 @@ API dependency:
 - Frontend simulator requires reachable backend endpoints:
   - `/api/check-rate-limits`
   - `/api/generate-implant-visualization`
-- `VITE_API_BASE_URL` must point to that backend in frontend build environment.
+- In split-origin deployment (Netlify frontend + external API), `VITE_API_BASE_URL` must point to that backend in frontend build environment.
 
 ## 9. Recommended Production Topology
 
@@ -202,6 +215,7 @@ Current production topology:
 - Contact form: Netlify Forms.
 - Simulator backend: standalone Dockerized Node service (`server/`), consumed via `VITE_API_BASE_URL`.
 - Build/deploy settings are codified in `netlify.toml`.
+- API container base image: Node `24-alpine` (multi-stage Docker build).
 
 Further hardening recommended:
 

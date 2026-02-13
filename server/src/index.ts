@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createServer } from "node:http";
+import { inspect } from "node:util";
 
 import {
   ALLOWED_IMAGE_MIME_TYPES,
@@ -22,6 +23,44 @@ import type { GeminiResponse, GenerateRequestBody, ImplantType } from "./types.j
 loadEnvironment();
 const config = getServerConfig();
 const simulatorRateLimiter = createRateLimiter(SIMULATOR_RATE_LIMITS);
+
+const formatLogPayload = (payload: unknown): string => {
+  if (payload instanceof Error) {
+    return payload.stack || `${payload.name}: ${payload.message}`;
+  }
+
+  return inspect(payload, {
+    depth: null,
+    colors: false,
+    compact: false,
+    breakLength: 120,
+    maxArrayLength: null,
+  });
+};
+
+const logInfo = (message: string, payload?: unknown) => {
+  if (payload === undefined) {
+    console.info(message);
+    return;
+  }
+  console.info(`${message} ${formatLogPayload(payload)}`);
+};
+
+const logWarn = (message: string, payload?: unknown) => {
+  if (payload === undefined) {
+    console.warn(message);
+    return;
+  }
+  console.warn(`${message} ${formatLogPayload(payload)}`);
+};
+
+const logError = (message: string, payload?: unknown) => {
+  if (payload === undefined) {
+    console.error(message);
+    return;
+  }
+  console.error(`${message} ${formatLogPayload(payload)}`);
+};
 
 const resolveCorsOrigin = (requestOrigin: string | null): string => {
   if (config.corsOrigins.length === 0 || config.corsOrigins.includes("*")) {
@@ -178,7 +217,7 @@ const selectGeneratedImage = (data: GeminiResponse): string | null => {
 
 const handleCheckRateLimits = (req: IncomingMessage, res: ServerResponse, ip: string, logPrefix: string) => {
   const snapshot = simulatorRateLimiter.getRateSnapshot(ip);
-  console.info(`${logPrefix} check-rate-limits`, { ip, snapshot });
+  logInfo(`${logPrefix} check-rate-limits`, { ip, snapshot });
   jsonResponse(req, res, 200, snapshot);
 };
 
@@ -188,7 +227,7 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
   const rateSnapshot = simulatorRateLimiter.getRateSnapshot(ip);
   const { normalizedMimeType, base64Data } = extractImageData(imageBase64);
 
-  console.info(`${logPrefix} request:received`, {
+  logInfo(`${logPrefix} request:received`, {
     ip,
     implantType,
     implantSize,
@@ -260,7 +299,7 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
   });
   const editPrompt = JSON.stringify(prompt, null, 2);
 
-  console.info(`${logPrefix} gemini:request`, {
+  logInfo(`${logPrefix} gemini:request`, {
     model: config.model,
     imageSize,
     promptLength: editPrompt.length,
@@ -282,13 +321,13 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
         contents: [
           {
             parts: [
-              { inline_data: { mime_type: normalizedMimeType, data: base64Data } },
               { text: editPrompt },
+              { inline_data: { mime_type: normalizedMimeType, data: base64Data } },
             ],
           },
         ],
         generationConfig: {
-          responseModalities: ["IMAGE"],
+          responseModalities: ["TEXT", "IMAGE"],
           imageConfig: {
             imageSize,
           },
@@ -299,7 +338,7 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
 
   if (!geminiResponse.ok) {
     const errorText = await geminiResponse.text();
-    console.error(`${logPrefix} gemini:error`, {
+    logError(`${logPrefix} gemini:error`, {
       status: geminiResponse.status,
       bodyPreview: errorText.slice(0, 2000),
     });
@@ -318,7 +357,7 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
 
   if (!generatedImage) {
     const finishReason = data.candidates?.[0]?.finishReason || data.candidates?.[0]?.finish_reason;
-    console.warn(`${logPrefix} gemini:no-image`, { finishReason });
+    logWarn(`${logPrefix} gemini:no-image`, { finishReason });
 
     if (finishReason === "SAFETY") {
       jsonResponse(req, res, 200, {
@@ -371,7 +410,7 @@ const server = createServer(async (req, res) => {
       const isAllowedCountry = countryCode ? config.allowedCountryCodes.includes(countryCode) : false;
       const canProceed = isAllowedCountry || (!countryCode && config.allowUnknownCountry);
 
-      console.info(`${logPrefix} geo:check`, {
+      logInfo(`${logPrefix} geo:check`, {
         ip,
         countryCode,
         allowedCountryCodes: config.allowedCountryCodes,
@@ -380,7 +419,7 @@ const server = createServer(async (req, res) => {
       });
 
       if (!canProceed) {
-        console.warn(`${logPrefix} geo:blocked`, {
+        logWarn(`${logPrefix} geo:blocked`, {
           ip,
           countryCode,
           reason: countryCode ? "country_not_allowed" : "country_not_detected",
@@ -404,7 +443,7 @@ const server = createServer(async (req, res) => {
 
     jsonResponse(req, res, 404, { error: "Not found" });
   } catch (error) {
-    console.error(`${logPrefix} request:error`, error);
+    logError(`${logPrefix} request:error`, error);
 
     if (error instanceof Error && error.message === "BODY_TOO_LARGE") {
       jsonResponse(req, res, 413, { error: "Body prea mare." });
@@ -421,9 +460,9 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(config.port, config.host, () => {
-  console.info(`[Simulator API] Listening on http://${config.host}:${config.port}`);
+  logInfo(`[Simulator API] Listening on http://${config.host}:${config.port}`);
   if (config.allowedCountryCodes.length > 0) {
-    console.info("[Simulator API] Country allowlist enabled", {
+    logInfo("[Simulator API] Country allowlist enabled", {
       allowedCountryCodes: config.allowedCountryCodes,
       countryHeaderNames: config.countryHeaderNames,
       allowUnknownCountry: config.allowUnknownCountry,

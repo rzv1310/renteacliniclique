@@ -8,7 +8,13 @@ import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import SEOHead from "@/components/SEOHead";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
-import { API_UNAVAILABLE_MESSAGE, isServerUnavailableError, isUnavailableProxyResponse, parseJsonSafely } from "@/lib/api";
+import {
+  API_UNAVAILABLE_MESSAGE,
+  buildApiUrl,
+  isServerUnavailableError,
+  isUnavailableProxyResponse,
+  parseJsonSafely,
+} from "@/lib/api";
 import heroSimulator from "@/assets/heroes/hero-simulator.jpg";
 
 interface RateLimits {
@@ -27,8 +33,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
-const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
 const CLIENT_GENERATION_LIMIT_PER_HOUR = 3;
 const CLIENT_GENERATION_WINDOW_MS = 60 * 60 * 1000;
 const CLIENT_GENERATION_STORAGE_KEY = "simulator-client-generations-v1";
@@ -100,13 +104,14 @@ const avatars = [
 ];
 
 const DEFAULT_CROP_RECT: CropRect = {
-  x: 0.1,
-  y: 0.1,
-  width: 0.8,
-  height: 0.8,
+  x: 0,
+  y: 0,
+  width: 1,
+  height: 1,
 };
 
 const MIN_CROP_SIZE = 0.15;
+const FULL_CROP_EPSILON = 0.002;
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
@@ -218,7 +223,7 @@ const Simulator3DPage = () => {
   const fetchRateLimits = useCallback(async () => {
     try {
       console.info("[Simulator] Fetching rate limits...");
-      const response = await fetch(apiUrl('/api/check-rate-limits'));
+      const response = await fetch(buildApiUrl('/api/check-rate-limits'));
       const rawResponse = await response.text();
       const data = parseJsonSafely<RateLimits | { error?: string }>(rawResponse);
       console.info("[Simulator] Rate limit response", {
@@ -394,14 +399,42 @@ const Simulator3DPage = () => {
     }
 
     try {
+      const cropRight = cropRect.x + cropRect.width;
+      const cropBottom = cropRect.y + cropRect.height;
+      const isFullCropSelection =
+        cropRect.x <= FULL_CROP_EPSILON &&
+        cropRect.y <= FULL_CROP_EPSILON &&
+        cropRight >= 1 - FULL_CROP_EPSILON &&
+        cropBottom >= 1 - FULL_CROP_EPSILON;
+
+      if (isFullCropSelection) {
+        setUploadedImage(cropSourceImage);
+        setGeneratedImage(null);
+        setShowComparison(false);
+        setComparisonPosition(50);
+        closeCropper();
+        toast.success("Imaginea completă a fost păstrată.");
+        return;
+      }
+
       const image = new Image();
       image.src = cropSourceImage;
       await image.decode();
 
-      const sourceX = Math.round(cropRect.x * image.naturalWidth);
-      const sourceY = Math.round(cropRect.y * image.naturalHeight);
-      const sourceWidth = Math.max(1, Math.round(cropRect.width * image.naturalWidth));
-      const sourceHeight = Math.max(1, Math.round(cropRect.height * image.naturalHeight));
+      const sourceX = clamp(Math.floor(cropRect.x * image.naturalWidth), 0, image.naturalWidth - 1);
+      const sourceY = clamp(Math.floor(cropRect.y * image.naturalHeight), 0, image.naturalHeight - 1);
+      const sourceRight = clamp(
+        Math.ceil((cropRect.x + cropRect.width) * image.naturalWidth),
+        sourceX + 1,
+        image.naturalWidth
+      );
+      const sourceBottom = clamp(
+        Math.ceil((cropRect.y + cropRect.height) * image.naturalHeight),
+        sourceY + 1,
+        image.naturalHeight
+      );
+      const sourceWidth = sourceRight - sourceX;
+      const sourceHeight = sourceBottom - sourceY;
 
       const canvas = document.createElement("canvas");
       canvas.width = sourceWidth;
@@ -532,7 +565,7 @@ const Simulator3DPage = () => {
         imagePayloadLength: uploadedImage.length,
       });
 
-      const response = await fetch(apiUrl('/api/generate-implant-visualization'), {
+      const response = await fetch(buildApiUrl('/api/generate-implant-visualization'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -985,11 +1018,11 @@ const Simulator3DPage = () => {
                           transformOrigin: 'center'
                         }}
                       >
-                        <img 
-                          src={uploadedImage} 
-                          alt="Original" 
-                          className="w-full h-full object-cover"
-                        />
+                          <img 
+                            src={uploadedImage} 
+                            alt="Original" 
+                            className="w-full h-full object-contain"
+                          />
                       </div>
 
                       {/* Generated Image */}
@@ -1005,7 +1038,7 @@ const Simulator3DPage = () => {
                           <img 
                             src={generatedImage} 
                             alt="Rezultat AI" 
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain"
                           />
                         </div>
                       )}

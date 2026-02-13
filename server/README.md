@@ -2,6 +2,10 @@
 
 Standalone TypeScript package for the AI simulator backend.
 
+Runtime target:
+
+- Node.js 24 (Docker image uses `node:24-alpine`)
+
 ## Endpoints
 
 - `GET /health`
@@ -21,6 +25,7 @@ Standalone TypeScript package for the AI simulator backend.
 - `ALLOW_UNKNOWN_COUNTRY` (`false` by default; if `true`, requests without country header pass)
 
 If `COUNTRY_ALLOWLIST` is set, the server accepts simulator API calls only from allowed countries based on trusted proxy/CDN headers (for example `cf-ipcountry`). This is an access filter, not a full auth mechanism.
+API logs are printed with deep object inspection for easier debugging (nested fields are not collapsed as `[Object]`).
 
 ## Scripts
 

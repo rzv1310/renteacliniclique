@@ -2,10 +2,13 @@ import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { API_UNAVAILABLE_MESSAGE, isServerUnavailableError, isUnavailableProxyResponse, parseJsonSafely } from "@/lib/api";
-
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
-const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
+import {
+  API_UNAVAILABLE_MESSAGE,
+  buildApiUrl,
+  isServerUnavailableError,
+  isUnavailableProxyResponse,
+  parseJsonSafely,
+} from "@/lib/api";
 
 type ImplantType = "rotund" | "anatomic" | "ergonomic";
 type ImplantSize = 200 | 275 | 350 | 425 | 500;
@@ -104,7 +107,7 @@ const SimulatorSection = () => {
         imagePayloadLength: uploadedImage.length,
       });
 
-      const response = await fetch(apiUrl('/api/generate-implant-visualization'), {
+      const response = await fetch(buildApiUrl('/api/generate-implant-visualization'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

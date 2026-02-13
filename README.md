@@ -59,10 +59,11 @@ Set these for local API testing:
 Set frontend API base URL in `.env.local`:
 
 ```sh
-VITE_API_BASE_URL=http://localhost:8787
+VITE_API_BASE_URL=http://127.0.0.1:8787
 ```
 
-If `VITE_API_BASE_URL` is empty during local development, Vite proxies `/api` to `http://127.0.0.1:8787`.
+If `VITE_API_BASE_URL` is empty during local development, frontend requests go directly to `http://127.0.0.1:8787`.
+If `VITE_API_BASE_URL` is empty in production build, requests stay same-origin (relative path).
 
 Docker API server:
 
@@ -71,6 +72,7 @@ docker build -t simulator-api ./server
 docker run --rm -p 8787:8787 \
   -e NANO_BANANA_API_KEY=your_key \
   -e CORS_ORIGIN=https://your-frontend-domain.com \
+  -e COUNTRY_ALLOWLIST=RO \
   simulator-api
 ```
 
@@ -79,6 +81,11 @@ Netlify deployment model:
 - Contact form: Netlify Forms.
 - Simulator API: deploy `server/` container separately and set `VITE_API_BASE_URL` in Netlify environment variables.
 - Netlify config is codified in `netlify.toml`.
+
+Current simulator behavior:
+- Local per-device guard: max **3 generations/hour** (browser localStorage).
+- Server per-IP limits: **3/minute, 10/hour, 20/day**.
+- Crop editor starts with full-frame selection and preserves full image if no effective crop is applied.
 
 Supabase runtime is no longer required.
 
