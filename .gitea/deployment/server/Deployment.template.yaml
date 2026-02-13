@@ -35,8 +35,6 @@ spec:
           value: "RO"
         - name: ALLOW_UNKNOWN_COUNTRY
           value: "false"
-        - name: COUNTRY_HEADER_NAMES
-          value: "cf-ipcountry,x-vercel-ip-country,x-country-code,x-geo-country"
         - name: NANO_BANANA_API_KEY
           valueFrom:
             secretKeyRef:

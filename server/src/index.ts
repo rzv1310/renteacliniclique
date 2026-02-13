@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createServer } from "node:http";
 import { inspect } from "node:util";
+import geoip from "geoip-lite";
 
 import {
   ALLOWED_IMAGE_MIME_TYPES,
@@ -114,6 +115,17 @@ const normalizeCountryCode = (value: string): string | null => {
   return null;
 };
 
+const normalizeIpForGeoLookup = (rawIp: string): string | null => {
+  const trimmed = rawIp.trim();
+  if (!trimmed || trimmed === "unknown") return null;
+
+  if (trimmed.startsWith("::ffff:")) {
+    return trimmed.slice("::ffff:".length);
+  }
+
+  return trimmed;
+};
+
 const getCountryCodeFromHeaders = (req: IncomingMessage): string | null => {
   for (const headerName of config.countryHeaderNames) {
     const rawHeader = req.headers[headerName];
@@ -126,6 +138,33 @@ const getCountryCodeFromHeaders = (req: IncomingMessage): string | null => {
   }
 
   return null;
+};
+
+const getCountryCodeFromIp = (ip: string): string | null => {
+  const ipForLookup = normalizeIpForGeoLookup(ip);
+  if (!ipForLookup) return null;
+
+  const result = geoip.lookup(ipForLookup);
+  if (!result?.country) return null;
+
+  return normalizeCountryCode(result.country);
+};
+
+const resolveCountryCode = (
+  req: IncomingMessage,
+  ip: string
+): { countryCode: string | null; source: "header" | "geoip" | "unknown" } => {
+  const fromHeader = getCountryCodeFromHeaders(req);
+  if (fromHeader) {
+    return { countryCode: fromHeader, source: "header" };
+  }
+
+  const fromGeoip = getCountryCodeFromIp(ip);
+  if (fromGeoip) {
+    return { countryCode: fromGeoip, source: "geoip" };
+  }
+
+  return { countryCode: null, source: "unknown" };
 };
 
 const replaceControlCharsWithSpace = (input: string): string => {
@@ -406,13 +445,14 @@ const server = createServer(async (req, res) => {
     }
 
     if (pathname.startsWith("/api/") && config.allowedCountryCodes.length > 0 && !isLoopbackIp(ip)) {
-      const countryCode = getCountryCodeFromHeaders(req);
+      const { countryCode, source } = resolveCountryCode(req, ip);
       const isAllowedCountry = countryCode ? config.allowedCountryCodes.includes(countryCode) : false;
       const canProceed = isAllowedCountry || (!countryCode && config.allowUnknownCountry);
 
       logInfo(`${logPrefix} geo:check`, {
         ip,
         countryCode,
+        source,
         allowedCountryCodes: config.allowedCountryCodes,
         allowUnknownCountry: config.allowUnknownCountry,
         canProceed,
@@ -422,6 +462,7 @@ const server = createServer(async (req, res) => {
         logWarn(`${logPrefix} geo:blocked`, {
           ip,
           countryCode,
+          source,
           reason: countryCode ? "country_not_allowed" : "country_not_detected",
         });
         jsonResponse(req, res, 403, {
