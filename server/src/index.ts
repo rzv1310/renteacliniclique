@@ -457,10 +457,20 @@ const server = createServer(async (req, res) => {
   const ip = getClientIp(req);
   const logPrefix = `[Simulator API ${requestId}]`;
 
+  // Apply CORS headers as early as possible for all code paths.
+  applyCorsHeaders(req, res);
+
+  res.on("finish", () => {
+    logInfo(`${logPrefix} response:sent`, {
+      method,
+      pathname,
+      statusCode: res.statusCode,
+    });
+  });
+
   try {
     if (method === "OPTIONS") {
       res.statusCode = 204;
-      applyCorsHeaders(req, res);
       res.end();
       return;
     }
