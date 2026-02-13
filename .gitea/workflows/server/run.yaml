@@ -5,7 +5,6 @@ on:
       - server/**
       - .gitea/workflows/server/**
       - .gitea/deployment/server/**
-  workflow_dispatch:
 
 
 jobs:
@@ -24,23 +23,6 @@ jobs:
           echo "dockerfile=server/Dockerfile" >> $GITHUB_OUTPUT
           echo "dockercontext=server" >> $GITHUB_OUTPUT
           echo "deployment=.gitea/deployment/server/Deployment.template.yaml" >> $GITHUB_OUTPUT
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - name: Install Server Dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: server
-      - name: Typecheck Server
-        run: pnpm check
-        working-directory: server
-      - name: Build Server
-        run: pnpm build
-        working-directory: server
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v2
       - name: Setup Docker Buildx
