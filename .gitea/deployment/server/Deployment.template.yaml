@@ -27,6 +27,8 @@ spec:
           value: "8080"
         - name: NANO_BANANA_MODEL
           value: "gemini-3-pro-image-preview"
+        - name: VEO_MODEL
+          value: "veo-3.1-generate-preview"
         - name: CORS_ORIGIN
           value: "https://implantmamarbucuresti.ro,https://www.implantmamarbucuresti.ro"
         - name: COUNTRY_ALLOWLIST

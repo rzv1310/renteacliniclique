@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { inspect } from "node:util";
 import { GoogleGenAI } from "@google/genai";
 import geoip from "geoip-lite";
+import { buildAnimationPromptText } from "./animation-prompt.js";
 
 import {
   ALLOWED_IMAGE_MIME_TYPES,
@@ -12,18 +13,30 @@ import {
   MAX_IMAGE_SIZE,
   MAX_IMPLANT_SIZE,
   MIN_IMPLANT_SIZE,
+  SIMULATOR_ANIMATION_GLOBAL_RATE_LIMITS,
+  SIMULATOR_ANIMATION_USER_RATE_LIMITS,
   SIMULATOR_RATE_LIMITS,
   VALID_IMPLANT_TYPES,
 } from "./constants.js";
 import { getServerConfig, loadEnvironment } from "./env.js";
 import { buildPrompt } from "./prompt.js";
+import {
+  extractImageData,
+  getErrorMessageFromUnknown,
+  getStatusFromError,
+  parseAnimateBody,
+  parseGenerateBody,
+  selectGeneratedImage,
+} from "./request-helpers.js";
 import { createRateLimiter } from "./rate-limiter.js";
-import type { GeminiResponse, GenerateRequestBody, ImplantType } from "./types.js";
+import type { AnimateRequestBody, AnimationJobStatus, GeminiResponse, GenerateRequestBody, ImplantType } from "./types.js";
 
 loadEnvironment();
 const config = getServerConfig();
 const genAI = config.apiKey ? new GoogleGenAI({ apiKey: config.apiKey }) : null;
 const simulatorRateLimiter = createRateLimiter(SIMULATOR_RATE_LIMITS);
+const simulatorAnimationUserRateLimiter = createRateLimiter(SIMULATOR_ANIMATION_USER_RATE_LIMITS);
+const simulatorAnimationGlobalRateLimiter = createRateLimiter(SIMULATOR_ANIMATION_GLOBAL_RATE_LIMITS);
 
 const formatLogPayload = (payload: unknown): string => {
   if (payload instanceof Error) {
@@ -167,24 +180,6 @@ const resolveCountryCode = (
   return { countryCode: null, source: "unknown" };
 };
 
-const replaceControlCharsWithSpace = (input: string): string => {
-  let cleaned = "";
-  for (const char of input) {
-    const code = char.charCodeAt(0);
-    cleaned += code < 32 || code === 127 ? " " : char;
-  }
-  return cleaned;
-};
-
-const sanitizeUserPrompt = (prompt: string): string =>
-  prompt
-    .split("\n")
-    .map((line) => replaceControlCharsWithSpace(line))
-    .join(" ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, MAX_CUSTOM_PROMPT_LENGTH);
-
 const hasDisallowedPromptTerms = (prompt: string): boolean =>
   DISALLOWED_PROMPT_PATTERNS.some((pattern) => pattern.test(prompt));
 
@@ -207,72 +202,29 @@ const readJsonBody = async (req: IncomingMessage, maxBytes = 10_000_000): Promis
   return JSON.parse(raw) as Record<string, unknown>;
 };
 
-const extractImageData = (imageBase64: string | null) => {
-  const dataUrlMatch =
-    typeof imageBase64 === "string"
-      ? imageBase64.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/)
-      : null;
-  const rawMimeType = dataUrlMatch?.[1]?.toLowerCase() ?? "image/jpeg";
-  const normalizedMimeType = rawMimeType === "image/jpg" ? "image/jpeg" : rawMimeType;
-  const base64Data =
-    typeof imageBase64 === "string" ? (dataUrlMatch?.[2] ?? imageBase64).trim() : "";
+interface AnimationJobRecord {
+  id: string;
+  ip: string;
+  status: AnimationJobStatus;
+  createdAt: number;
+  updatedAt: number;
+  operation: unknown | null;
+  error: string | null;
+  videoUri: string | null;
+  videoMimeType: string | null;
+  videoBytesBase64: string | null;
+}
 
-  return { normalizedMimeType, base64Data };
-};
+const animationJobs = new Map<string, AnimationJobRecord>();
+const GLOBAL_ANIMATION_KEY = "__global__";
+const ANIMATION_JOB_TTL_MS = 2 * 60 * 60 * 1000;
 
-const parseGenerateBody = (body: GenerateRequestBody) => {
-  const imageBase64 = typeof body.imageBase64 === "string" ? body.imageBase64 : null;
-  const implantType = typeof body.implantType === "string" ? body.implantType : null;
-  const implantSize = typeof body.implantSize === "number" ? body.implantSize : null;
-  const customPromptRaw = typeof body.customPrompt === "string" ? body.customPrompt : "";
-  const customPrompt = sanitizeUserPrompt(customPromptRaw);
-  return { imageBase64, implantType, implantSize, customPrompt };
-};
-
-const selectGeneratedImage = (data: GeminiResponse): string | null => {
-  const parts = data.candidates?.[0]?.content?.parts || [];
-  const imageParts = parts.filter((part) => Boolean(part.inline_data || part.inlineData));
-  const nonThoughtImagePart = imageParts.find((part) => !part.thought);
-  const selectedImagePart = nonThoughtImagePart || imageParts.at(-1);
-
-  if (selectedImagePart) {
-    const inlineData = selectedImagePart.inline_data || selectedImagePart.inlineData;
-    if (inlineData?.data) {
-      const outputMimeType = inlineData.mime_type || inlineData.mimeType || "image/png";
-      return `data:${outputMimeType};base64,${inlineData.data}`;
+const pruneAnimationJobs = (now = Date.now()) => {
+  for (const [jobId, job] of animationJobs.entries()) {
+    if (now - job.updatedAt > ANIMATION_JOB_TTL_MS) {
+      animationJobs.delete(jobId);
     }
   }
-
-  for (const part of parts) {
-    const inlineData = part.inline_data || part.inlineData;
-    if (inlineData?.data) {
-      const outputMimeType = inlineData.mime_type || inlineData.mimeType || "image/png";
-      return `data:${outputMimeType};base64,${inlineData.data}`;
-    }
-  }
-
-  return null;
-};
-
-const getStatusFromError = (error: unknown): number | null => {
-  if (!error || typeof error !== "object") return null;
-  const payload = error as Record<string, unknown>;
-  const directStatus = payload.status;
-  if (typeof directStatus === "number") return directStatus;
-
-  const statusCode = payload.statusCode;
-  if (typeof statusCode === "number") return statusCode;
-
-  const code = payload.code;
-  if (typeof code === "number") return code;
-
-  const nestedError = payload.error;
-  if (nestedError && typeof nestedError === "object") {
-    const nestedStatus = (nestedError as Record<string, unknown>).status;
-    if (typeof nestedStatus === "number") return nestedStatus;
-  }
-
-  return null;
 };
 
 const handleCheckRateLimits = (req: IncomingMessage, res: ServerResponse, ip: string, logPrefix: string) => {
@@ -281,9 +233,361 @@ const handleCheckRateLimits = (req: IncomingMessage, res: ServerResponse, ip: st
   jsonResponse(req, res, 200, snapshot);
 };
 
+const getAnimationRateSnapshot = (ip: string) => {
+  const user = simulatorAnimationUserRateLimiter.getRateSnapshot(ip);
+  const global = simulatorAnimationGlobalRateLimiter.getRateSnapshot(GLOBAL_ANIMATION_KEY);
+  return {
+    user,
+    global,
+    canAnimate: user.canGenerate && global.canGenerate,
+  };
+};
+
+const getAnimationLimitMessage = (snapshot: ReturnType<typeof getAnimationRateSnapshot>): string => {
+  if (!snapshot.user.canGenerate) {
+    return "Ai atins limita de 1 animație pe oră pe acest dispozitiv.";
+  }
+
+  if (!snapshot.global.canGenerate) {
+    if (snapshot.global.limitType === "hour") {
+      return "Limita globală de 3 animații pe oră a fost atinsă. Încearcă din nou mai târziu.";
+    }
+    if (snapshot.global.limitType === "day") {
+      return "Limita globală de 10 animații pe zi a fost atinsă. Revino mâine.";
+    }
+    return "Generarea animației este temporar indisponibilă.";
+  }
+
+  return "Generarea animației este temporar indisponibilă.";
+};
+
+const handleCheckAnimationRateLimits = (req: IncomingMessage, res: ServerResponse, ip: string, logPrefix: string) => {
+  const snapshot = getAnimationRateSnapshot(ip);
+  logInfo(`${logPrefix} check-animation-rate-limits`, { ip, snapshot });
+  jsonResponse(req, res, 200, snapshot);
+};
+
+const refreshAnimationJobStatus = async (job: AnimationJobRecord, logPrefix: string) => {
+  if (!genAI || !job.operation) {
+    return;
+  }
+
+  const operation = await genAI.operations.getVideosOperation({
+    operation: job.operation as never,
+  });
+  job.operation = operation;
+  job.updatedAt = Date.now();
+  const opAny = operation as unknown as Record<string, unknown>;
+
+  const done = opAny.done === true;
+  if (!done) {
+    job.status = "processing";
+    return;
+  }
+
+  const error = opAny.error as Record<string, unknown> | undefined;
+  if (error) {
+    job.status = "failed";
+    job.error = JSON.stringify(error);
+    return;
+  }
+
+  const response = opAny.response as Record<string, unknown> | undefined;
+  const generatedVideos = response?.generatedVideos as Array<Record<string, unknown>> | undefined;
+  const firstVideoPayload = generatedVideos?.[0];
+  const video = firstVideoPayload?.video as Record<string, unknown> | undefined;
+  const videoUri = typeof video?.uri === "string" ? video.uri : null;
+  const videoMimeType = typeof video?.mimeType === "string" ? video.mimeType : "video/mp4";
+  const videoBytes = typeof video?.videoBytes === "string" ? video.videoBytes : null;
+
+  if (!videoUri && !videoBytes) {
+    const filteredReasons = Array.isArray(response?.raiMediaFilteredReasons)
+      ? (response?.raiMediaFilteredReasons as unknown[])
+          .filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0)
+      : [];
+    const filteredReasonText =
+      filteredReasons.length > 0
+        ? filteredReasons.join(" | ")
+        : "Video generation was blocked by safety filtering.";
+
+    job.status = "failed";
+    job.error = filteredReasonText;
+    logWarn(`${logPrefix} animation:no-video`, { jobId: job.id, response });
+    return;
+  }
+
+  job.videoUri = videoUri;
+  job.videoMimeType = videoMimeType;
+  job.videoBytesBase64 = videoBytes;
+  job.status = "completed";
+  job.error = null;
+};
+
+const handleStartAnimation = async (req: IncomingMessage, res: ServerResponse, ip: string, logPrefix: string) => {
+  const body = (await readJsonBody(req)) as AnimateRequestBody;
+  const { imageBase64, implantType, implantSize, customPrompt } = parseAnimateBody(body, {
+    maxCustomPromptLength: MAX_CUSTOM_PROMPT_LENGTH,
+  });
+  const rateSnapshot = getAnimationRateSnapshot(ip);
+  const { normalizedMimeType, base64Data } = extractImageData(imageBase64);
+
+  logInfo(`${logPrefix} animation:request:received`, {
+    ip,
+    implantType,
+    implantSize,
+    customPromptLength: customPrompt.length,
+    imageBase64Length: imageBase64?.length ?? 0,
+    mimeType: normalizedMimeType,
+    rateSnapshot,
+  });
+
+  if (!rateSnapshot.canAnimate) {
+    jsonResponse(req, res, 429, {
+      error: getAnimationLimitMessage(rateSnapshot),
+      limits: rateSnapshot,
+    });
+    return;
+  }
+
+  if (!imageBase64) {
+    jsonResponse(req, res, 400, { error: "Date imagine invalide pentru animație." });
+    return;
+  }
+
+  if (!implantType || !VALID_IMPLANT_TYPES.has(implantType as ImplantType)) {
+    jsonResponse(req, res, 400, { error: "Tip de implant invalid pentru animație." });
+    return;
+  }
+
+  if (implantSize === null || implantSize < MIN_IMPLANT_SIZE || implantSize > MAX_IMPLANT_SIZE) {
+    jsonResponse(req, res, 400, {
+      error: `Mărime implant invalidă. Trebuie să fie între ${MIN_IMPLANT_SIZE} și ${MAX_IMPLANT_SIZE}cc.`,
+    });
+    return;
+  }
+
+  if (!ALLOWED_IMAGE_MIME_TYPES.has(normalizedMimeType)) {
+    jsonResponse(req, res, 400, { error: "Format imagine neacceptat. Folosiți JPG, PNG sau WEBP." });
+    return;
+  }
+
+  if (!genAI) {
+    jsonResponse(req, res, 503, { error: "Serviciu animație indisponibil (configurare)." });
+    return;
+  }
+
+  simulatorAnimationUserRateLimiter.recordRequest(ip);
+  simulatorAnimationGlobalRateLimiter.recordRequest(GLOBAL_ANIMATION_KEY);
+
+  const prompt = buildAnimationPromptText({
+    implantType: implantType as ImplantType,
+    implantSize,
+    customPrompt,
+  });
+  const strictMedicalAnimationConfig = {
+    durationSeconds: 4,
+    aspectRatio: "16:9",
+    resolution: "720p",
+    personGeneration: "allow_adult" as const,
+    numberOfVideos: 1,
+    negativePrompt:
+      "sexualized framing, explicit content, fetish styling, glamour aesthetics, provocative pose, dramatic scene change, cartoon look, low quality, distortion",
+  };
+
+  let operation: unknown;
+  try {
+    operation = await genAI.models.generateVideos({
+      model: config.veoModel,
+      prompt,
+      image: {
+        imageBytes: base64Data,
+        mimeType: normalizedMimeType,
+      },
+      config: strictMedicalAnimationConfig,
+    });
+  } catch (errorFirst) {
+    const statusFirst = getStatusFromError(errorFirst);
+    const messageFirst = getErrorMessageFromUnknown(errorFirst);
+    logWarn(`${logPrefix} animation:start:first-config-failed`, {
+      status: statusFirst,
+      message: messageFirst,
+    });
+
+    try {
+      // Fallback with minimal config for compatibility differences.
+      operation = await genAI.models.generateVideos({
+        model: config.veoModel,
+        prompt,
+        image: {
+          imageBytes: base64Data,
+          mimeType: normalizedMimeType,
+        },
+        config: {
+          // Keep strict medical defaults even in fallback.
+          durationSeconds: strictMedicalAnimationConfig.durationSeconds,
+          aspectRatio: strictMedicalAnimationConfig.aspectRatio,
+          resolution: strictMedicalAnimationConfig.resolution,
+          personGeneration: strictMedicalAnimationConfig.personGeneration,
+          negativePrompt: strictMedicalAnimationConfig.negativePrompt,
+        },
+      });
+      logInfo(`${logPrefix} animation:start:fallback-config-ok`);
+    } catch (errorSecond) {
+      const status = getStatusFromError(errorSecond) ?? statusFirst;
+      const message = getErrorMessageFromUnknown(errorSecond);
+      logError(`${logPrefix} animation:start:error`, { status, message, error: errorSecond });
+
+      if (status === 429) {
+        jsonResponse(req, res, 429, {
+          error: "Serviciul video este ocupat. Încearcă din nou în câteva minute.",
+        });
+        return;
+      }
+
+      if (status && status >= 400 && status < 500) {
+        jsonResponse(req, res, status, {
+          error: `Veo request invalid: ${message}`,
+        });
+        return;
+      }
+
+      jsonResponse(req, res, 500, {
+        error: "Nu s-a putut porni animația video. Încearcă din nou.",
+      });
+      return;
+    }
+  }
+
+  const jobId = crypto.randomUUID();
+  const job: AnimationJobRecord = {
+    id: jobId,
+    ip,
+    status: "processing",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    operation,
+    error: null,
+    videoUri: null,
+    videoMimeType: null,
+    videoBytesBase64: null,
+  };
+  animationJobs.set(jobId, job);
+
+  await refreshAnimationJobStatus(job, logPrefix);
+
+  jsonResponse(req, res, 202, {
+    jobId,
+    status: job.status,
+  });
+};
+
+const handleAnimationStatus = async (
+  req: IncomingMessage,
+  res: ServerResponse,
+  ip: string,
+  logPrefix: string,
+  jobId: string
+) => {
+  const job = animationJobs.get(jobId);
+  if (!job) {
+    jsonResponse(req, res, 404, { error: "Animation job not found." });
+    return;
+  }
+
+  if (job.ip !== ip) {
+    jsonResponse(req, res, 403, { error: "Nu aveți acces la acest job." });
+    return;
+  }
+
+  if (job.status === "processing" || job.status === "queued") {
+    try {
+      await refreshAnimationJobStatus(job, logPrefix);
+    } catch (error) {
+      job.status = "failed";
+      job.error = error instanceof Error ? error.message : "Unexpected animation status error.";
+      job.updatedAt = Date.now();
+      logError(`${logPrefix} animation:status:error`, { jobId, error });
+    }
+  }
+
+  jsonResponse(req, res, 200, {
+    jobId: job.id,
+    status: job.status,
+    error: job.error,
+    videoReady: job.status === "completed",
+    videoUrl: job.status === "completed" ? `/api/animation-jobs/${job.id}/video` : null,
+  });
+};
+
+const handleAnimationVideo = async (
+  req: IncomingMessage,
+  res: ServerResponse,
+  ip: string,
+  logPrefix: string,
+  jobId: string
+) => {
+  const job = animationJobs.get(jobId);
+  if (!job) {
+    jsonResponse(req, res, 404, { error: "Animation job not found." });
+    return;
+  }
+
+  if (job.ip !== ip) {
+    jsonResponse(req, res, 403, { error: "Nu aveți acces la acest video." });
+    return;
+  }
+
+  if (job.status !== "completed") {
+    jsonResponse(req, res, 409, { error: "Video-ul nu este gata încă." });
+    return;
+  }
+
+  if (job.videoBytesBase64) {
+    const payload = Buffer.from(job.videoBytesBase64, "base64");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", job.videoMimeType || "video/mp4");
+    res.setHeader("Content-Length", String(payload.length));
+    res.end(payload);
+    return;
+  }
+
+  if (!job.videoUri || !config.apiKey) {
+    jsonResponse(req, res, 500, { error: "Video-ul nu este disponibil pentru descărcare." });
+    return;
+  }
+
+  const videoResponse = await fetch(job.videoUri, {
+    headers: {
+      "x-goog-api-key": config.apiKey,
+    },
+  });
+
+  if (!videoResponse.ok) {
+    logError(`${logPrefix} animation:video:fetch:error`, {
+      jobId,
+      status: videoResponse.status,
+    });
+    jsonResponse(req, res, 502, { error: "Nu s-a putut descărca video-ul generat." });
+    return;
+  }
+
+  const videoBytes = Buffer.from(await videoResponse.arrayBuffer());
+  const contentType = videoResponse.headers.get("content-type") || job.videoMimeType || "video/mp4";
+  job.videoMimeType = contentType;
+  job.videoBytesBase64 = videoBytes.toString("base64");
+  job.updatedAt = Date.now();
+
+  res.statusCode = 200;
+  res.setHeader("Content-Type", contentType);
+  res.setHeader("Content-Length", String(videoBytes.length));
+  res.end(videoBytes);
+};
+
 const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: string, logPrefix: string) => {
   const body = (await readJsonBody(req)) as GenerateRequestBody;
-  const { imageBase64, implantType, implantSize, customPrompt } = parseGenerateBody(body);
+  const { imageBase64, implantType, implantSize, customPrompt } = parseGenerateBody(body, {
+    maxCustomPromptLength: MAX_CUSTOM_PROMPT_LENGTH,
+  });
   const rateSnapshot = simulatorRateLimiter.getRateSnapshot(ip);
   const { normalizedMimeType, base64Data } = extractImageData(imageBase64);
 
@@ -456,6 +760,8 @@ const server = createServer(async (req, res) => {
   const requestId = crypto.randomUUID();
   const ip = getClientIp(req);
   const logPrefix = `[Simulator API ${requestId}]`;
+  const animationStatusMatch = pathname.match(/^\/api\/animation-jobs\/([a-f0-9-]+)$/);
+  const animationVideoMatch = pathname.match(/^\/api\/animation-jobs\/([a-f0-9-]+)\/video$/);
 
   // Apply CORS headers as early as possible for all code paths.
   applyCorsHeaders(req, res);
@@ -469,6 +775,8 @@ const server = createServer(async (req, res) => {
   });
 
   try {
+    pruneAnimationJobs();
+
     if (method === "OPTIONS") {
       res.statusCode = 204;
       res.end();
@@ -519,6 +827,26 @@ const server = createServer(async (req, res) => {
 
     if (method === "POST" && pathname === "/api/generate-implant-visualization") {
       await handleGenerate(req, res, ip, logPrefix);
+      return;
+    }
+
+    if (method === "GET" && pathname === "/api/check-animation-rate-limits") {
+      handleCheckAnimationRateLimits(req, res, ip, logPrefix);
+      return;
+    }
+
+    if (method === "POST" && pathname === "/api/animate-implant-visualization") {
+      await handleStartAnimation(req, res, ip, logPrefix);
+      return;
+    }
+
+    if (method === "GET" && animationStatusMatch?.[1]) {
+      await handleAnimationStatus(req, res, ip, logPrefix, animationStatusMatch[1]);
+      return;
+    }
+
+    if (method === "GET" && animationVideoMatch?.[1]) {
+      await handleAnimationVideo(req, res, ip, logPrefix, animationVideoMatch[1]);
       return;
     }
 

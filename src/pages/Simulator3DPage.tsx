@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Download, Crop } from "lucide-react";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Download, Crop, Clapperboard } from "lucide-react";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
@@ -26,6 +26,25 @@ interface RateLimits {
   canGenerate: boolean;
   limitType: 'minute' | 'hour' | 'day' | null;
 }
+
+interface AnimationRateLimits {
+  user: RateLimits;
+  global: RateLimits;
+  canAnimate: boolean;
+}
+
+interface AnimationStartResponse {
+  jobId: string;
+  status: "queued" | "processing" | "completed" | "failed";
+}
+
+interface AnimationStatusResponse {
+  jobId: string;
+  status: "queued" | "processing" | "completed" | "failed";
+  error?: string | null;
+  videoReady?: boolean;
+  videoUrl?: string | null;
+}
 import {
   Accordion,
   AccordionContent,
@@ -36,6 +55,11 @@ import {
 const CLIENT_GENERATION_LIMIT_PER_HOUR = 3;
 const CLIENT_GENERATION_WINDOW_MS = 60 * 60 * 1000;
 const CLIENT_GENERATION_STORAGE_KEY = "simulator-client-generations-v1";
+const CLIENT_ANIMATION_LIMIT_PER_HOUR = 1;
+const CLIENT_ANIMATION_WINDOW_MS = 60 * 60 * 1000;
+const CLIENT_ANIMATION_STORAGE_KEY = "simulator-client-animations-v1";
+const GENERIC_ANIMATION_FAILURE_MESSAGE =
+  "Nu am putut genera animația în acest moment. Te rugăm să încerci din nou.";
 
 const faqItems = [
   {
@@ -115,11 +139,11 @@ const FULL_CROP_EPSILON = 0.002;
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
-const loadClientGenerationTimestamps = (): number[] => {
+const loadClientTimestamps = (storageKey: string): number[] => {
   if (typeof window === "undefined") return [];
 
   try {
-    const raw = localStorage.getItem(CLIENT_GENERATION_STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
@@ -129,26 +153,37 @@ const loadClientGenerationTimestamps = (): number[] => {
   }
 };
 
-const saveClientGenerationTimestamps = (timestamps: number[]) => {
+const saveClientTimestamps = (storageKey: string, timestamps: number[]) => {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(CLIENT_GENERATION_STORAGE_KEY, JSON.stringify(timestamps));
+    localStorage.setItem(storageKey, JSON.stringify(timestamps));
   } catch {
     // Ignore storage errors.
   }
 };
 
-const buildClientGenerationSnapshot = (timestamps: number[], now = Date.now()): ClientGenerationLimitSnapshot => {
+const loadClientGenerationTimestamps = (): number[] => loadClientTimestamps(CLIENT_GENERATION_STORAGE_KEY);
+const saveClientGenerationTimestamps = (timestamps: number[]) =>
+  saveClientTimestamps(CLIENT_GENERATION_STORAGE_KEY, timestamps);
+const loadClientAnimationTimestamps = (): number[] => loadClientTimestamps(CLIENT_ANIMATION_STORAGE_KEY);
+const saveClientAnimationTimestamps = (timestamps: number[]) =>
+  saveClientTimestamps(CLIENT_ANIMATION_STORAGE_KEY, timestamps);
+
+const buildClientLimitSnapshot = (
+  timestamps: number[],
+  limit: number,
+  now = Date.now()
+): ClientGenerationLimitSnapshot => {
   const recent = timestamps.filter((timestamp) => timestamp > now - CLIENT_GENERATION_WINDOW_MS);
   const used = recent.length;
-  const remaining = Math.max(0, CLIENT_GENERATION_LIMIT_PER_HOUR - used);
+  const remaining = Math.max(0, limit - used);
   const canGenerate = remaining > 0;
   const oldestRecent = recent.length > 0 ? Math.min(...recent) : null;
   const nextResetAt = oldestRecent ? oldestRecent + CLIENT_GENERATION_WINDOW_MS : null;
 
   return {
     used,
-    limit: CLIENT_GENERATION_LIMIT_PER_HOUR,
+    limit,
     remaining,
     canGenerate,
     nextResetAt,
@@ -180,10 +215,23 @@ const Simulator3DPage = () => {
   const [comparisonPosition, setComparisonPosition] = useState(50);
   const [zoom, setZoom] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [generatedVideoUrl, setGeneratedVideoUrl] = useState<string | null>(null);
+  const [animationJobId, setAnimationJobId] = useState<string | null>(null);
+  const [animationRateLimits, setAnimationRateLimits] = useState<AnimationRateLimits | null>(null);
   const [rateLimits, setRateLimits] = useState<RateLimits | null>(null);
   const [clientLimitSnapshot, setClientLimitSnapshot] = useState<ClientGenerationLimitSnapshot>(
-    () => buildClientGenerationSnapshot([])
+    () => buildClientLimitSnapshot([], CLIENT_GENERATION_LIMIT_PER_HOUR)
+  );
+  const [clientAnimationSnapshot, setClientAnimationSnapshot] = useState<ClientGenerationLimitSnapshot>(
+    () =>
+      buildClientLimitSnapshot(
+        loadClientAnimationTimestamps().filter(
+          (timestamp) => timestamp > Date.now() - CLIENT_ANIMATION_WINDOW_MS
+        ),
+        CLIENT_ANIMATION_LIMIT_PER_HOUR
+      )
   );
   const [cropSourceImage, setCropSourceImage] = useState<string | null>(null);
   const [cropRect, setCropRect] = useState<CropRect>(DEFAULT_CROP_RECT);
@@ -207,7 +255,7 @@ const Simulator3DPage = () => {
       (timestamp) => timestamp > now - CLIENT_GENERATION_WINDOW_MS
     );
     saveClientGenerationTimestamps(timestamps);
-    setClientLimitSnapshot(buildClientGenerationSnapshot(timestamps, now));
+    setClientLimitSnapshot(buildClientLimitSnapshot(timestamps, CLIENT_GENERATION_LIMIT_PER_HOUR, now));
   }, []);
 
   const recordClientGeneration = useCallback(() => {
@@ -217,7 +265,30 @@ const Simulator3DPage = () => {
     );
     timestamps.push(now);
     saveClientGenerationTimestamps(timestamps);
-    setClientLimitSnapshot(buildClientGenerationSnapshot(timestamps, now));
+    setClientLimitSnapshot(buildClientLimitSnapshot(timestamps, CLIENT_GENERATION_LIMIT_PER_HOUR, now));
+  }, []);
+
+  const refreshClientAnimationSnapshot = useCallback(() => {
+    const now = Date.now();
+    const timestamps = loadClientAnimationTimestamps().filter(
+      (timestamp) => timestamp > now - CLIENT_ANIMATION_WINDOW_MS
+    );
+    saveClientAnimationTimestamps(timestamps);
+    setClientAnimationSnapshot(
+      buildClientLimitSnapshot(timestamps, CLIENT_ANIMATION_LIMIT_PER_HOUR, now)
+    );
+  }, []);
+
+  const recordClientAnimation = useCallback(() => {
+    const now = Date.now();
+    const timestamps = loadClientAnimationTimestamps().filter(
+      (timestamp) => timestamp > now - CLIENT_ANIMATION_WINDOW_MS
+    );
+    timestamps.push(now);
+    saveClientAnimationTimestamps(timestamps);
+    setClientAnimationSnapshot(
+      buildClientLimitSnapshot(timestamps, CLIENT_ANIMATION_LIMIT_PER_HOUR, now)
+    );
   }, []);
 
   const fetchRateLimits = useCallback(async () => {
@@ -255,21 +326,55 @@ const Simulator3DPage = () => {
     }
   }, []);
 
+  const fetchAnimationRateLimits = useCallback(async () => {
+    try {
+      console.info("[Simulator] Fetching animation rate limits...");
+      const response = await fetch(buildApiUrl('/api/check-animation-rate-limits'));
+      const rawResponse = await response.text();
+      const data = parseJsonSafely<AnimationRateLimits | { error?: string }>(rawResponse);
+
+      if (!response.ok) {
+        if (isUnavailableProxyResponse(response.status, rawResponse)) {
+          console.error(API_UNAVAILABLE_MESSAGE);
+          return;
+        }
+        console.error('Error fetching animation rate limits:', data);
+        return;
+      }
+
+      if (!data) {
+        console.error("Animation rate limits response was not valid JSON.");
+        return;
+      }
+
+      setAnimationRateLimits(data as AnimationRateLimits);
+    } catch (error) {
+      if (isServerUnavailableError(error)) {
+        console.error(API_UNAVAILABLE_MESSAGE, error);
+        return;
+      }
+      console.error('Error fetching animation rate limits:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchRateLimits();
-  }, [fetchRateLimits]);
+    fetchAnimationRateLimits();
+  }, [fetchRateLimits, fetchAnimationRateLimits]);
 
   useEffect(() => {
     refreshClientLimitSnapshot();
-  }, [refreshClientLimitSnapshot]);
+    refreshClientAnimationSnapshot();
+  }, [refreshClientLimitSnapshot, refreshClientAnimationSnapshot]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       refreshClientLimitSnapshot();
+      refreshClientAnimationSnapshot();
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [refreshClientLimitSnapshot]);
+  }, [refreshClientLimitSnapshot, refreshClientAnimationSnapshot]);
 
   useEffect(() => {
     if (!rateLimits || rateLimits.canGenerate) {
@@ -282,6 +387,18 @@ const Simulator3DPage = () => {
 
     return () => clearInterval(interval);
   }, [rateLimits, fetchRateLimits]);
+
+  useEffect(() => {
+    if (!animationRateLimits || animationRateLimits.canAnimate) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      fetchAnimationRateLimits();
+    }, 10_000);
+
+    return () => clearInterval(interval);
+  }, [animationRateLimits, fetchAnimationRateLimits]);
 
   useEffect(() => {
     if (!cropActiveHandle) {
@@ -366,6 +483,8 @@ const Simulator3DPage = () => {
           setCropSourceImage(result);
           setCropRect(DEFAULT_CROP_RECT);
           setGeneratedImage(null);
+          setGeneratedVideoUrl(null);
+          setAnimationJobId(null);
           setShowComparison(false);
           setComparisonPosition(50);
         }
@@ -410,6 +529,8 @@ const Simulator3DPage = () => {
       if (isFullCropSelection) {
         setUploadedImage(cropSourceImage);
         setGeneratedImage(null);
+        setGeneratedVideoUrl(null);
+        setAnimationJobId(null);
         setShowComparison(false);
         setComparisonPosition(50);
         closeCropper();
@@ -460,6 +581,8 @@ const Simulator3DPage = () => {
       const croppedImage = canvas.toDataURL("image/png");
       setUploadedImage(croppedImage);
       setGeneratedImage(null);
+      setGeneratedVideoUrl(null);
+      setAnimationJobId(null);
       setShowComparison(false);
       setComparisonPosition(50);
       closeCropper();
@@ -507,6 +630,8 @@ const Simulator3DPage = () => {
     setShowComparison(false);
     setZoom(1);
     setGeneratedImage(null);
+    setGeneratedVideoUrl(null);
+    setAnimationJobId(null);
     closeCropper();
   };
 
@@ -624,6 +749,8 @@ const Simulator3DPage = () => {
 
       if (data?.generatedImage) {
         setGeneratedImage(data.generatedImage);
+        setGeneratedVideoUrl(null);
+        setAnimationJobId(null);
         setShowComparison(true);
         recordClientGeneration();
         toast.success("Vizualizare AI generată cu succes!");
@@ -653,6 +780,119 @@ const Simulator3DPage = () => {
     }
   };
 
+  const pollAnimationJob = useCallback(
+    async (jobId: string) => {
+      const startedAt = Date.now();
+
+      while (Date.now() - startedAt < 8 * 60 * 1000) {
+        const response = await fetch(buildApiUrl(`/api/animation-jobs/${jobId}`));
+        const raw = await response.text();
+        const data = parseJsonSafely<AnimationStatusResponse | { error?: string }>(raw);
+
+        if (!response.ok) {
+          if (isUnavailableProxyResponse(response.status, raw)) {
+            throw new Error(API_UNAVAILABLE_MESSAGE);
+          }
+
+          const errorMessage = data && "error" in data && data.error ? data.error : "Eroare la verificarea statusului animației.";
+          throw new Error(errorMessage);
+        }
+
+        const parsed = data as AnimationStatusResponse | null;
+        if (!parsed) {
+          throw new Error("Răspuns invalid la status animație.");
+        }
+
+        if (parsed.status === "failed") {
+          // Keep detailed policy/debug reasons on server logs, not in user-facing toasts.
+          throw new Error(GENERIC_ANIMATION_FAILURE_MESSAGE);
+        }
+
+        if (parsed.status === "completed" && parsed.videoReady && parsed.videoUrl) {
+          return parsed.videoUrl;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+
+      throw new Error("Animația a expirat sau durează prea mult. Încearcă din nou.");
+    },
+    []
+  );
+
+  const animateVisualization = async () => {
+    if (!generatedImage) {
+      toast.error("Generează mai întâi imaginea AI.");
+      return;
+    }
+
+    if (animationClientLocked) {
+      toast.error(animationClientLockMessage);
+      return;
+    }
+
+    if (animationServerLocked) {
+      toast.error(animationServerLockMessage);
+      return;
+    }
+
+    setIsAnimating(true);
+    toast.info("Se pornește animația video (4 sec)...", { duration: 8000 });
+
+    try {
+      const response = await fetch(buildApiUrl("/api/animate-implant-visualization"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageBase64: generatedImage,
+          implantType: selectedType,
+          implantSize: selectedSize,
+          customPrompt,
+        }),
+      });
+
+      const raw = await response.text();
+      const data = parseJsonSafely<AnimationStartResponse | { error?: string }>(raw);
+
+      if (isUnavailableProxyResponse(response.status, raw)) {
+        throw new Error(API_UNAVAILABLE_MESSAGE);
+      }
+
+      if (!response.ok) {
+        const errorMessage = data && "error" in data && data.error ? data.error : "Nu am putut porni animația.";
+        throw new Error(errorMessage);
+      }
+
+      const parsed = data as AnimationStartResponse | null;
+      if (!parsed?.jobId) {
+        throw new Error("Nu am primit jobId pentru animație.");
+      }
+
+      setAnimationJobId(parsed.jobId);
+      recordClientAnimation();
+      fetchAnimationRateLimits();
+
+      toast.info("Animația este în procesare. Poate dura până la câteva minute.", { duration: 12000 });
+      const videoPath = await pollAnimationJob(parsed.jobId);
+      const resolvedVideoUrl = buildApiUrl(videoPath);
+      setGeneratedVideoUrl(`${resolvedVideoUrl}${resolvedVideoUrl.includes("?") ? "&" : "?"}t=${Date.now()}`);
+      toast.success("Animația video a fost generată cu succes!");
+    } catch (error) {
+      if (isServerUnavailableError(error)) {
+        console.error(API_UNAVAILABLE_MESSAGE, error);
+        toast.error(API_UNAVAILABLE_MESSAGE);
+        return;
+      }
+      console.error("Error generating animation:", error);
+      toast.error(GENERIC_ANIMATION_FAILURE_MESSAGE);
+    } finally {
+      setIsAnimating(false);
+      fetchAnimationRateLimits();
+    }
+  };
+
   const getImplantTransform = () => {
     const sizeMultiplier = (selectedSize - 200) / 300;
     const baseScale = 1 + sizeMultiplier * 0.15;
@@ -671,9 +911,14 @@ const Simulator3DPage = () => {
   const transform = getImplantTransform();
   const clientLocked = !clientLimitSnapshot.canGenerate;
   const serverLocked = Boolean(rateLimits && !rateLimits.canGenerate);
+  const animationClientLocked = !clientAnimationSnapshot.canGenerate;
+  const animationServerLocked = Boolean(animationRateLimits && !animationRateLimits.canAnimate);
   const isSimulatorLocked = clientLocked || serverLocked;
   const clientRemainingMs = clientLimitSnapshot.nextResetAt
     ? Math.max(0, clientLimitSnapshot.nextResetAt - Date.now())
+    : 0;
+  const animationClientRemainingMs = clientAnimationSnapshot.nextResetAt
+    ? Math.max(0, clientAnimationSnapshot.nextResetAt - Date.now())
     : 0;
 
   const serverLimitMessage =
@@ -691,6 +936,36 @@ const Simulator3DPage = () => {
   const lockDescription = clientLocked
     ? `Poți genera maximum ${CLIENT_GENERATION_LIMIT_PER_HOUR} imagini pe oră pe acest dispozitiv. Încearcă din nou peste ${formatRemainingTime(clientRemainingMs)}.`
     : serverLimitMessage;
+
+  const animationServerLockMessage = !animationRateLimits
+    ? "Animația este temporar indisponibilă."
+    : !animationRateLimits.user.canGenerate
+    ? "Ai atins limita de 1 animație pe oră pe acest dispozitiv."
+    : animationRateLimits.global.limitType === "hour"
+    ? "Limita globală de 3 animații pe oră a fost atinsă."
+    : animationRateLimits.global.limitType === "day"
+    ? "Limita globală de 10 animații pe zi a fost atinsă."
+    : "Animația este temporar indisponibilă.";
+
+  const animationClientLockMessage = `Poți genera maximum ${CLIENT_ANIMATION_LIMIT_PER_HOUR} animație pe oră pe acest dispozitiv. Încearcă din nou peste ${formatRemainingTime(animationClientRemainingMs)}.`;
+
+  useEffect(() => {
+    const hasGeneratedMedia = Boolean(generatedImage || generatedVideoUrl);
+    if (!hasGeneratedMedia) {
+      return;
+    }
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      // Required for cross-browser leave confirmation dialogs.
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [generatedImage, generatedVideoUrl]);
 
   return (
     <PageLayout>
@@ -798,6 +1073,8 @@ const Simulator3DPage = () => {
                         setUploadedImage(null);
                         setSelectedAvatar(avatar.id);
                         setGeneratedImage(null);
+                        setGeneratedVideoUrl(null);
+                        setAnimationJobId(null);
                       }}
                       className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-300 ${
                         !uploadedImage && selectedAvatar === avatar.id
@@ -934,44 +1211,23 @@ const Simulator3DPage = () => {
                 </p>
               </div>
 
-              <Button
-                className="w-full btn-primary-rose-gold py-6 text-lg"
-                onClick={generateAIVisualization}
-                disabled={isGenerating || !uploadedImage || isSimulatorLocked}
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Se generează...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Generează cu AI
-                  </>
+              <div className="rounded-xl border border-border/40 bg-muted/40 p-3 text-sm">
+                <p className="text-foreground">
+                  Limită animație dispozitiv: {clientAnimationSnapshot.used}/{CLIENT_ANIMATION_LIMIT_PER_HOUR} video/oră
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {animationClientLocked && animationClientRemainingMs > 0
+                    ? `Poți anima din nou peste ${formatRemainingTime(animationClientRemainingMs)}.`
+                    : `Disponibile acum: ${Math.max(0, CLIENT_ANIMATION_LIMIT_PER_HOUR - clientAnimationSnapshot.used)}`}
+                </p>
+                {animationRateLimits && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Global server: {animationRateLimits.global.limits.hour.used}/{animationRateLimits.global.limits.hour.limit} video/oră,{" "}
+                    {animationRateLimits.global.limits.day.used}/{animationRateLimits.global.limits.day.limit} video/zi.
+                  </p>
                 )}
-              </Button>
-
-              {/* Action Buttons */}
-              <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={resetSimulator}
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Resetează
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={downloadGeneratedImage}
-                  disabled={!generatedImage}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Descarcă
-                </Button>
               </div>
+
             </div>
 
             {/* Right Panel - Visualization */}
@@ -1084,6 +1340,92 @@ const Simulator3DPage = () => {
                     </div>
                   )}
                 </div>
+
+                {!generatedImage && (
+                  <div className="mt-5">
+                    <Button
+                      className="w-full btn-primary-rose-gold py-6 text-lg"
+                      onClick={generateAIVisualization}
+                      disabled={isGenerating || !uploadedImage || isSimulatorLocked}
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Se generează...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-5 h-5 mr-2" />
+                          Generează cu AI
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={resetSimulator}
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Resetează
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={downloadGeneratedImage}
+                    disabled={!generatedImage}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descarcă
+                  </Button>
+                </div>
+
+                {generatedImage && !generatedVideoUrl && (
+                  <div className="mt-5">
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={animateVisualization}
+                      disabled={isAnimating || animationClientLocked || animationServerLocked}
+                    >
+                      {isAnimating ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Se animează...
+                        </>
+                      ) : (
+                        <>
+                          <Clapperboard className="w-4 h-4 mr-2" />
+                          Animează 4s
+                        </>
+                      )}
+                    </Button>
+                    {(animationClientLocked || animationServerLocked) && (
+                      <p className="text-xs text-muted-foreground mt-3 mb-2">
+                        {animationClientLocked ? animationClientLockMessage : animationServerLockMessage}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {generatedVideoUrl && (
+                  <div className="mt-5 p-4 bg-muted/30 rounded-xl border border-border/40">
+                    <p className="text-sm font-medium text-foreground mb-3">Animație generată (4s)</p>
+                    <video
+                      key={generatedVideoUrl}
+                      src={generatedVideoUrl}
+                      controls
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full rounded-lg bg-black"
+                    />
+                  </div>
+                )}
 
                 {/* Selected Options Summary */}
                 <div className="mt-6 p-4 bg-muted/50 rounded-xl">

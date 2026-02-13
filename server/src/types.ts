@@ -25,6 +25,15 @@ export interface GenerateRequestBody {
   customPrompt?: unknown;
 }
 
+export interface AnimateRequestBody {
+  imageBase64?: unknown;
+  implantType?: unknown;
+  implantSize?: unknown;
+  customPrompt?: unknown;
+}
+
+export type AnimationJobStatus = "queued" | "processing" | "completed" | "failed";
+
 export interface InlineDataPayload {
   data?: string;
   mime_type?: string;

@@ -6,12 +6,25 @@ export const SIMULATOR_RATE_LIMITS: RateLimitConfig = {
   perDay: 20,
 };
 
+export const SIMULATOR_ANIMATION_USER_RATE_LIMITS: RateLimitConfig = {
+  perMinute: 1000,
+  perHour: 1,
+  perDay: 24,
+};
+
+export const SIMULATOR_ANIMATION_GLOBAL_RATE_LIMITS: RateLimitConfig = {
+  perMinute: 1000,
+  perHour: 3,
+  perDay: 10,
+};
+
 export const VALID_IMPLANT_TYPES = new Set<ImplantType>(["rotund", "anatomic", "ergonomic"]);
 export const MIN_IMPLANT_SIZE = 200;
 export const MAX_IMPLANT_SIZE = 500;
 export const MAX_IMAGE_SIZE = 7_000_000;
 export const MAX_CUSTOM_PROMPT_LENGTH = 280;
 export const DEFAULT_NANO_BANANA_MODEL = "gemini-3-pro-image-preview";
+export const DEFAULT_VEO_MODEL = "veo-3.1-generate-preview";
 export const ALLOWED_IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export const DISALLOWED_PROMPT_PATTERNS: RegExp[] = [
