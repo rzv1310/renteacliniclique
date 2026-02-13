@@ -1,8 +1,11 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { API_UNAVAILABLE_MESSAGE, isServerUnavailableError, isUnavailableProxyResponse, parseJsonSafely } from "@/lib/api";
+
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
 
 type ImplantType = "rotund" | "anatomic" | "ergonomic";
 type ImplantSize = 200 | 275 | 350 | 425 | 500;
@@ -89,17 +92,45 @@ const SimulatorSection = () => {
     toast.info("Se generează vizualizarea AI...", { duration: 10000 });
 
     try {
-      const { data, error } = await supabase.functions.invoke('generate-implant-visualization', {
-        body: {
-          imageBase64: uploadedImage,
-          implantType: selectedType,
-          implantSize: selectedSize,
-        }
+      const requestPayload = {
+        imageBase64: uploadedImage,
+        implantType: selectedType,
+        implantSize: selectedSize,
+      };
+      const startedAt = performance.now();
+      console.info("[SimulatorSection] Sending generation request", {
+        implantType: selectedType,
+        implantSize: selectedSize,
+        imagePayloadLength: uploadedImage.length,
       });
 
-      if (error) {
-        console.error('Edge function error:', error);
-        throw new Error(error.message || 'Eroare la generarea vizualizării');
+      const response = await fetch(apiUrl('/api/generate-implant-visualization'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
+      });
+
+      const rawResponse = await response.text();
+      const data = parseJsonSafely<{ error?: string; generatedImage?: string }>(rawResponse);
+      console.info("[SimulatorSection] Generation response", {
+        status: response.status,
+        durationMs: Math.round(performance.now() - startedAt),
+        hasGeneratedImage: Boolean(data?.generatedImage),
+        error: data?.error ?? null,
+      });
+
+      if (isUnavailableProxyResponse(response.status, rawResponse)) {
+        throw new Error(API_UNAVAILABLE_MESSAGE);
+      }
+
+      if (!response.ok && !data?.error) {
+        throw new Error('Eroare la generarea vizualizării');
+      }
+
+      if (!data) {
+        throw new Error('Răspuns invalid de la API.');
       }
 
       if (data?.error) {
@@ -114,6 +145,11 @@ const SimulatorSection = () => {
         throw new Error('Nu s-a putut genera imaginea');
       }
     } catch (error) {
+      if (isServerUnavailableError(error)) {
+        console.error(API_UNAVAILABLE_MESSAGE, error);
+        toast.error(API_UNAVAILABLE_MESSAGE);
+        return;
+      }
       console.error('Error generating AI visualization:', error);
       toast.error(error instanceof Error ? error.message : 'Eroare la generarea vizualizării AI');
     } finally {

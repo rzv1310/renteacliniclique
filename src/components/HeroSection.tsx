@@ -12,7 +12,7 @@ const HeroSection = () => {
           src={heroImage}
           alt="Echipa Rentéa Aesthetic Clinique"
           className="w-full h-full object-cover object-top -translate-y-[30px]"
-          fetchPriority="high"
+          fetchpriority="high"
           loading="eager"
         />
         <div className="absolute inset-0 bg-black/50" />

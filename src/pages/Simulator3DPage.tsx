@@ -1,12 +1,14 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Clock, Download } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Upload, User, RotateCcw, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Sparkles, Loader2, HelpCircle, Download, Crop } from "lucide-react";
 import { toast } from "sonner";
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import SEOHead from "@/components/SEOHead";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { API_UNAVAILABLE_MESSAGE, isServerUnavailableError, isUnavailableProxyResponse, parseJsonSafely } from "@/lib/api";
 import heroSimulator from "@/assets/heroes/hero-simulator.jpg";
 
 interface RateLimits {
@@ -24,6 +26,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const apiUrl = (path: string) => `${API_BASE_URL}${path}`;
+const CLIENT_GENERATION_LIMIT_PER_HOUR = 3;
+const CLIENT_GENERATION_WINDOW_MS = 60 * 60 * 1000;
+const CLIENT_GENERATION_STORAGE_KEY = "simulator-client-generations-v1";
 
 const faqItems = [
   {
@@ -54,6 +62,22 @@ const faqItems = [
 
 type ImplantType = "rotund" | "anatomic" | "ergonomic";
 type ImplantSize = 200 | 275 | 350 | 425 | 500;
+type CropHandle = "move" | "nw" | "ne" | "sw" | "se";
+
+type CropRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+type ClientGenerationLimitSnapshot = {
+  used: number;
+  limit: number;
+  remaining: number;
+  canGenerate: boolean;
+  nextResetAt: number | null;
+};
 
 interface ImplantOption {
   type: ImplantType;
@@ -75,37 +99,154 @@ const avatars = [
   { id: 3, name: "Model C", silhouette: "curvy" },
 ];
 
+const DEFAULT_CROP_RECT: CropRect = {
+  x: 0.1,
+  y: 0.1,
+  width: 0.8,
+  height: 0.8,
+};
+
+const MIN_CROP_SIZE = 0.15;
+
+const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
+
+const loadClientGenerationTimestamps = (): number[] => {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = localStorage.getItem(CLIENT_GENERATION_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((value): value is number => typeof value === "number" && Number.isFinite(value));
+  } catch {
+    return [];
+  }
+};
+
+const saveClientGenerationTimestamps = (timestamps: number[]) => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(CLIENT_GENERATION_STORAGE_KEY, JSON.stringify(timestamps));
+  } catch {
+    // Ignore storage errors.
+  }
+};
+
+const buildClientGenerationSnapshot = (timestamps: number[], now = Date.now()): ClientGenerationLimitSnapshot => {
+  const recent = timestamps.filter((timestamp) => timestamp > now - CLIENT_GENERATION_WINDOW_MS);
+  const used = recent.length;
+  const remaining = Math.max(0, CLIENT_GENERATION_LIMIT_PER_HOUR - used);
+  const canGenerate = remaining > 0;
+  const oldestRecent = recent.length > 0 ? Math.min(...recent) : null;
+  const nextResetAt = oldestRecent ? oldestRecent + CLIENT_GENERATION_WINDOW_MS : null;
+
+  return {
+    used,
+    limit: CLIENT_GENERATION_LIMIT_PER_HOUR,
+    remaining,
+    canGenerate,
+    nextResetAt,
+  };
+};
+
+const formatRemainingTime = (milliseconds: number): string => {
+  const totalSeconds = Math.max(1, Math.ceil(milliseconds / 1000));
+  if (totalSeconds < 60) {
+    return `${totalSeconds}s`;
+  }
+
+  const totalMinutes = Math.ceil(totalSeconds / 60);
+  if (totalMinutes < 60) {
+    return `${totalMinutes} min`;
+  }
+
+  const totalHours = Math.ceil(totalMinutes / 60);
+  return `${totalHours}h`;
+};
+
 const Simulator3DPage = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState<number>(1);
   const [selectedType, setSelectedType] = useState<ImplantType>("anatomic");
   const [selectedSize, setSelectedSize] = useState<ImplantSize>(350);
+  const [customPrompt, setCustomPrompt] = useState("");
   const [showComparison, setShowComparison] = useState(false);
   const [comparisonPosition, setComparisonPosition] = useState(50);
   const [zoom, setZoom] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [rateLimits, setRateLimits] = useState<RateLimits | null>(null);
-  const [isLoadingLimits, setIsLoadingLimits] = useState(true);
-  const [resetTimer, setResetTimer] = useState<number>(0);
+  const [clientLimitSnapshot, setClientLimitSnapshot] = useState<ClientGenerationLimitSnapshot>(
+    () => buildClientGenerationSnapshot([])
+  );
+  const [cropSourceImage, setCropSourceImage] = useState<string | null>(null);
+  const [cropRect, setCropRect] = useState<CropRect>(DEFAULT_CROP_RECT);
+  const [cropActiveHandle, setCropActiveHandle] = useState<CropHandle | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
+  const cropImageFrameRef = useRef<HTMLDivElement>(null);
+  const cropDragStartRef = useRef<{
+    handle: CropHandle;
+    startClientX: number;
+    startClientY: number;
+    initialRect: CropRect;
+  } | null>(null);
 
   const controlsAnimation = useScrollAnimation();
   const visualAnimation = useScrollAnimation();
 
+  const refreshClientLimitSnapshot = useCallback(() => {
+    const now = Date.now();
+    const timestamps = loadClientGenerationTimestamps().filter(
+      (timestamp) => timestamp > now - CLIENT_GENERATION_WINDOW_MS
+    );
+    saveClientGenerationTimestamps(timestamps);
+    setClientLimitSnapshot(buildClientGenerationSnapshot(timestamps, now));
+  }, []);
+
+  const recordClientGeneration = useCallback(() => {
+    const now = Date.now();
+    const timestamps = loadClientGenerationTimestamps().filter(
+      (timestamp) => timestamp > now - CLIENT_GENERATION_WINDOW_MS
+    );
+    timestamps.push(now);
+    saveClientGenerationTimestamps(timestamps);
+    setClientLimitSnapshot(buildClientGenerationSnapshot(timestamps, now));
+  }, []);
+
   const fetchRateLimits = useCallback(async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-rate-limits');
-      if (error) {
-        console.error('Error fetching rate limits:', error);
+      console.info("[Simulator] Fetching rate limits...");
+      const response = await fetch(apiUrl('/api/check-rate-limits'));
+      const rawResponse = await response.text();
+      const data = parseJsonSafely<RateLimits | { error?: string }>(rawResponse);
+      console.info("[Simulator] Rate limit response", {
+        status: response.status,
+        data,
+      });
+
+      if (!response.ok) {
+        if (isUnavailableProxyResponse(response.status, rawResponse)) {
+          console.error(API_UNAVAILABLE_MESSAGE);
+          return;
+        }
+        console.error('Error fetching rate limits:', data);
         return;
       }
-      setRateLimits(data);
+
+      if (!data) {
+        console.error("Rate limits response was not valid JSON.");
+        return;
+      }
+
+      setRateLimits(data as RateLimits);
     } catch (error) {
+      if (isServerUnavailableError(error)) {
+        console.error(API_UNAVAILABLE_MESSAGE, error);
+        return;
+      }
       console.error('Error fetching rate limits:', error);
-    } finally {
-      setIsLoadingLimits(false);
     }
   }, []);
 
@@ -113,40 +254,198 @@ const Simulator3DPage = () => {
     fetchRateLimits();
   }, [fetchRateLimits]);
 
-  // Timer effect for minute reset countdown
   useEffect(() => {
-    if (rateLimits && rateLimits.limits.minute.remaining === 0) {
-      // Start 60 second countdown
-      setResetTimer(60);
-    }
-  }, [rateLimits]);
+    refreshClientLimitSnapshot();
+  }, [refreshClientLimitSnapshot]);
 
   useEffect(() => {
-    if (resetTimer > 0) {
-      const interval = setInterval(() => {
-        setResetTimer(prev => {
-          if (prev <= 1) {
-            // Timer finished, refresh limits
-            fetchRateLimits();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      refreshClientLimitSnapshot();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [refreshClientLimitSnapshot]);
+
+  useEffect(() => {
+    if (!rateLimits || rateLimits.canGenerate) {
+      return;
     }
-  }, [resetTimer, fetchRateLimits]);
+
+    const interval = setInterval(() => {
+      fetchRateLimits();
+    }, 10_000);
+
+    return () => clearInterval(interval);
+  }, [rateLimits, fetchRateLimits]);
+
+  useEffect(() => {
+    if (!cropActiveHandle) {
+      return;
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      const dragStart = cropDragStartRef.current;
+      const frame = cropImageFrameRef.current;
+      if (!dragStart || !frame) {
+        return;
+      }
+
+      const frameRect = frame.getBoundingClientRect();
+      if (!frameRect.width || !frameRect.height) {
+        return;
+      }
+
+      const deltaX = (event.clientX - dragStart.startClientX) / frameRect.width;
+      const deltaY = (event.clientY - dragStart.startClientY) / frameRect.height;
+      const { initialRect, handle } = dragStart;
+      const startLeft = initialRect.x;
+      const startTop = initialRect.y;
+      const startRight = initialRect.x + initialRect.width;
+      const startBottom = initialRect.y + initialRect.height;
+
+      let left = startLeft;
+      let top = startTop;
+      let right = startRight;
+      let bottom = startBottom;
+
+      if (handle === "move") {
+        const width = initialRect.width;
+        const height = initialRect.height;
+        left = clamp(startLeft + deltaX, 0, 1 - width);
+        top = clamp(startTop + deltaY, 0, 1 - height);
+        right = left + width;
+        bottom = top + height;
+      } else if (handle === "nw") {
+        left = clamp(startLeft + deltaX, 0, startRight - MIN_CROP_SIZE);
+        top = clamp(startTop + deltaY, 0, startBottom - MIN_CROP_SIZE);
+      } else if (handle === "ne") {
+        right = clamp(startRight + deltaX, startLeft + MIN_CROP_SIZE, 1);
+        top = clamp(startTop + deltaY, 0, startBottom - MIN_CROP_SIZE);
+      } else if (handle === "sw") {
+        left = clamp(startLeft + deltaX, 0, startRight - MIN_CROP_SIZE);
+        bottom = clamp(startBottom + deltaY, startTop + MIN_CROP_SIZE, 1);
+      } else if (handle === "se") {
+        right = clamp(startRight + deltaX, startLeft + MIN_CROP_SIZE, 1);
+        bottom = clamp(startBottom + deltaY, startTop + MIN_CROP_SIZE, 1);
+      }
+
+      setCropRect({
+        x: left,
+        y: top,
+        width: right - left,
+        height: bottom - top,
+      });
+    };
+
+    const onPointerUp = () => {
+      setCropActiveHandle(null);
+      cropDragStartRef.current = null;
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+  }, [cropActiveHandle]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setUploadedImage(e.target?.result as string);
-        setGeneratedImage(null);
+        const result = e.target?.result;
+        if (typeof result === "string") {
+          setCropSourceImage(result);
+          setCropRect(DEFAULT_CROP_RECT);
+          setGeneratedImage(null);
+          setShowComparison(false);
+          setComparisonPosition(50);
+        }
       };
       reader.readAsDataURL(file);
+      event.target.value = "";
     }
+  };
+
+  const startCropDrag = (handle: CropHandle, event: React.PointerEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    cropDragStartRef.current = {
+      handle,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      initialRect: cropRect,
+    };
+    setCropActiveHandle(handle);
+  };
+
+  const closeCropper = () => {
+    setCropSourceImage(null);
+    setCropActiveHandle(null);
+    cropDragStartRef.current = null;
+  };
+
+  const applyCropToImage = async () => {
+    if (!cropSourceImage) {
+      return;
+    }
+
+    try {
+      const image = new Image();
+      image.src = cropSourceImage;
+      await image.decode();
+
+      const sourceX = Math.round(cropRect.x * image.naturalWidth);
+      const sourceY = Math.round(cropRect.y * image.naturalHeight);
+      const sourceWidth = Math.max(1, Math.round(cropRect.width * image.naturalWidth));
+      const sourceHeight = Math.max(1, Math.round(cropRect.height * image.naturalHeight));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = sourceWidth;
+      canvas.height = sourceHeight;
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        throw new Error("Nu s-a putut inițializa editorul de imagine.");
+      }
+
+      context.drawImage(
+        image,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        0,
+        0,
+        sourceWidth,
+        sourceHeight
+      );
+
+      const croppedImage = canvas.toDataURL("image/png");
+      setUploadedImage(croppedImage);
+      setGeneratedImage(null);
+      setShowComparison(false);
+      setComparisonPosition(50);
+      closeCropper();
+      toast.success("Decuparea a fost aplicată.");
+    } catch (error) {
+      console.error("Error applying crop:", error);
+      toast.error("Nu am putut aplica decuparea imaginii.");
+    }
+  };
+
+  const openCropperForCurrentImage = () => {
+    if (!uploadedImage) {
+      toast.error("Încarcă mai întâi o fotografie.");
+      return;
+    }
+    setCropSourceImage(uploadedImage);
+    setCropRect(DEFAULT_CROP_RECT);
+    setCropActiveHandle(null);
+    cropDragStartRef.current = null;
   };
 
   const handleComparisonMove = useCallback((e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
@@ -171,9 +470,11 @@ const Simulator3DPage = () => {
     setSelectedAvatar(1);
     setSelectedType("anatomic");
     setSelectedSize(350);
+    setCustomPrompt("");
     setShowComparison(false);
     setZoom(1);
     setGeneratedImage(null);
+    closeCropper();
   };
 
   const downloadGeneratedImage = () => {
@@ -203,21 +504,67 @@ const Simulator3DPage = () => {
       return;
     }
 
+    if (clientLocked) {
+      toast.error(lockDescription);
+      return;
+    }
+
+    if (serverLocked) {
+      toast.error(serverLimitMessage);
+      return;
+    }
+
     setIsGenerating(true);
     toast.info("Se generează vizualizarea AI...", { duration: 10000 });
 
     try {
-      const { data, error } = await supabase.functions.invoke('generate-implant-visualization', {
-        body: {
-          imageBase64: uploadedImage,
-          implantType: selectedType,
-          implantSize: selectedSize,
-        }
+      const requestPayload = {
+        imageBase64: uploadedImage,
+        implantType: selectedType,
+        implantSize: selectedSize,
+        customPrompt: customPrompt,
+      };
+      const startedAt = performance.now();
+      console.info("[Simulator] Sending generation request", {
+        implantType: selectedType,
+        implantSize: selectedSize,
+        customPromptLength: customPrompt.length,
+        imagePayloadLength: uploadedImage.length,
       });
 
-      if (error) {
-        console.error('Edge function error:', error);
-        throw new Error(error.message || 'Eroare la generarea vizualizării');
+      const response = await fetch(apiUrl('/api/generate-implant-visualization'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
+      });
+
+      const rawResponse = await response.text();
+      const data = parseJsonSafely<{ error?: string; tips?: string[]; showTips?: boolean; generatedImage?: string }>(rawResponse);
+      console.info("[Simulator] Generation response", {
+        status: response.status,
+        durationMs: Math.round(performance.now() - startedAt),
+        hasGeneratedImage: Boolean(data?.generatedImage),
+        error: data?.error ?? null,
+      });
+
+      if (isUnavailableProxyResponse(response.status, rawResponse)) {
+        throw new Error(API_UNAVAILABLE_MESSAGE);
+      }
+
+      if (response.status === 429 && data?.error) {
+        toast.error(data.error);
+        fetchRateLimits();
+        return;
+      }
+
+      if (!response.ok && !data?.error) {
+        throw new Error('Eroare la generarea vizualizării');
+      }
+
+      if (!data) {
+        throw new Error('Răspuns invalid de la API.');
       }
 
       if (data?.error) {
@@ -245,6 +592,7 @@ const Simulator3DPage = () => {
       if (data?.generatedImage) {
         setGeneratedImage(data.generatedImage);
         setShowComparison(true);
+        recordClientGeneration();
         toast.success("Vizualizare AI generată cu succes!");
         // Refresh rate limits after generation
         fetchRateLimits();
@@ -252,6 +600,11 @@ const Simulator3DPage = () => {
         throw new Error('Nu s-a putut genera imaginea');
       }
     } catch (error) {
+      if (isServerUnavailableError(error)) {
+        console.error(API_UNAVAILABLE_MESSAGE, error);
+        toast.error(API_UNAVAILABLE_MESSAGE);
+        return;
+      }
       console.error('Error generating AI visualization:', error);
       toast.error(
         <div className="space-y-2">
@@ -283,6 +636,28 @@ const Simulator3DPage = () => {
   };
 
   const transform = getImplantTransform();
+  const clientLocked = !clientLimitSnapshot.canGenerate;
+  const serverLocked = Boolean(rateLimits && !rateLimits.canGenerate);
+  const isSimulatorLocked = clientLocked || serverLocked;
+  const clientRemainingMs = clientLimitSnapshot.nextResetAt
+    ? Math.max(0, clientLimitSnapshot.nextResetAt - Date.now())
+    : 0;
+
+  const serverLimitMessage =
+    rateLimits?.limitType === "minute"
+      ? "Generarea este temporar indisponibilă. Te rugăm să aștepți puțin și să încerci din nou."
+      : rateLimits?.limitType === "hour"
+      ? "Ai atins limita orară de generare. Revino mai târziu."
+      : rateLimits?.limitType === "day"
+      ? "Ai atins limita zilnică de generare. Revino mâine."
+      : "Generarea este temporar indisponibilă.";
+
+  const lockTitle = clientLocked
+    ? "Ai atins limita locală de generare"
+    : "Generare indisponibilă temporar";
+  const lockDescription = clientLocked
+    ? `Poți genera maximum ${CLIENT_GENERATION_LIMIT_PER_HOUR} imagini pe oră pe acest dispozitiv. Încearcă din nou peste ${formatRemainingTime(clientRemainingMs)}.`
+    : serverLimitMessage;
 
   return (
     <PageLayout>
@@ -322,7 +697,12 @@ const Simulator3DPage = () => {
       {/* Simulator Section */}
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="relative">
+            <div
+              className={`grid lg:grid-cols-2 gap-12 items-start transition-opacity ${
+                isSimulatorLocked ? "pointer-events-none opacity-45" : ""
+              }`}
+            >
             {/* Left Panel - Controls */}
             <div ref={controlsAnimation.ref as React.RefObject<HTMLDivElement>} className={`space-y-8 scroll-animate ${controlsAnimation.isVisible ? 'visible' : ''}`}>
               {/* Image Upload Section */}
@@ -347,10 +727,25 @@ const Simulator3DPage = () => {
                   Încarcă Fotografie
                 </Button>
 
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                  Confidențialitate: fotografia este procesată doar pentru generare în sesiunea curentă și nu este stocată în baza de date sau pe disc.
+                </p>
+
                 {uploadedImage && (
-                  <p className="text-sm text-green-500 text-center mb-4">
-                    ✓ Fotografie încărcată - gata pentru generare AI
-                  </p>
+                  <div className="text-center mb-4">
+                    <p className="text-sm text-green-500 mb-1">
+                      ✓ Fotografie încărcată - gata pentru generare AI
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2"
+                      onClick={openCropperForCurrentImage}
+                    >
+                      <Crop className="w-4 h-4 mr-2" />
+                      Decupează fotografia
+                    </Button>
+                  </div>
                 )}
 
                 <div className="relative">
@@ -471,46 +866,45 @@ const Simulator3DPage = () => {
                 </div>
               </div>
 
-              {/* Rate Limits Display */}
-              {!isLoadingLimits && rateLimits && (
-                <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/30">
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-rose-gold" />
-                    Limite Generare AI
-                  </h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Pe minut:</span>
-                      <span className={rateLimits.limits.minute.remaining === 0 ? "text-destructive font-medium" : "text-foreground"}>
-                        {rateLimits.limits.minute.remaining} / {rateLimits.limits.minute.limit}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Pe oră:</span>
-                      <span className={rateLimits.limits.hour.remaining === 0 ? "text-destructive font-medium" : "text-foreground"}>
-                        {rateLimits.limits.hour.remaining} / {rateLimits.limits.hour.limit}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Pe zi:</span>
-                      <span className={rateLimits.limits.day.remaining === 0 ? "text-destructive font-medium" : "text-foreground"}>
-                        {rateLimits.limits.day.remaining} / {rateLimits.limits.day.limit}
-                      </span>
-                    </div>
-                    {resetTimer > 0 && (
-                      <p className="text-xs text-rose-gold mt-2">
-                        Limita pe minut se resetează în {resetTimer}s
-                      </p>
-                    )}
-                  </div>
+              {/* Custom Prompt Selection */}
+              <div className="bg-card rounded-2xl p-6 shadow-elegant border border-border/30">
+                <h3 className="font-display text-xl font-semibold text-foreground mb-4">
+                  4. Instrucțiuni Suplimentare (Opțional)
+                </h3>
+                
+                <div className="space-y-4">
+                  <Label htmlFor="custom-prompt" className="text-sm text-muted-foreground">
+                    Adaugă detalii clinice pentru AI (ex: "proiecție moderată", "simetrie naturală", "contur discret")
+                  </Label>
+                  <Input
+                    id="custom-prompt"
+                    placeholder="Ex: Vreau un aspect foarte natural..."
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    className="w-full bg-background border-input"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Instrucțiunile explicite sau sexualizate sunt blocate automat.
+                  </p>
                 </div>
-              )}
+              </div>
 
               {/* Generate Button */}
+              <div className="rounded-xl border border-border/40 bg-muted/40 p-3 text-sm">
+                <p className="text-foreground">
+                  Limită locală dispozitiv: {clientLimitSnapshot.used}/{clientLimitSnapshot.limit} imagini/oră
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {clientLocked && clientRemainingMs > 0
+                    ? `Poți genera din nou peste ${formatRemainingTime(clientRemainingMs)}.`
+                    : `Disponibile acum: ${clientLimitSnapshot.remaining}`}
+                </p>
+              </div>
+
               <Button
                 className="w-full btn-primary-rose-gold py-6 text-lg"
                 onClick={generateAIVisualization}
-                disabled={isGenerating || !uploadedImage || (rateLimits && !rateLimits.canGenerate)}
+                disabled={isGenerating || !uploadedImage || isSimulatorLocked}
               >
                 {isGenerating ? (
                   <>
@@ -674,9 +1068,97 @@ const Simulator3DPage = () => {
                 </div>
               </div>
             </div>
+            </div>
+
+            {isSimulatorLocked && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center p-4">
+                <div className="max-w-xl w-full rounded-2xl border border-border bg-card/95 shadow-elegant p-6 md:p-8 text-center backdrop-blur-sm">
+                  <p className="text-lg font-display text-foreground mb-2">{lockTitle}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{lockDescription}</p>
+                  <p className="text-xs text-muted-foreground mt-4">
+                    Limitele server-side sunt aplicate automat pentru toate cererile.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
+
+      {cropSourceImage && (
+        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
+          <div className="w-full max-w-5xl bg-card border border-border/40 rounded-2xl shadow-xl p-4 md:p-6">
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h3 className="font-display text-xl md:text-2xl text-foreground">Decupează fotografia</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Trage zona selectată sau colțurile pentru a ajusta exact ce vrei să procesezi.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border/40 bg-black/30 p-3 overflow-auto max-h-[72vh]">
+              <div className="relative w-fit mx-auto select-none" ref={cropImageFrameRef}>
+                <img
+                  src={cropSourceImage}
+                  alt="Imagine pentru decupare"
+                  className="block max-h-[65vh] max-w-full"
+                  draggable={false}
+                />
+
+                <div
+                  className="absolute border-2 border-rose-gold shadow-[0_0_0_9999px_rgba(0,0,0,0.45)] cursor-move"
+                  style={{
+                    left: `${cropRect.x * 100}%`,
+                    top: `${cropRect.y * 100}%`,
+                    width: `${cropRect.width * 100}%`,
+                    height: `${cropRect.height * 100}%`,
+                  }}
+                  onPointerDown={(event) => startCropDrag("move", event)}
+                >
+                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                    {Array.from({ length: 9 }).map((_, index) => (
+                      <div key={index} className="border border-white/20" />
+                    ))}
+                  </div>
+                  <div
+                    className="absolute -top-2.5 -left-2.5 w-5 h-5 rounded-full bg-rose-gold border-2 border-white cursor-nwse-resize"
+                    onPointerDown={(event) => startCropDrag("nw", event)}
+                  />
+                  <div
+                    className="absolute -top-2.5 -right-2.5 w-5 h-5 rounded-full bg-rose-gold border-2 border-white cursor-nesw-resize"
+                    onPointerDown={(event) => startCropDrag("ne", event)}
+                  />
+                  <div
+                    className="absolute -bottom-2.5 -left-2.5 w-5 h-5 rounded-full bg-rose-gold border-2 border-white cursor-nesw-resize"
+                    onPointerDown={(event) => startCropDrag("sw", event)}
+                  />
+                  <div
+                    className="absolute -bottom-2.5 -right-2.5 w-5 h-5 rounded-full bg-rose-gold border-2 border-white cursor-nwse-resize"
+                    onPointerDown={(event) => startCropDrag("se", event)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-muted-foreground mt-4">
+              Datele imaginii rămân în browser pentru decupare și sunt trimise doar la apăsarea butonului de generare.
+            </p>
+
+            <div className="mt-5 flex flex-wrap gap-3 justify-end">
+              <Button variant="outline" onClick={closeCropper}>
+                Anulează
+              </Button>
+              <Button variant="outline" onClick={() => setCropRect(DEFAULT_CROP_RECT)}>
+                Resetare decupare
+              </Button>
+              <Button className="btn-primary-rose-gold" onClick={applyCropToImage}>
+                Aplică decuparea
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* FAQ Section */}
       <section className="py-20 bg-card">

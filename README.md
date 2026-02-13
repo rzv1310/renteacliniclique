@@ -36,6 +36,52 @@ npm i
 npm run dev
 ```
 
+Simulator API (Nano Banana) runs as a standalone TypeScript package in `server/` (entry: `server/src/index.ts`).
+
+```sh
+# terminal 1 - frontend
+npm run dev
+
+# terminal 2 - API server
+npm --prefix server install
+npm run api:dev
+```
+
+The app calls:
+- `/api/check-rate-limits`
+- `/api/generate-implant-visualization`
+
+Set these for local API testing:
+- `NANO_BANANA_API_KEY` (required)
+- `NANO_BANANA_MODEL` (default: `gemini-3-pro-image-preview`)
+- `NANO_BANANA_IMAGE_SIZE` (`1K`, `2K`, or `4K`; default: `2K`)
+
+Set frontend API base URL in `.env.local`:
+
+```sh
+VITE_API_BASE_URL=http://localhost:8787
+```
+
+If `VITE_API_BASE_URL` is empty during local development, Vite proxies `/api` to `http://127.0.0.1:8787`.
+
+Docker API server:
+
+```sh
+docker build -t simulator-api ./server
+docker run --rm -p 8787:8787 \
+  -e NANO_BANANA_API_KEY=your_key \
+  -e CORS_ORIGIN=https://your-frontend-domain.com \
+  simulator-api
+```
+
+Netlify deployment model:
+- Frontend: static (`dist`) on Netlify.
+- Contact form: Netlify Forms.
+- Simulator API: deploy `server/` container separately and set `VITE_API_BASE_URL` in Netlify environment variables.
+- Netlify config is codified in `netlify.toml`.
+
+Supabase runtime is no longer required.
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).

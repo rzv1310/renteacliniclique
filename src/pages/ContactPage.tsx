@@ -10,7 +10,6 @@ import { ArrowRight, Phone, Mail, MapPin, Loader2, CheckCircle } from "lucide-re
 import PageLayout from "@/components/PageLayout";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import SEOHead from "@/components/SEOHead";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   Form,
@@ -79,24 +78,30 @@ const ContactPage = () => {
     setIsSubmitting(true);
     
     try {
-      const { data: responseData, error } = await supabase.functions.invoke('contact-form', {
-        body: {
-          firstName: data.fullName.split(' ')[0] || data.fullName,
-          lastName: data.fullName.split(' ').slice(1).join(' ') || '',
-          email: data.email,
-          phone: data.phone,
-          message: data.message || '',
-        },
+      const firstName = data.fullName.split(" ")[0] || data.fullName;
+      const lastName = data.fullName.split(" ").slice(1).join(" ") || "";
+
+      const body = new URLSearchParams({
+        "form-name": "contact",
+        fullName: data.fullName,
+        firstName,
+        lastName,
+        email: data.email,
+        phone: data.phone,
+        message: data.message || "",
+        consent: String(data.consent),
       });
 
-      if (error) {
-        console.error("Contact form error:", error);
-        toast.error("A apărut o eroare. Te rugăm să încerci din nou.");
-        return;
-      }
+      const response = await fetch("/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body.toString(),
+      });
 
-      if (responseData?.error) {
-        toast.error(responseData.error);
+      if (!response.ok) {
+        toast.error("A apărut o eroare la trimitere. Te rugăm să încerci din nou.");
         return;
       }
 
@@ -248,7 +253,16 @@ const ContactPage = () => {
                 </div>
               ) : (
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                  <form
+                    name="contact"
+                    method="POST"
+                    data-netlify="true"
+                    data-netlify-honeypot="bot-field"
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-5"
+                  >
+                    <input type="hidden" name="form-name" value="contact" />
+                    <input type="hidden" name="bot-field" />
                     <div className="grid sm:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -348,7 +362,7 @@ const ContactPage = () => {
                           <div className="space-y-1 leading-none">
                             <FormLabel className="text-xs text-muted-foreground font-normal cursor-pointer">
                               Sunt de acord cu{" "}
-                              <a href="/politica-confidentialitate" className="text-primary underline hover:no-underline">
+                              <a href="/gdpr" className="text-primary underline hover:no-underline">
                                 Politica de Confidențialitate
                               </a>{" "}
                               și prelucrarea datelor.
