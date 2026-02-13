@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plurid-app-apps-api-implantmamarbucuresti-ro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plurid-app-apps-api-implantmamarbucuresti-ro
+  template:
+    metadata:
+      labels:
+        app: plurid-app-apps-api-implantmamarbucuresti-ro
+    spec:
+      containers:
+      - name: plurid-app-apps-api-implantmamarbucuresti-ro
+        image: hypod.cloud/plurid/production/plurid-app-api-implantmamarbucuresti-ro:COMMIT_SHA
+        ports:
+        - containerPort: 8080
+        env:
+        - name: TZ
+          value: "Europe/Bucharest"
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "8080"
+        - name: NANO_BANANA_MODEL
+          value: "gemini-3-pro-image-preview"
+        - name: NANO_BANANA_IMAGE_SIZE
+          value: "2K"
+        - name: CORS_ORIGIN
+          value: "https://implantmamarbucuresti.ro,https://www.implantmamarbucuresti.ro"
+        - name: COUNTRY_ALLOWLIST
+          value: "RO"
+        - name: ALLOW_UNKNOWN_COUNTRY
+          value: "false"
+        - name: COUNTRY_HEADER_NAMES
+          value: "cf-ipcountry,x-vercel-ip-country,x-country-code,x-geo-country"
+        - name: NANO_BANANA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: plurid-app-apps-api-implantmamarbucuresti-ro
+              key: NANO_BANANA_API_KEY
+      imagePullSecrets:
+      - name: hypod-cloud-registry
