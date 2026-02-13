@@ -31,6 +31,15 @@ Runtime target:
 If `COUNTRY_ALLOWLIST` is set, the server accepts simulator API calls only from allowed countries based on trusted proxy/CDN headers when present, with GeoIP IP lookup fallback. This is an access filter, not a full auth mechanism.
 API logs are printed with deep object inspection for easier debugging (nested fields are not collapsed as `[Object]`).
 
+## Generation behavior
+
+- Uses `gemini-3-pro-image-preview` by default.
+- Uses a strict clinical prompt contract (`server/src/prompt.ts`) that enforces:
+  - same framing/perspective/alignment as input
+  - localized breast-only edits
+  - profile reference crop as guidance only (never rendered directly)
+- Frontend normalizes AI output dimensions to match input image dimensions exactly before comparison/download.
+
 ## Animation limits
 
 Animation requests are limited as follows:

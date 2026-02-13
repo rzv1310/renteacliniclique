@@ -8,6 +8,11 @@ type SizePlan = {
   cleavage_change: string;
 };
 
+type ProfilePlan = {
+  profile_label: "Low Profile" | "Moderate Profile" | "Moderate Plus Profile" | "High Profile" | "Ultra-High Profile";
+  projection_curve_guidance: string;
+};
+
 type ShapePlan = {
   profile_name: string;
   distribution: string;
@@ -25,12 +30,19 @@ const sizePlanByCc: Record<number, SizePlan> = {
     upper_pole_change: "minimal fullness increase",
     cleavage_change: "very mild increase",
   },
-  275: {
-    intensity: "mild-moderate",
+  250: {
+    intensity: "mild",
     target_volume_delta_percent: "12-18%",
     target_projection_delta_mm: "6-9mm",
     upper_pole_change: "mild fullness increase",
     cleavage_change: "mild increase",
+  },
+  300: {
+    intensity: "mild-moderate",
+    target_volume_delta_percent: "16-22%",
+    target_projection_delta_mm: "8-11mm",
+    upper_pole_change: "mild-moderate fullness increase",
+    cleavage_change: "mild-moderate increase",
   },
   350: {
     intensity: "moderate",
@@ -39,19 +51,57 @@ const sizePlanByCc: Record<number, SizePlan> = {
     upper_pole_change: "moderate fullness increase",
     cleavage_change: "moderate increase",
   },
-  425: {
+  400: {
     intensity: "moderate-high",
     target_volume_delta_percent: "25-32%",
     target_projection_delta_mm: "12-15mm",
     upper_pole_change: "pronounced fullness increase",
     cleavage_change: "clear increase",
   },
-  500: {
+  450: {
     intensity: "high",
-    target_volume_delta_percent: "32-40%",
-    target_projection_delta_mm: "15-18mm",
+    target_volume_delta_percent: "30-36%",
+    target_projection_delta_mm: "14-17mm",
     upper_pole_change: "high fullness increase",
     cleavage_change: "strong increase",
+  },
+  500: {
+    intensity: "very high",
+    target_volume_delta_percent: "36-44%",
+    target_projection_delta_mm: "17-21mm",
+    upper_pole_change: "very high fullness increase",
+    cleavage_change: "very strong increase",
+  },
+};
+
+const profilePlanByCc: Record<number, ProfilePlan> = {
+  200: {
+    profile_label: "Low Profile",
+    projection_curve_guidance: "broad base with lower forward projection",
+  },
+  250: {
+    profile_label: "Moderate Profile",
+    projection_curve_guidance: "balanced base and projection",
+  },
+  300: {
+    profile_label: "Moderate Profile",
+    projection_curve_guidance: "balanced profile with slightly increased projection",
+  },
+  350: {
+    profile_label: "Moderate Plus Profile",
+    projection_curve_guidance: "noticeably forward projection with controlled base width",
+  },
+  400: {
+    profile_label: "High Profile",
+    projection_curve_guidance: "high forward projection with tighter base footprint",
+  },
+  450: {
+    profile_label: "High Profile",
+    projection_curve_guidance: "high projection with pronounced anterior fullness",
+  },
+  500: {
+    profile_label: "Ultra-High Profile",
+    projection_curve_guidance: "maximum forward projection while preserving realistic anatomy",
   },
 };
 
@@ -89,17 +139,35 @@ interface PromptInput {
   modelName: string;
 }
 
+const selectNearestSupportedCc = (requestedCc: number): number => {
+  const supported = Object.keys(sizePlanByCc)
+    .map((value) => Number(value))
+    .sort((a, b) => a - b);
+
+  let nearest = supported[0];
+  for (const candidate of supported) {
+    if (Math.abs(candidate - requestedCc) < Math.abs((nearest ?? candidate) - requestedCc)) {
+      nearest = candidate;
+    }
+  }
+
+  return nearest;
+};
+
 export const buildPrompt = ({
   implantType,
   implantSize,
   customPrompt,
   modelName,
 }: PromptInput) => {
-  const sizePlan = sizePlanByCc[implantSize] ?? sizePlanByCc[350];
+  const normalizedCc = selectNearestSupportedCc(implantSize);
+  const sizePlan = sizePlanByCc[normalizedCc] ?? sizePlanByCc[350];
+  const profilePlan = profilePlanByCc[normalizedCc] ?? profilePlanByCc[350];
   const shapePlan = shapePlanByType[implantType];
   const userConfig = {
     implant_type: implantType,
     implant_size_cc: implantSize,
+    normalized_implant_size_cc_for_profile_mapping: normalizedCc,
     clinical_instruction: customPrompt || null,
   };
 
@@ -113,6 +181,7 @@ export const buildPrompt = ({
     generation_recipe: {
       operation: "augmentation_only_local_edit",
       size_plan: sizePlan,
+      projection_profile_plan: profilePlan,
       shape_plan: shapePlan,
       technical_pipeline: [
         "1) Detect breast ROI and anatomical landmarks (chest wall, inframammary fold, clavicle, axillary boundaries).",
@@ -120,6 +189,12 @@ export const buildPrompt = ({
         "3) Preserve global scene, pose, framing, and body anatomy outside ROI.",
         "4) Recompute local highlights/shadows to match original lighting direction and softness.",
         "5) Perform artifact check and regenerate if blur/smudge/warping is present.",
+      ],
+      reference_guidance: [
+        "A second reference image is provided: a single cropped implant profile sample corresponding to the selected cc.",
+        "Use only this cropped profile sample as projection guidance, while keeping identity and scene intact.",
+        "Do not copy, blend, overlay, or render the profile crop itself in the final output.",
+        "The final output must be derived from INPUT IMAGE #1 only; INPUT IMAGE #2 is guidance metadata.",
       ],
     },
     content_safety: {
@@ -142,6 +217,8 @@ export const buildPrompt = ({
       "same skin tone, texture, pores (do not retouch except to maintain realism)",
       "same clothing/drape/medical bra",
       "same crop and framing (no recrop, no zoom changes, no camera repositioning)",
+      "same pixel-registered composition relative to the frame (no subject shift)",
+      "same camera perspective and body alignment in-frame",
       "same person identity and body proportions outside breast region",
       "same neck/jawline/abdomen/arms and same background objects",
     ],
@@ -149,7 +226,10 @@ export const buildPrompt = ({
       operation: "localized breast volume/projection increase only",
       target_change: {
         implant_size_cc: implantSize,
+        normalized_implant_size_cc_for_profile_mapping: normalizedCc,
         implant_type: implantType,
+        profile_label_from_reference_crop: profilePlan.profile_label,
+        profile_curve_guidance: profilePlan.projection_curve_guidance,
         volume_delta_percent: sizePlan.target_volume_delta_percent,
         projection_delta_mm: sizePlan.target_projection_delta_mm,
         cleavage: sizePlan.cleavage_change,
@@ -198,10 +278,58 @@ export const buildPrompt = ({
     ],
     output: {
       deliverable: "single edited image",
-      cropping_instruction: "Keep original framing. Do not crop or recompose.",
+      cropping_instruction:
+        "Keep original framing, orientation, and exact pixel dimensions from INPUT IMAGE #1. Do not crop, resize canvas, or recompose.",
+      geometric_alignment_contract:
+        "Output must remain pixel-registered to INPUT IMAGE #1 except for localized breast ROI edits only.",
       consistency_check:
         "If any element outside breast size/shape changes, reject and regenerate until only breast ROI is modified.",
       user_instruction: customPrompt || "None",
     },
   };
+};
+
+export const buildPromptText = ({
+  implantType,
+  implantSize,
+  customPrompt,
+  modelName,
+}: PromptInput): string => {
+  const prompt = buildPrompt({
+    implantType,
+    implantSize,
+    customPrompt,
+    modelName,
+  });
+
+  const constraints = [
+    "INPUT IMAGE #1 is the authoritative base canvas.",
+    "INPUT IMAGE #2 is a profile reference sample only (guidance metadata).",
+    "Keep EXACTLY the same canvas width, canvas height, aspect ratio, framing, camera position, pose, and subject alignment.",
+    "Do NOT zoom, crop, pan, rotate, tilt, or recompose.",
+    "Do NOT change background, clothing, arms, neck, jawline, abdomen, or any non-breast region.",
+    "Modify only breast size/shape according to user config, with realistic anatomy and lighting continuity.",
+    "Never render, overlay, blend, or copy INPUT IMAGE #2 into the output.",
+    "Output must be pixel-registered to INPUT IMAGE #1, except localized breast ROI edits.",
+    "If these constraints cannot be satisfied, return INPUT IMAGE #1 unchanged.",
+  ];
+
+  return [
+    `ROLE: Clinical breast augmentation image editor using ${modelName}.`,
+    "CONTEXT: Strictly medical, non-erotic, patient consultation visualization.",
+    "TASK: Edit only breast volume/projection on INPUT IMAGE #1.",
+    "",
+    "NON-NEGOTIABLE CONSTRAINTS:",
+    ...constraints.map((constraint, index) => `${index + 1}. ${constraint}`),
+    "",
+    "USER CONFIG:",
+    JSON.stringify(prompt.user_config, null, 2),
+    "",
+    "TARGET EDIT SPEC:",
+    JSON.stringify(prompt.breast_edit_spec.target_change, null, 2),
+    "",
+    "OUTPUT REQUIREMENT:",
+    "- Return exactly one IMAGE.",
+    "- No explanatory text needed.",
+  ].join("\n");
 };

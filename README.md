@@ -50,6 +50,10 @@ npm run api:dev
 The app calls:
 - `/api/check-rate-limits`
 - `/api/generate-implant-visualization`
+- `/api/check-animation-rate-limits`
+- `/api/animate-implant-visualization`
+- `/api/animation-jobs/:jobId`
+- `/api/animation-jobs/:jobId/video`
 
 Set these for local API testing:
 - `NANO_BANANA_API_KEY` (required)
@@ -84,8 +88,11 @@ Netlify deployment model:
 
 Current simulator behavior:
 - Local per-device guard: max **3 generations/hour** (browser localStorage).
+- Local per-device guard: max **1 animation/hour** (browser localStorage).
 - Server per-IP limits: **3/minute, 10/hour, 20/day**.
+- Server animation limits: **1/hour per IP**, **3/hour global**, **10/day global**.
 - Crop editor starts with full-frame selection and preserves full image if no effective crop is applied.
+- Generated image is normalized to the same width/height as the uploaded image for stable before/after comparison.
 
 Supabase runtime is no longer required.
 

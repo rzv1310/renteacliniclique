@@ -1,9 +1,7 @@
 import crypto from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createServer } from "node:http";
-import { inspect } from "node:util";
 import { GoogleGenAI } from "@google/genai";
-import geoip from "geoip-lite";
 import { buildAnimationPromptText } from "./animation-prompt.js";
 
 import {
@@ -19,7 +17,11 @@ import {
   VALID_IMPLANT_TYPES,
 } from "./constants.js";
 import { getServerConfig, loadEnvironment } from "./env.js";
-import { buildPrompt } from "./prompt.js";
+import { isLoopbackIp, resolveCountryCode } from "./geo.js";
+import { applyCorsHeaders, getClientIp, jsonResponse as jsonResponseWithCors, readJsonBody } from "./http-helpers.js";
+import { logError, logInfo, logWarn } from "./logger.js";
+import { buildPromptText } from "./prompt.js";
+import { loadProfileReferenceImageForCc } from "./profile-reference.js";
 import {
   extractImageData,
   getErrorMessageFromUnknown,
@@ -37,170 +39,11 @@ const genAI = config.apiKey ? new GoogleGenAI({ apiKey: config.apiKey }) : null;
 const simulatorRateLimiter = createRateLimiter(SIMULATOR_RATE_LIMITS);
 const simulatorAnimationUserRateLimiter = createRateLimiter(SIMULATOR_ANIMATION_USER_RATE_LIMITS);
 const simulatorAnimationGlobalRateLimiter = createRateLimiter(SIMULATOR_ANIMATION_GLOBAL_RATE_LIMITS);
-
-const formatLogPayload = (payload: unknown): string => {
-  if (payload instanceof Error) {
-    return payload.stack || `${payload.name}: ${payload.message}`;
-  }
-
-  return inspect(payload, {
-    depth: null,
-    colors: false,
-    compact: false,
-    breakLength: 120,
-    maxArrayLength: null,
-  });
-};
-
-const logInfo = (message: string, payload?: unknown) => {
-  if (payload === undefined) {
-    console.info(message);
-    return;
-  }
-  console.info(`${message} ${formatLogPayload(payload)}`);
-};
-
-const logWarn = (message: string, payload?: unknown) => {
-  if (payload === undefined) {
-    console.warn(message);
-    return;
-  }
-  console.warn(`${message} ${formatLogPayload(payload)}`);
-};
-
-const logError = (message: string, payload?: unknown) => {
-  if (payload === undefined) {
-    console.error(message);
-    return;
-  }
-  console.error(`${message} ${formatLogPayload(payload)}`);
-};
-
-const resolveCorsOrigin = (requestOrigin: string | null): string => {
-  if (config.corsOrigins.length === 0 || config.corsOrigins.includes("*")) {
-    return "*";
-  }
-
-  if (requestOrigin && config.corsOrigins.includes(requestOrigin)) {
-    return requestOrigin;
-  }
-
-  return config.corsOrigins[0];
-};
-
-const applyCorsHeaders = (req: IncomingMessage, res: ServerResponse) => {
-  const requestOrigin = typeof req.headers.origin === "string" ? req.headers.origin : null;
-  const allowedOrigin = resolveCorsOrigin(requestOrigin);
-  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  if (allowedOrigin !== "*") {
-    res.setHeader("Vary", "Origin");
-  }
-};
-
-const jsonResponse = (req: IncomingMessage, res: ServerResponse, statusCode: number, payload: unknown) => {
-  res.statusCode = statusCode;
-  applyCorsHeaders(req, res);
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify(payload));
-};
-
-const getClientIp = (req: IncomingMessage): string => {
-  const forwardedFor = req.headers["x-forwarded-for"];
-  if (typeof forwardedFor === "string" && forwardedFor.trim()) {
-    return forwardedFor.split(",")[0]?.trim() || "unknown";
-  }
-  return req.socket.remoteAddress || "unknown";
-};
-
-const isLoopbackIp = (ip: string): boolean =>
-  ip === "::1" ||
-  ip === "127.0.0.1" ||
-  ip === "::ffff:127.0.0.1" ||
-  ip.startsWith("::ffff:127.");
-
-const normalizeCountryCode = (value: string): string | null => {
-  const normalized = value.trim().toUpperCase();
-  if (/^[A-Z]{2}$/.test(normalized)) {
-    return normalized;
-  }
-  return null;
-};
-
-const normalizeIpForGeoLookup = (rawIp: string): string | null => {
-  const trimmed = rawIp.trim();
-  if (!trimmed || trimmed === "unknown") return null;
-
-  if (trimmed.startsWith("::ffff:")) {
-    return trimmed.slice("::ffff:".length);
-  }
-
-  return trimmed;
-};
-
-const getCountryCodeFromHeaders = (req: IncomingMessage): string | null => {
-  for (const headerName of config.countryHeaderNames) {
-    const rawHeader = req.headers[headerName];
-    const headerValue = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader;
-    if (!headerValue) continue;
-    const firstValue = headerValue.split(",")[0];
-    if (!firstValue) continue;
-    const normalized = normalizeCountryCode(firstValue);
-    if (normalized) return normalized;
-  }
-
-  return null;
-};
-
-const getCountryCodeFromIp = (ip: string): string | null => {
-  const ipForLookup = normalizeIpForGeoLookup(ip);
-  if (!ipForLookup) return null;
-
-  const result = geoip.lookup(ipForLookup);
-  if (!result?.country) return null;
-
-  return normalizeCountryCode(result.country);
-};
-
-const resolveCountryCode = (
-  req: IncomingMessage,
-  ip: string
-): { countryCode: string | null; source: "header" | "geoip" | "unknown" } => {
-  const fromHeader = getCountryCodeFromHeaders(req);
-  if (fromHeader) {
-    return { countryCode: fromHeader, source: "header" };
-  }
-
-  const fromGeoip = getCountryCodeFromIp(ip);
-  if (fromGeoip) {
-    return { countryCode: fromGeoip, source: "geoip" };
-  }
-
-  return { countryCode: null, source: "unknown" };
-};
+const jsonResponse = (req: IncomingMessage, res: ServerResponse, statusCode: number, payload: unknown) =>
+  jsonResponseWithCors(req, res, statusCode, payload, config.corsOrigins);
 
 const hasDisallowedPromptTerms = (prompt: string): boolean =>
   DISALLOWED_PROMPT_PATTERNS.some((pattern) => pattern.test(prompt));
-
-const readJsonBody = async (req: IncomingMessage, maxBytes = 10_000_000): Promise<Record<string, unknown>> => {
-  const chunks: Buffer[] = [];
-  let totalBytes = 0;
-
-  for await (const chunk of req) {
-    const asBuffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-    totalBytes += asBuffer.length;
-    if (totalBytes > maxBytes) {
-      throw new Error("BODY_TOO_LARGE");
-    }
-    chunks.push(asBuffer);
-  }
-
-  if (totalBytes === 0) return {};
-
-  const raw = Buffer.concat(chunks).toString("utf8");
-  return JSON.parse(raw) as Record<string, unknown>;
-};
 
 interface AnimationJobRecord {
   id: string;
@@ -653,19 +496,26 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
     return;
   }
 
-  const prompt = buildPrompt({
+  const editPrompt = buildPromptText({
     implantType: implantType as ImplantType,
     implantSize,
     customPrompt,
     modelName: config.model,
   });
-  const editPrompt = JSON.stringify(prompt, null, 2);
+  const profileReferenceImage = loadProfileReferenceImageForCc(implantSize);
 
   logInfo(`${logPrefix} gemini:request`, {
     model: config.model,
     promptLength: editPrompt.length,
     imageDataLength: base64Data.length,
     mimeType: normalizedMimeType,
+    hasProfileReferenceImage: Boolean(profileReferenceImage),
+    profileReference: profileReferenceImage
+      ? {
+          profileKey: profileReferenceImage.profileKey,
+          normalizedCc: profileReferenceImage.normalizedCc,
+        }
+      : null,
     userConfig: {
       implant_type: implantType,
       implant_size_cc: implantSize,
@@ -678,57 +528,109 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
     return;
   }
 
-  let data: GeminiResponse | null = null;
+  type GenerationAttempt = {
+    variant: string;
+    promptText: string;
+    includeProfileReference: boolean;
+    responseModalities: Array<"IMAGE">;
+  };
 
-  try {
+  const attempts: GenerationAttempt[] = [
+    {
+      variant: "strict_prompt+profile_crop+image_only",
+      promptText: editPrompt,
+      includeProfileReference: true,
+      responseModalities: ["IMAGE"],
+    },
+    {
+      variant: "strict_prompt+no_profile+image_only",
+      promptText: editPrompt,
+      includeProfileReference: false,
+      responseModalities: ["IMAGE"],
+    },
+  ];
+
+  let data: GeminiResponse | null = null;
+  let generatedImage: string | null = null;
+  let lastStatus: number | null = null;
+
+  for (const attempt of attempts) {
+    const contents: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [
+      { text: attempt.promptText },
+      {
+        inlineData: {
+          mimeType: normalizedMimeType,
+          data: base64Data,
+        },
+      },
+    ];
+
+    if (attempt.includeProfileReference && profileReferenceImage) {
+      contents.push({
+        inlineData: {
+          mimeType: profileReferenceImage.mimeType,
+          data: profileReferenceImage.data,
+        },
+      });
+    }
+
     const payload: Parameters<typeof genAI.models.generateContent>[0] = {
       model: config.model,
-      contents: [
-        { text: editPrompt },
-        {
-          inlineData: {
-            mimeType: normalizedMimeType,
-            data: base64Data,
-          },
-        },
-      ],
-      // NOTE: imageConfig.imageSize caused INVALID_ARGUMENT for this key/model.
+      contents,
       config: {
-        responseModalities: ["TEXT", "IMAGE"],
+        responseModalities: attempt.responseModalities,
       },
     };
 
     logInfo(`${logPrefix} gemini:attempt`, {
-      variant: "parts+json_prompt_from_prompt_ts+config_text_image_no_imagesize",
+      variant: attempt.variant,
+      hasProfileReferenceImage: attempt.includeProfileReference && Boolean(profileReferenceImage),
+      promptLength: attempt.promptText.length,
     });
 
-    const geminiResponse = await genAI.models.generateContent(payload);
-    data = geminiResponse as unknown as GeminiResponse;
+    try {
+      const geminiResponse = await genAI.models.generateContent(payload);
+      data = geminiResponse as unknown as GeminiResponse;
+      generatedImage = selectGeneratedImage(data);
 
-    logInfo(`${logPrefix} gemini:attempt:ok`, {
-      variant: "parts+json_prompt_from_prompt_ts+config_text_image_no_imagesize",
-    });
-  } catch (error) {
-    const status = getStatusFromError(error);
-    logError(`${logPrefix} gemini:error`, {
-      status,
-      error,
-    });
+      if (generatedImage) {
+        logInfo(`${logPrefix} gemini:attempt:ok`, {
+          variant: attempt.variant,
+        });
+        break;
+      }
 
-    if (status === 429) {
-      jsonResponse(req, res, 429, { error: "Prea multe cereri. Încercați din nou în câteva secunde." });
-      return;
+      const finishReason = data.candidates?.[0]?.finishReason || data.candidates?.[0]?.finish_reason;
+      const safetyRatings = (data.candidates?.[0] as Record<string, unknown> | undefined)?.safetyRatings;
+      logWarn(`${logPrefix} gemini:attempt:no-image`, {
+        variant: attempt.variant,
+        finishReason,
+        safetyRatings,
+      });
+
+      if (finishReason === "SAFETY" || finishReason === "IMAGE_SAFETY") {
+        break;
+      }
+    } catch (error) {
+      const status = getStatusFromError(error);
+      lastStatus = status;
+
+      logError(`${logPrefix} gemini:attempt:failed`, {
+        variant: attempt.variant,
+        status,
+        error,
+      });
+
+      if (status === 429) {
+        jsonResponse(req, res, 429, { error: "Prea multe cereri. Încercați din nou în câteva secunde." });
+        return;
+      }
     }
-
-    jsonResponse(req, res, 500, { error: "Nu s-a putut genera vizualizarea. Încercați din nou." });
-    return;
   }
 
-  const generatedImage = selectGeneratedImage(data);
-
   if (!generatedImage) {
-    const finishReason = data.candidates?.[0]?.finishReason || data.candidates?.[0]?.finish_reason;
-    const safetyRatings = (data.candidates?.[0] as Record<string, unknown> | undefined)?.safetyRatings;
+    const finishReason = data?.candidates?.[0]?.finishReason || data?.candidates?.[0]?.finish_reason;
+    const safetyRatings = (data?.candidates?.[0] as Record<string, unknown> | undefined)?.safetyRatings;
     logWarn(`${logPrefix} gemini:no-image`, { finishReason, safetyRatings });
 
     if (finishReason === "SAFETY" || finishReason === "IMAGE_SAFETY") {
@@ -737,6 +639,11 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
           "Generarea a fost blocată de filtrele de siguranță ale modelului (IMAGE_SAFETY). Folosiți o fotografie clinică non-explicită (ex: bustieră/sutien sport/top opac), lumină neutră și fără expunere areolară.",
         showTips: true,
       });
+      return;
+    }
+
+    if (lastStatus && lastStatus >= 500) {
+      jsonResponse(req, res, 500, { error: "Nu s-a putut genera vizualizarea. Încercați din nou." });
       return;
     }
 
@@ -764,7 +671,7 @@ const server = createServer(async (req, res) => {
   const animationVideoMatch = pathname.match(/^\/api\/animation-jobs\/([a-f0-9-]+)\/video$/);
 
   // Apply CORS headers as early as possible for all code paths.
-  applyCorsHeaders(req, res);
+  applyCorsHeaders(req, res, config.corsOrigins);
 
   res.on("finish", () => {
     logInfo(`${logPrefix} response:sent`, {
@@ -793,7 +700,7 @@ const server = createServer(async (req, res) => {
     }
 
     if (pathname.startsWith("/api/") && config.allowedCountryCodes.length > 0 && !isLoopbackIp(ip)) {
-      const { countryCode, source } = resolveCountryCode(req, ip);
+      const { countryCode, source } = resolveCountryCode(req, ip, config.countryHeaderNames);
       const isAllowedCountry = countryCode ? config.allowedCountryCodes.includes(countryCode) : false;
       const canProceed = isAllowedCountry || (!countryCode && config.allowUnknownCountry);
 

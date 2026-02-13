@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -89,8 +89,9 @@ const faqItems = [
 ];
 
 type ImplantType = "rotund" | "anatomic" | "ergonomic";
-type ImplantSize = 200 | 275 | 350 | 425 | 500;
+type ImplantSize = 200 | 250 | 300 | 350 | 400 | 450 | 500;
 type CropHandle = "move" | "nw" | "ne" | "sw" | "se";
+type CompareSourceId = string;
 
 type CropRect = {
   x: number;
@@ -107,6 +108,27 @@ type ClientGenerationLimitSnapshot = {
   nextResetAt: number | null;
 };
 
+type GeneratedVisualization = {
+  id: string;
+  image: string;
+  implantType: ImplantType;
+  implantSize: ImplantSize;
+  createdAt: number;
+};
+
+type GenerationSignature = {
+  sourceImage: string;
+  implantType: ImplantType;
+  implantSize: ImplantSize;
+  customPrompt: string;
+};
+
+type CompareOption = {
+  id: CompareSourceId;
+  label: string;
+  image: string;
+};
+
 interface ImplantOption {
   type: ImplantType;
   name: string;
@@ -119,7 +141,7 @@ const implantTypes: ImplantOption[] = [
   { type: "ergonomic", name: "Ergonomic", description: "Adaptabil la mișcare" },
 ];
 
-const implantSizes: ImplantSize[] = [200, 275, 350, 425, 500];
+const implantSizes: ImplantSize[] = [200, 250, 300, 350, 400, 450, 500];
 
 const avatars = [
   { id: 1, name: "Model A", silhouette: "athletic" },
@@ -136,6 +158,7 @@ const DEFAULT_CROP_RECT: CropRect = {
 
 const MIN_CROP_SIZE = 0.15;
 const FULL_CROP_EPSILON = 0.002;
+const ORIGINAL_COMPARE_SOURCE_ID = "source-original";
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
 
@@ -205,6 +228,58 @@ const formatRemainingTime = (milliseconds: number): string => {
   return `${totalHours}h`;
 };
 
+const loadImageElement = (src: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Nu am putut încărca imaginea pentru normalizare."));
+    image.src = src;
+  });
+
+const getPreferredDataUrlMimeType = (dataUrl: string): "image/png" | "image/jpeg" | "image/webp" => {
+  if (dataUrl.startsWith("data:image/jpeg")) return "image/jpeg";
+  if (dataUrl.startsWith("data:image/webp")) return "image/webp";
+  return "image/png";
+};
+
+const normalizeImageToReferenceDimensions = async (
+  generatedImageDataUrl: string,
+  referenceImageDataUrl: string
+): Promise<string> => {
+  const [generatedImageElement, referenceImageElement] = await Promise.all([
+    loadImageElement(generatedImageDataUrl),
+    loadImageElement(referenceImageDataUrl),
+  ]);
+
+  const targetWidth = referenceImageElement.naturalWidth;
+  const targetHeight = referenceImageElement.naturalHeight;
+
+  if (
+    generatedImageElement.naturalWidth === targetWidth &&
+    generatedImageElement.naturalHeight === targetHeight
+  ) {
+    return generatedImageDataUrl;
+  }
+
+  const outputCanvas = document.createElement("canvas");
+  outputCanvas.width = targetWidth;
+  outputCanvas.height = targetHeight;
+  const outputContext = outputCanvas.getContext("2d");
+
+  if (!outputContext) {
+    return generatedImageDataUrl;
+  }
+
+  outputContext.imageSmoothingEnabled = true;
+  outputContext.imageSmoothingQuality = "high";
+  outputContext.drawImage(generatedImageElement, 0, 0, targetWidth, targetHeight);
+
+  const outputMimeType = getPreferredDataUrlMimeType(generatedImageDataUrl);
+  const quality = outputMimeType === "image/jpeg" ? 0.95 : undefined;
+
+  return outputCanvas.toDataURL(outputMimeType, quality);
+};
+
 const Simulator3DPage = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState<number>(1);
@@ -217,10 +292,14 @@ const Simulator3DPage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [generatedVersions, setGeneratedVersions] = useState<GeneratedVisualization[]>([]);
+  const [compareLeftSource, setCompareLeftSource] = useState<CompareSourceId>(ORIGINAL_COMPARE_SOURCE_ID);
+  const [compareRightSource, setCompareRightSource] = useState<CompareSourceId>(ORIGINAL_COMPARE_SOURCE_ID);
+  const [lastGenerationSignature, setLastGenerationSignature] = useState<GenerationSignature | null>(null);
   const [generatedVideoUrl, setGeneratedVideoUrl] = useState<string | null>(null);
-  const [animationJobId, setAnimationJobId] = useState<string | null>(null);
   const [animationRateLimits, setAnimationRateLimits] = useState<AnimationRateLimits | null>(null);
   const [rateLimits, setRateLimits] = useState<RateLimits | null>(null);
+  const [isLockModalVisible, setIsLockModalVisible] = useState(false);
   const [clientLimitSnapshot, setClientLimitSnapshot] = useState<ClientGenerationLimitSnapshot>(
     () => buildClientLimitSnapshot([], CLIENT_GENERATION_LIMIT_PER_HOUR)
   );
@@ -483,8 +562,11 @@ const Simulator3DPage = () => {
           setCropSourceImage(result);
           setCropRect(DEFAULT_CROP_RECT);
           setGeneratedImage(null);
+          setGeneratedVersions([]);
+          setCompareLeftSource(ORIGINAL_COMPARE_SOURCE_ID);
+          setCompareRightSource(ORIGINAL_COMPARE_SOURCE_ID);
+          setLastGenerationSignature(null);
           setGeneratedVideoUrl(null);
-          setAnimationJobId(null);
           setShowComparison(false);
           setComparisonPosition(50);
         }
@@ -529,8 +611,11 @@ const Simulator3DPage = () => {
       if (isFullCropSelection) {
         setUploadedImage(cropSourceImage);
         setGeneratedImage(null);
+        setGeneratedVersions([]);
+        setCompareLeftSource(ORIGINAL_COMPARE_SOURCE_ID);
+        setCompareRightSource(ORIGINAL_COMPARE_SOURCE_ID);
+        setLastGenerationSignature(null);
         setGeneratedVideoUrl(null);
-        setAnimationJobId(null);
         setShowComparison(false);
         setComparisonPosition(50);
         closeCropper();
@@ -581,8 +666,11 @@ const Simulator3DPage = () => {
       const croppedImage = canvas.toDataURL("image/png");
       setUploadedImage(croppedImage);
       setGeneratedImage(null);
+      setGeneratedVersions([]);
+      setCompareLeftSource(ORIGINAL_COMPARE_SOURCE_ID);
+      setCompareRightSource(ORIGINAL_COMPARE_SOURCE_ID);
+      setLastGenerationSignature(null);
       setGeneratedVideoUrl(null);
-      setAnimationJobId(null);
       setShowComparison(false);
       setComparisonPosition(50);
       closeCropper();
@@ -630,22 +718,31 @@ const Simulator3DPage = () => {
     setShowComparison(false);
     setZoom(1);
     setGeneratedImage(null);
+    setGeneratedVersions([]);
+    setCompareLeftSource(ORIGINAL_COMPARE_SOURCE_ID);
+    setCompareRightSource(ORIGINAL_COMPARE_SOURCE_ID);
+    setLastGenerationSignature(null);
     setGeneratedVideoUrl(null);
-    setAnimationJobId(null);
     closeCropper();
   };
 
   const downloadGeneratedImage = () => {
-    if (!generatedImage) {
+    const targetImage = rightCompareOption?.image ?? null;
+    if (!targetImage) {
       toast.error("Nu există imagine de descărcat");
       return;
     }
 
     try {
+      const labelSuffix = (rightCompareOption?.label ?? "rezultat")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
       // Create a link element and trigger download
       const link = document.createElement('a');
-      link.href = generatedImage;
-      link.download = `simulare-implant-${selectedType}-${selectedSize}cc-${Date.now()}.png`;
+      link.href = targetImage;
+      link.download = `simulare-implant-${labelSuffix || "rezultat"}-${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -748,9 +845,36 @@ const Simulator3DPage = () => {
       }
 
       if (data?.generatedImage) {
-        setGeneratedImage(data.generatedImage);
+        let normalizedGeneratedImage = data.generatedImage;
+        try {
+          normalizedGeneratedImage = await normalizeImageToReferenceDimensions(
+            data.generatedImage,
+            uploadedImage
+          );
+        } catch (normalizationError) {
+          console.warn("[Simulator] Could not normalize generated image dimensions.", normalizationError);
+        }
+
+        const newVersion: GeneratedVisualization = {
+          id: `gen-${Date.now()}`,
+          image: normalizedGeneratedImage,
+          implantType: selectedType,
+          implantSize: selectedSize,
+          createdAt: Date.now(),
+        };
+        const previousLastVersion = generatedVersions[generatedVersions.length - 1] ?? null;
+
+        setGeneratedImage(normalizedGeneratedImage);
+        setGeneratedVersions((previousVersions) => [...previousVersions, newVersion]);
+        setCompareLeftSource(previousLastVersion ? previousLastVersion.id : ORIGINAL_COMPARE_SOURCE_ID);
+        setCompareRightSource(newVersion.id);
+        setLastGenerationSignature({
+          sourceImage: uploadedImage,
+          implantType: selectedType,
+          implantSize: selectedSize,
+          customPrompt: customPrompt.trim(),
+        });
         setGeneratedVideoUrl(null);
-        setAnimationJobId(null);
         setShowComparison(true);
         recordClientGeneration();
         toast.success("Vizualizare AI generată cu succes!");
@@ -821,7 +945,8 @@ const Simulator3DPage = () => {
   );
 
   const animateVisualization = async () => {
-    if (!generatedImage) {
+    const targetImage = rightCompareOption?.image ?? null;
+    if (!targetImage) {
       toast.error("Generează mai întâi imaginea AI.");
       return;
     }
@@ -846,7 +971,7 @@ const Simulator3DPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          imageBase64: generatedImage,
+          imageBase64: targetImage,
           implantType: selectedType,
           implantSize: selectedSize,
           customPrompt,
@@ -870,7 +995,6 @@ const Simulator3DPage = () => {
         throw new Error("Nu am primit jobId pentru animație.");
       }
 
-      setAnimationJobId(parsed.jobId);
       recordClientAnimation();
       fetchAnimationRateLimits();
 
@@ -893,22 +1017,6 @@ const Simulator3DPage = () => {
     }
   };
 
-  const getImplantTransform = () => {
-    const sizeMultiplier = (selectedSize - 200) / 300;
-    const baseScale = 1 + sizeMultiplier * 0.15;
-    
-    let shapeModifier = 0;
-    if (selectedType === "rotund") shapeModifier = 0.05;
-    if (selectedType === "anatomic") shapeModifier = 0.02;
-    if (selectedType === "ergonomic") shapeModifier = 0.03;
-    
-    return {
-      scale: baseScale + shapeModifier,
-      projection: selectedType === "rotund" ? "fuller" : selectedType === "anatomic" ? "natural" : "adaptive",
-    };
-  };
-
-  const transform = getImplantTransform();
   const clientLocked = !clientLimitSnapshot.canGenerate;
   const serverLocked = Boolean(rateLimits && !rateLimits.canGenerate);
   const animationClientLocked = !clientAnimationSnapshot.canGenerate;
@@ -949,6 +1057,64 @@ const Simulator3DPage = () => {
 
   const animationClientLockMessage = `Poți genera maximum ${CLIENT_ANIMATION_LIMIT_PER_HOUR} animație pe oră pe acest dispozitiv. Încearcă din nou peste ${formatRemainingTime(animationClientRemainingMs)}.`;
 
+  const compareOptions = useMemo<CompareOption[]>(() => {
+    const options: CompareOption[] = [];
+    if (uploadedImage) {
+      options.push({
+        id: ORIGINAL_COMPARE_SOURCE_ID,
+        label: "Originală",
+        image: uploadedImage,
+      });
+    }
+
+    generatedVersions.forEach((version, index) => {
+      options.push({
+        id: version.id,
+        label: `Generare ${index + 1} (${version.implantSize}cc)`,
+        image: version.image,
+      });
+    });
+
+    return options;
+  }, [uploadedImage, generatedVersions]);
+
+  const leftCompareOption =
+    compareOptions.find((option) => option.id === compareLeftSource) ??
+    compareOptions[0] ??
+    null;
+  const rightCompareOption =
+    compareOptions.find((option) => option.id === compareRightSource) ??
+    compareOptions.at(-1) ??
+    null;
+  const canRenderComparison = Boolean(showComparison && leftCompareOption && rightCompareOption);
+
+  const currentPromptSignature = customPrompt.trim();
+  const hasGenerationParameterChanges = Boolean(
+    generatedImage &&
+      lastGenerationSignature &&
+      uploadedImage &&
+      (lastGenerationSignature.sourceImage !== uploadedImage ||
+        lastGenerationSignature.implantType !== selectedType ||
+        lastGenerationSignature.implantSize !== selectedSize ||
+        lastGenerationSignature.customPrompt !== currentPromptSignature)
+  );
+  const shouldShowGenerateButton = Boolean(uploadedImage) && (!generatedImage || hasGenerationParameterChanges);
+  const shouldBlockSimulatorUi = isSimulatorLocked && isLockModalVisible;
+
+  useEffect(() => {
+    if (compareOptions.length === 0) {
+      return;
+    }
+
+    if (!compareOptions.some((option) => option.id === compareLeftSource)) {
+      setCompareLeftSource(compareOptions[0].id);
+    }
+
+    if (!compareOptions.some((option) => option.id === compareRightSource)) {
+      setCompareRightSource(compareOptions.at(-1)?.id ?? compareOptions[0].id);
+    }
+  }, [compareOptions, compareLeftSource, compareRightSource]);
+
   useEffect(() => {
     const hasGeneratedMedia = Boolean(generatedImage || generatedVideoUrl);
     if (!hasGeneratedMedia) {
@@ -966,6 +1132,15 @@ const Simulator3DPage = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [generatedImage, generatedVideoUrl]);
+
+  useEffect(() => {
+    if (isSimulatorLocked) {
+      setIsLockModalVisible(true);
+      return;
+    }
+
+    setIsLockModalVisible(false);
+  }, [isSimulatorLocked]);
 
   return (
     <PageLayout>
@@ -1008,7 +1183,7 @@ const Simulator3DPage = () => {
           <div className="relative">
             <div
               className={`grid lg:grid-cols-2 gap-12 items-start transition-opacity ${
-                isSimulatorLocked ? "pointer-events-none opacity-45" : ""
+                shouldBlockSimulatorUi ? "pointer-events-none opacity-45" : ""
               }`}
             >
             {/* Left Panel - Controls */}
@@ -1074,7 +1249,6 @@ const Simulator3DPage = () => {
                         setSelectedAvatar(avatar.id);
                         setGeneratedImage(null);
                         setGeneratedVideoUrl(null);
-                        setAnimationJobId(null);
                       }}
                       className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-300 ${
                         !uploadedImage && selectedAvatar === avatar.id
@@ -1157,7 +1331,7 @@ const Simulator3DPage = () => {
                     type="range"
                     min={200}
                     max={500}
-                    step={25}
+                    step={50}
                     value={selectedSize}
                     onChange={(e) => setSelectedSize(Number(e.target.value) as ImplantSize)}
                     className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-rose-gold"
@@ -1256,51 +1430,113 @@ const Simulator3DPage = () => {
                   </div>
                 </div>
 
+                {compareOptions.length > 1 && (
+                  <div className="mb-4 space-y-3 rounded-xl border border-border/40 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
+                        Compară stânga
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {compareOptions.map((option) => (
+                          <Button
+                            key={`compare-left-${option.id}`}
+                            type="button"
+                            size="sm"
+                            variant={compareLeftSource === option.id ? "default" : "outline"}
+                            className="h-8 px-3 text-xs"
+                            onClick={() => {
+                              setShowComparison(true);
+                              setCompareLeftSource(option.id);
+                            }}
+                          >
+                            {option.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">
+                        Compară dreapta
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {compareOptions.map((option) => (
+                          <Button
+                            key={`compare-right-${option.id}`}
+                            type="button"
+                            size="sm"
+                            variant={compareRightSource === option.id ? "default" : "outline"}
+                            className="h-8 px-3 text-xs"
+                            onClick={() => {
+                              setShowComparison(true);
+                              setCompareRightSource(option.id);
+                            }}
+                          >
+                            {option.label}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Visualization Area */}
                 <div 
                   ref={comparisonRef}
                   className="relative aspect-[3/4] bg-muted rounded-xl overflow-hidden cursor-ew-resize"
-                  onMouseMove={showComparison ? handleComparisonMove : undefined}
-                  onTouchMove={showComparison ? handleComparisonMove : undefined}
+                  onMouseMove={canRenderComparison && !isGenerating ? handleComparisonMove : undefined}
+                  onTouchMove={canRenderComparison && !isGenerating ? handleComparisonMove : undefined}
                 >
                   {uploadedImage ? (
                     <>
-                      {/* Original Image */}
-                      <div 
-                        className="absolute inset-0 overflow-hidden"
-                        style={{ 
-                          clipPath: showComparison ? `inset(0 ${100 - comparisonPosition}% 0 0)` : 'none',
-                          transform: `scale(${zoom})`,
-                          transformOrigin: 'center'
-                        }}
-                      >
-                          <img 
-                            src={uploadedImage} 
-                            alt="Original" 
-                            className="w-full h-full object-contain"
-                          />
-                      </div>
-
-                      {/* Generated Image */}
-                      {generatedImage && showComparison && (
+                      {canRenderComparison ? (
+                        <>
+                          <div
+                            className="absolute inset-0 overflow-hidden"
+                            style={{
+                              clipPath: `inset(0 ${100 - comparisonPosition}% 0 0)`,
+                              transform: `scale(${zoom})`,
+                              transformOrigin: "center",
+                            }}
+                          >
+                            <img
+                              src={leftCompareOption.image}
+                              alt={leftCompareOption.label}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                          <div
+                            className="absolute inset-0 overflow-hidden"
+                            style={{
+                              clipPath: `inset(0 0 0 ${comparisonPosition}%)`,
+                              transform: `scale(${zoom})`,
+                              transformOrigin: "center",
+                            }}
+                          >
+                            <img
+                              src={rightCompareOption.image}
+                              alt={rightCompareOption.label}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                        </>
+                      ) : (
                         <div 
                           className="absolute inset-0 overflow-hidden"
-                          style={{ 
-                            clipPath: `inset(0 0 0 ${comparisonPosition}%)`,
+                          style={{
                             transform: `scale(${zoom})`,
-                            transformOrigin: 'center'
+                            transformOrigin: "center",
                           }}
                         >
                           <img 
-                            src={generatedImage} 
-                            alt="Rezultat AI" 
+                            src={generatedImage ?? uploadedImage} 
+                            alt={generatedImage ? "Rezultat AI" : "Original"} 
                             className="w-full h-full object-contain"
                           />
                         </div>
                       )}
 
                       {/* Comparison Slider */}
-                      {showComparison && generatedImage && (
+                      {canRenderComparison && (
                         <div 
                           className="absolute top-0 bottom-0 w-1 bg-white shadow-lg cursor-ew-resize z-10"
                           style={{ left: `${comparisonPosition}%` }}
@@ -1313,13 +1549,13 @@ const Simulator3DPage = () => {
                       )}
 
                       {/* Labels */}
-                      {showComparison && generatedImage && (
+                      {canRenderComparison && (
                         <>
                           <div className="absolute top-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-xs">
-                            Înainte
+                            {leftCompareOption.label}
                           </div>
                           <div className="absolute top-4 right-4 bg-rose-gold text-white px-3 py-1 rounded-full text-xs">
-                            După (AI)
+                            {rightCompareOption.label}
                           </div>
                         </>
                       )}
@@ -1341,7 +1577,7 @@ const Simulator3DPage = () => {
                   )}
                 </div>
 
-                {!generatedImage && (
+                {shouldShowGenerateButton && (
                   <div className="mt-5">
                     <Button
                       className="w-full btn-primary-rose-gold py-6 text-lg"
@@ -1356,7 +1592,7 @@ const Simulator3DPage = () => {
                       ) : (
                         <>
                           <Sparkles className="w-5 h-5 mr-2" />
-                          Generează cu AI
+                          {generatedImage ? "Generează din nou cu AI" : "Generează cu AI"}
                         </>
                       )}
                     </Button>
@@ -1376,7 +1612,7 @@ const Simulator3DPage = () => {
                     variant="outline"
                     className="w-full"
                     onClick={downloadGeneratedImage}
-                    disabled={!generatedImage}
+                    disabled={!rightCompareOption?.image}
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Descarcă
@@ -1389,7 +1625,7 @@ const Simulator3DPage = () => {
                       variant="outline"
                       className="w-full"
                       onClick={animateVisualization}
-                      disabled={isAnimating || animationClientLocked || animationServerLocked}
+                      disabled={isAnimating || animationClientLocked || animationServerLocked || !rightCompareOption?.image}
                     >
                       {isAnimating ? (
                         <>
@@ -1445,7 +1681,7 @@ const Simulator3DPage = () => {
             </div>
             </div>
 
-            {isSimulatorLocked && (
+            {isSimulatorLocked && isLockModalVisible && (
               <div className="absolute inset-0 z-20 flex items-center justify-center p-4">
                 <div className="max-w-xl w-full rounded-2xl border border-border bg-card/95 shadow-elegant p-6 md:p-8 text-center backdrop-blur-sm">
                   <p className="text-lg font-display text-foreground mb-2">{lockTitle}</p>
@@ -1453,6 +1689,14 @@ const Simulator3DPage = () => {
                   <p className="text-xs text-muted-foreground mt-4">
                     Limitele server-side sunt aplicate automat pentru toate cererile.
                   </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-5"
+                    onClick={() => setIsLockModalVisible(false)}
+                  >
+                    Închide
+                  </Button>
                 </div>
               </div>
             )}

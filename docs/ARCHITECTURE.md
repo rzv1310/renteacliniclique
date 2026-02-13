@@ -1,262 +1,172 @@
 # Architecture
 
-## 1. Overview
+## 1. System Overview
 
-`renteacliniclique` is a Vite + React + TypeScript single-page application (SPA) for a breast augmentation clinic website.
+`renteacliniclique` is split into two deployable units:
 
-Current scope:
+- Frontend: static React SPA (Vite build output in `dist/`), deployed to Netlify.
+- Backend: standalone Node.js TypeScript API in `server/`, deployed as Docker.
 
-- Marketing website pages (home, procedures, blog, legal pages, pricing, etc.).
-- Contact page with **Netlify Forms** submission.
-- AI simulator page (`/simulator-3d`) that uploads/crops a photo and requests image generation from Gemini Nano Banana (Gemini 3 Pro Image Preview).
+Current product scope:
 
-## 2. Tech Stack
+- Marketing website pages.
+- Contact page backed by Netlify Forms.
+- AI simulator (`/simulator-3d`) for clinical breast implant visualization and optional short animation.
 
-- Frontend:
-  - React 18
-  - React Router (`BrowserRouter`)
-  - TypeScript
-  - Tailwind CSS + shadcn/ui components
-  - `sonner` toast notifications
-  - `react-hook-form` + `zod` (contact form validation)
-- Build/dev:
-  - Vite 5
-  - `@vitejs/plugin-react-swc`
-- Runtime API:
-  - Standalone TypeScript package in `server/` (deployable via Docker)
+## 2. Frontend Architecture
 
-## 3. Frontend Architecture
+### 2.1 Runtime and routing
 
-### 3.1 App shell and routing
+- React 18 + TypeScript + React Router.
+- App shell and route map are in `src/App.tsx`.
+- Entry point is `src/main.tsx`.
+- Shared layout/components under `src/components`.
 
-Entry:
-
-- `src/main.tsx` mounts `App`.
-- `src/App.tsx` defines all routes and wraps the app in:
-  - `HelmetProvider`
-  - `QueryClientProvider`
-  - `TooltipProvider`
-  - global toasters, cookie consent, accessibility widget.
-
-Routing style:
-
-- SPA routing with many lazy-loaded route components.
-- Route fallback: `*` -> `NotFound`.
-
-Important routes:
-
-- `/contact` -> `src/pages/ContactPage.tsx`
-- `/simulator-3d` -> `src/pages/Simulator3DPage.tsx`
-- legal routes:
-  - `/cookies`
-  - `/gdpr`
-  - `/termeni-si-conditii`
-
-### 3.2 UI composition
-
-- Page layout is largely compositional (`PageLayout`, `Header`, `Footer`, shared UI components).
-- Static assets are bundled from `src/assets/*`.
-
-## 4. Simulator Subsystem
-
-### 4.1 Client-side simulator page
+### 2.2 Simulator page
 
 Main file: `src/pages/Simulator3DPage.tsx`
 
-Client responsibilities:
+Responsibilities:
 
-- Image intake:
-  - file upload from browser
-  - optional in-browser crop tool (canvas-based crop export to base64 PNG)
-  - full-frame crop selection preserves original image (no recrop rewrite)
-- User controls:
-  - implant type (`rotund`, `anatomic`, `ergonomic`)
-  - implant size (`200`, `275`, `350`, `425`, `500` cc)
-  - optional custom clinical prompt
-- Request/response:
-  - `GET /api/check-rate-limits`
-  - `POST /api/generate-implant-visualization`
-- UX:
-  - comparison slider (before/after)
-  - image preview uses `object-contain` to avoid implicit viewport recropping
-  - download generated image
-  - lock overlay when client-side/server-side limits are exceeded
-  - detailed console logging for debugging.
+- Upload source image.
+- Optional in-browser crop before generation.
+- Configure implant:
+  - type: `rotund | anatomic | ergonomic`
+  - size: `200..500` cc, step `50`
+- Generate image via API.
+- Compare multiple generations:
+  - source options include Original and all generated versions
+  - left/right comparison selectors + slider
+- Animate selected result (right-side selection) via API.
+- Download selected result (right-side selection).
 
-Client-only rate limiting:
+### 2.3 Client-side safeguards and UX behavior
 
-- LocalStorage key: `simulator-client-generations-v1`
-- Limit: **3 generations/hour/device/browser**
+- Local generation throttle: `3` images/hour/device (localStorage).
+- Local animation throttle: `1` animation/hour/device (localStorage).
+- If locked, modal can be dismissed so users can still inspect existing outputs.
+- Warning before page refresh if generated media exists.
+- During generation, comparison slider movement is disabled.
+- Generated image is normalized to source width/height for stable comparison geometry.
 
-### 4.2 API service
+## 3. Backend Architecture (`server/`)
 
-Main source entry: `server/src/index.ts`
+### 3.1 Runtime
 
-The server exposes HTTP endpoints:
+- Node.js TypeScript package (`type: module`).
+- Entry point: `server/src/index.ts`.
+- Docker target: Node 24 Alpine.
 
+### 3.2 HTTP endpoints
+
+- `GET /health`
 - `GET /api/check-rate-limits`
 - `POST /api/generate-implant-visualization`
+- `GET /api/check-animation-rate-limits`
+- `POST /api/animate-implant-visualization`
+- `GET /api/animation-jobs/:jobId`
+- `GET /api/animation-jobs/:jobId/video`
 
-Server-side behavior:
+### 3.3 Image generation flow
 
-- Validates payload and image mime types.
-- Sanitizes custom prompt and blocks explicit/sexualized/minor-related terms.
-- Enforces in-memory per-IP limits:
-  - 3/minute
-  - 10/hour
-  - 20/day
-- Builds a structured clinical prompt with:
-  - user config
-  - implant size/shape plans
-  - strong preservation constraints (edit breast ROI only)
-  - safety and negative prompts.
-- Calls Gemini API:
-  - endpoint: `v1beta/models/{model}:generateContent`
-  - default model: `gemini-3-pro-image-preview`
-  - generation config: `responseModalities=["TEXT","IMAGE"]` + `imageConfig.imageSize`
-  - returns one selected image part to client.
-  - structured request logging uses deep object inspection (no `[Object]` truncation).
+Core files:
 
-Environment variables used:
-
-- `NANO_BANANA_API_KEY` (preferred)
-- `NANO_BANANA_MODEL` (optional override)
-- `NANO_BANANA_IMAGE_SIZE` (`1K|2K|4K`, applied to `generationConfig.imageConfig.imageSize`)
-- `CORS_ORIGIN` (optional, defaults to `*`)
-- `COUNTRY_ALLOWLIST` (optional, ISO code list, e.g. `RO`)
-- `COUNTRY_HEADER_NAMES` (optional geo-header priority, defaults include `cf-ipcountry`)
-- `ALLOW_UNKNOWN_COUNTRY` (optional, defaults to `false`)
-
-## 5. Contact Form Architecture
-
-Files:
-
-- `src/pages/ContactPage.tsx`
-- static Netlify detection form in `index.html`
+- `server/src/index.ts`
+- `server/src/prompt.ts`
+- `server/src/profile-reference.ts`
+- `server/src/request-helpers.ts`
 
 Flow:
 
-1. User fills React form (validated by zod).
-2. Submit handler encodes fields as `application/x-www-form-urlencoded`.
-3. Client posts to `/` with `form-name=contact`.
-4. Netlify Forms backend ingests submission (after deployment on Netlify with form detection enabled).
+1. Validate request body, mime type, implant params, and prompt constraints.
+2. Enforce per-IP rate limits.
+3. Build strict clinical prompt text (`buildPromptText`).
+4. Add source image as primary input and one implant profile crop as reference guidance.
+5. Call Gemini (`gemini-3-pro-image-preview` by default) with `responseModalities=["IMAGE"]`.
+6. Return selected image part to frontend.
 
-## 6. Configuration and Build
+Prompt strategy:
 
-### 6.1 Vite config
+- Strict identity/framing lock instructions.
+- Explicit rule that reference profile image is guidance-only, never rendered.
+- Strong localized-edit constraint: only breast size/shape changes.
 
-File: `vite.config.ts`
+### 3.4 Animation flow
 
-- Registers frontend plugins:
-  - React SWC plugin
-  - optional development component tagger.
-- No API proxy is configured in Vite.
+Core files:
 
-### 6.2 API URL resolution (frontend)
+- `server/src/index.ts`
+- `server/src/animation-prompt.ts`
 
-File: `src/lib/api.ts`
+Flow:
 
-- If `VITE_API_BASE_URL` is set, it is used as API base.
-- If empty and app runs in dev mode, API base defaults to `http://127.0.0.1:8787`.
-- If empty and app runs in production build, API calls remain same-origin (relative path).
+1. Validate request and animation rate limits.
+2. Start async Veo operation.
+3. Poll operation status via `/api/animation-jobs/:jobId`.
+4. Serve ready video via `/api/animation-jobs/:jobId/video`.
 
-### 6.3 Runtime modes
+## 4. Rate Limiting Model
 
-- `npm run dev`:
-  - starts Vite frontend dev server.
-  - frontend API calls default to `http://127.0.0.1:8787` directly when `VITE_API_BASE_URL` is not set.
-- `npm run api:setup`:
-  - installs dependencies for `server/` package.
-- `npm run api:dev`:
-  - starts standalone API server on `PORT` (default `8787`).
-- `npm run preview`:
-  - previews static build output.
-- `npm run build`:
-  - outputs static `dist` frontend assets.
+### 4.1 Image generation
 
-## 7. Security and Privacy Model
+- Client-side (device): `3/hour`.
+- Server-side (per IP): `3/min`, `10/hour`, `20/day`.
 
-Implemented:
+### 4.2 Animation generation
 
-- Prompt sanitization and disallowed prompt term filters.
-- MIME/type and payload guards.
-- Dual-layer throttling (server + client).
-- UI communication that images are not stored.
-- Optional country allowlist gate (server-side) for `/api/*` endpoints.
+- Client-side (device): `1/hour`.
+- Server-side user/IP: `1/hour`.
+- Server-side global app: `3/hour`, `10/day`.
 
-Operational caveat:
+Note: server rate limit storage is in-memory; counters reset on restart and are not shared across replicas.
 
-- API key must never be exposed in browser client code.
-- Secure Gemini requests require a trusted server runtime (or serverless function) in production.
-- Country allowlist depends on trusted reverse-proxy geo headers; by itself it does not replace authentication.
+## 5. Geo Access Policy
 
-## 8. Deployment Architecture (Current)
+Core file: `server/src/geo.ts`
 
-Target platform: Netlify static publish (`dist`) + external Docker API service.
+- Optional allowlist via `COUNTRY_ALLOWLIST`.
+- Country resolution order:
+  1. trusted headers (`COUNTRY_HEADER_NAMES`)
+  2. GeoIP lookup (`geoip-lite`) fallback
+- Loopback IPs bypass geo restriction for local development.
 
-What works in static deployment:
+## 6. Configuration
 
-- SPA UI pages
-- Netlify contact form handling
-- SPA route fallback via `public/_redirects`
+### 6.1 Frontend
 
-API dependency:
+- `VITE_API_BASE_URL`:
+  - if set: used as API origin.
+  - if empty in dev: defaults to `http://127.0.0.1:8787`.
+  - if empty in production build: uses same-origin relative `/api/*`.
 
-- Frontend simulator requires reachable backend endpoints:
-  - `/api/check-rate-limits`
-  - `/api/generate-implant-visualization`
-- In split-origin deployment (Netlify frontend + external API), `VITE_API_BASE_URL` must point to that backend in frontend build environment.
+### 6.2 Backend
 
-## 9. Recommended Production Topology
+Key env vars:
 
-Current production topology:
+- `NANO_BANANA_API_KEY` (required)
+- `NANO_BANANA_MODEL` (optional)
+- `VEO_MODEL` (optional)
+- `HOST`, `PORT`
+- `CORS_ORIGIN`
+- `COUNTRY_ALLOWLIST`
+- `COUNTRY_HEADER_NAMES`
+- `ALLOW_UNKNOWN_COUNTRY`
 
-- Frontend: static SPA on Netlify.
-- Contact form: Netlify Forms.
-- Simulator backend: standalone Dockerized Node service (`server/`), consumed via `VITE_API_BASE_URL`.
-- Build/deploy settings are codified in `netlify.toml`.
-- API container base image: Node `24-alpine` (multi-stage Docker build).
+## 7. Deployment Topology
 
-Further hardening recommended:
+Current intended production layout:
 
-- Persist rate-limit counters in durable storage if strict limits are required across restarts/instances.
-- Restrict CORS to exact frontend origins in production.
-- Add bot mitigation (Cloudflare Turnstile / WAF rate rules) to reduce direct scripted API abuse.
+- Netlify:
+  - serves static SPA (`dist/`)
+  - handles contact submissions via Netlify Forms
+- External container platform / Kubernetes:
+  - runs `server/` API
+  - exposed as `api.implantmamarbucuresti.ro`
+- Frontend calls backend using `VITE_API_BASE_URL`.
 
-## 10. Production Readiness Assessment (2026-02-13)
+## 8. Operational Notes
 
-Validation performed:
-
-- Frontend build: `npm run build` ✅
-- Frontend type-check: `npx tsc --noEmit` ✅
-- Server package type-check: `npx tsc -p server/tsconfig.json --noEmit` ✅
-- Frontend lint: `npm run lint` ✅ (warnings only, no errors)
-
-Status by capability:
-
-- Static frontend deploy on Netlify: ✅ Ready
-- Netlify contact form flow: ✅ Ready
-- External simulator API architecture: ✅ Ready
-- Simulator backend operational hardening: ⚠️ Partially ready
-- CI/lint gate cleanliness: ✅ Ready (warnings remain)
-
-Current production blockers / caveats:
-
-- In-memory server-side rate limiting is not durable across restarts/replicas.
-- CORS defaults to `*` unless explicitly configured.
-- Simulator availability depends on valid Gemini billing/quota for the API key.
-- Country allowlist relies on trusted proxy geo headers (recommended behind CDN/WAF).
-
-Go-live checklist:
-
-- Set Netlify env var `VITE_API_BASE_URL` to the deployed API URL.
-- Deploy `server/` Docker image with:
-  - `NANO_BANANA_API_KEY`
-  - `CORS_ORIGIN` (exact frontend origin(s), not `*`)
-  - `COUNTRY_ALLOWLIST=RO` (optional Romania-only access policy)
-  - `COUNTRY_HEADER_NAMES`/`ALLOW_UNKNOWN_COUNTRY` as needed for your edge provider
-  - `HOST=0.0.0.0`
-  - `PORT` as required by host platform
-- Verify `/health`, `/api/check-rate-limits`, `/api/generate-implant-visualization` in deployed environment.
-- Decide whether rate limits must survive restarts; if yes, move counters to shared storage (Redis/DB).
-- Add edge bot controls (WAF/Turnstile) if abuse pressure increases.
+- CORS should be set to explicit production origins.
+- Apply edge/WAF bot controls in front of API.
+- If strict distributed throttling is required, migrate rate limiting to shared storage (Redis/DB).
+- Keep Gemini/Veo quota and billing monitored to avoid runtime failures.
