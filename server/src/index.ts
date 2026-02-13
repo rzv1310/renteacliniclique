@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createServer } from "node:http";
 import { inspect } from "node:util";
+import { GoogleGenAI } from "@google/genai";
 import geoip from "geoip-lite";
 
 import {
@@ -23,6 +24,7 @@ import type { GeminiResponse, GenerateRequestBody, ImplantType } from "./types.j
 
 loadEnvironment();
 const config = getServerConfig();
+const genAI = config.apiKey ? new GoogleGenAI({ apiKey: config.apiKey }) : null;
 const simulatorRateLimiter = createRateLimiter(SIMULATOR_RATE_LIMITS);
 
 const formatLogPayload = (payload: unknown): string => {
@@ -254,6 +256,27 @@ const selectGeneratedImage = (data: GeminiResponse): string | null => {
   return null;
 };
 
+const getStatusFromError = (error: unknown): number | null => {
+  if (!error || typeof error !== "object") return null;
+  const payload = error as Record<string, unknown>;
+  const directStatus = payload.status;
+  if (typeof directStatus === "number") return directStatus;
+
+  const statusCode = payload.statusCode;
+  if (typeof statusCode === "number") return statusCode;
+
+  const code = payload.code;
+  if (typeof code === "number") return code;
+
+  const nestedError = payload.error;
+  if (nestedError && typeof nestedError === "object") {
+    const nestedStatus = (nestedError as Record<string, unknown>).status;
+    if (typeof nestedStatus === "number") return nestedStatus;
+  }
+
+  return null;
+};
+
 const handleCheckRateLimits = (req: IncomingMessage, res: ServerResponse, ip: string, logPrefix: string) => {
   const snapshot = simulatorRateLimiter.getRateSnapshot(ip);
   logInfo(`${logPrefix} check-rate-limits`, { ip, snapshot });
@@ -351,38 +374,58 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
     },
   });
 
-  const geminiResponse = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: editPrompt },
-              { inline_data: { mime_type: normalizedMimeType, data: base64Data } },
-            ],
-          },
-        ],
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"],
-          imageConfig: {
-            imageSize,
+  if (!genAI) {
+    jsonResponse(req, res, 503, { error: "Serviciu temporar indisponibil (configurare)." });
+    return;
+  }
+
+  let data: GeminiResponse | null = null;
+  const compactPrompt = [
+    "Clinical breast augmentation simulation, non-erotic medical context.",
+    "Edit ONLY breast volume/shape according to settings, preserve identity, pose, lighting, background, framing, and all non-breast anatomy.",
+    `Implant type: ${implantType}. Implant size: ${implantSize}cc.`,
+    customPrompt ? `Additional clinical instruction: ${customPrompt}` : null,
+    "No blur halos, no smudging, no global restyling. Keep photorealistic texture.",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  try {
+    const payload: Parameters<typeof genAI.models.generateContent>[0] = {
+      model: config.model,
+      contents: [
+        { text: compactPrompt },
+        {
+          inlineData: {
+            mimeType: normalizedMimeType,
+            data: base64Data,
           },
         },
-      }),
-    }
-  );
+      ],
+      // NOTE: imageConfig.imageSize caused INVALID_ARGUMENT for this key/model.
+      config: {
+        responseModalities: ["TEXT", "IMAGE"],
+      },
+    };
 
-  if (!geminiResponse.ok) {
-    const errorText = await geminiResponse.text();
-    logError(`${logPrefix} gemini:error`, {
-      status: geminiResponse.status,
-      bodyPreview: errorText.slice(0, 2000),
+    logInfo(`${logPrefix} gemini:attempt`, {
+      variant: "parts+compact_prompt+config_text_image_no_imagesize",
     });
 
-    if (geminiResponse.status === 429) {
+    const geminiResponse = await genAI.models.generateContent(payload);
+    data = geminiResponse as unknown as GeminiResponse;
+
+    logInfo(`${logPrefix} gemini:attempt:ok`, {
+      variant: "parts+compact_prompt+config_text_image_no_imagesize",
+    });
+  } catch (error) {
+    const status = getStatusFromError(error);
+    logError(`${logPrefix} gemini:error`, {
+      status,
+      error,
+    });
+
+    if (status === 429) {
       jsonResponse(req, res, 429, { error: "Prea multe cereri. Încercați din nou în câteva secunde." });
       return;
     }
@@ -391,7 +434,6 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
     return;
   }
 
-  const data = (await geminiResponse.json()) as GeminiResponse;
   const generatedImage = selectGeneratedImage(data);
 
   if (!generatedImage) {
