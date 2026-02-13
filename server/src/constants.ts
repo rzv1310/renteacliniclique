@@ -12,8 +12,6 @@ export const MAX_IMPLANT_SIZE = 500;
 export const MAX_IMAGE_SIZE = 7_000_000;
 export const MAX_CUSTOM_PROMPT_LENGTH = 280;
 export const DEFAULT_NANO_BANANA_MODEL = "gemini-3-pro-image-preview";
-export const DEFAULT_IMAGE_SIZE = "2K";
-export const ALLOWED_IMAGE_SIZES = new Set(["1K", "2K", "4K"]);
 export const ALLOWED_IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export const DISALLOWED_PROMPT_PATTERNS: RegExp[] = [

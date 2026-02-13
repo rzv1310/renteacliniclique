@@ -85,7 +85,6 @@ const shapePlanByType: Record<ImplantType, ShapePlan> = {
 interface PromptInput {
   implantType: ImplantType;
   implantSize: number;
-  imageSize: string;
   customPrompt: string;
   modelName: string;
 }
@@ -93,7 +92,6 @@ interface PromptInput {
 export const buildPrompt = ({
   implantType,
   implantSize,
-  imageSize,
   customPrompt,
   modelName,
 }: PromptInput) => {
@@ -102,7 +100,6 @@ export const buildPrompt = ({
   const userConfig = {
     implant_type: implantType,
     implant_size_cc: implantSize,
-    image_resolution: imageSize,
     clinical_instruction: customPrompt || null,
   };
 
@@ -129,8 +126,8 @@ export const buildPrompt = ({
       subject_age: "adult woman (25-40)",
       tone: "medical, non-erotic, educational/clinical",
       privacy: "anonymized clinical output; if face appears, apply subtle blur only to face region without reframing",
-      nudity_handling:
-        "No explicit nudity. If nipples/areola are visible in source or output, apply minimal localized censoring only on areola region. Do not blur surrounding breast skin.",
+      input_modesty: "Prefer clinically modest source images (opaque top, sports bra, or medical drape).",
+      output_modesty: "Keep output suitable for medical consultation and patient education contexts.",
       sexualization_policy: "strictly forbidden",
     },
     safety_override_rules: [
@@ -180,10 +177,8 @@ export const buildPrompt = ({
     },
     negative_prompt: [
       "sexualized pose or framing",
-      "erotic styling, lingerie",
-      "fetish content",
-      "visible nipples or areola",
-      "explicit nudity",
+      "non-clinical adult content",
+      "provocative styling",
       "provocative cleavage framing",
       "distorted anatomy",
       "over-smoothing, plastic skin",

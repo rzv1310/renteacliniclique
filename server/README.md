@@ -16,7 +16,6 @@ Runtime target:
 
 - `NANO_BANANA_API_KEY` (required)
 - `NANO_BANANA_MODEL` (default: `gemini-3-pro-image-preview`)
-- `NANO_BANANA_IMAGE_SIZE` (`1K`, `2K`, `4K`, default: `2K`)
 - `CORS_ORIGIN` (comma-separated allowed origins, default: `*`)
 - `PORT` (default: `8787`)
 - `HOST` (default: `127.0.0.1`, use `0.0.0.0` in containers)
@@ -24,7 +23,7 @@ Runtime target:
 - `COUNTRY_HEADER_NAMES` (optional geo header priority list)
 - `ALLOW_UNKNOWN_COUNTRY` (`false` by default; if `true`, requests without country header pass)
 
-If `COUNTRY_ALLOWLIST` is set, the server accepts simulator API calls only from allowed countries based on trusted proxy/CDN headers (for example `cf-ipcountry`). This is an access filter, not a full auth mechanism.
+If `COUNTRY_ALLOWLIST` is set, the server accepts simulator API calls only from allowed countries based on trusted proxy/CDN headers when present, with GeoIP IP lookup fallback. This is an access filter, not a full auth mechanism.
 API logs are printed with deep object inspection for easier debugging (nested fields are not collapsed as `[Object]`).
 
 ## Scripts

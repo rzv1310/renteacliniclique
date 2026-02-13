@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { DEFAULT_IMAGE_SIZE, DEFAULT_NANO_BANANA_MODEL } from "./constants.js";
+import { DEFAULT_NANO_BANANA_MODEL } from "./constants.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const serverRoot = path.resolve(currentDir, "..");
@@ -86,7 +86,6 @@ export interface ServerConfig {
   corsOrigins: string[];
   apiKey?: string;
   model: string;
-  imageSize: string;
   allowedCountryCodes: string[];
   countryHeaderNames: string[];
   allowUnknownCountry: boolean;
@@ -98,7 +97,6 @@ export const getServerConfig = (): ServerConfig => ({
   corsOrigins: parseCorsOrigins(process.env.CORS_ORIGIN),
   apiKey: process.env.NANO_BANANA_API_KEY,
   model: process.env.NANO_BANANA_MODEL || DEFAULT_NANO_BANANA_MODEL,
-  imageSize: (process.env.NANO_BANANA_IMAGE_SIZE || DEFAULT_IMAGE_SIZE).toUpperCase(),
   allowedCountryCodes: parseCountryCodes(process.env.COUNTRY_ALLOWLIST),
   countryHeaderNames: parseHeaderNames(process.env.COUNTRY_HEADER_NAMES),
   allowUnknownCountry: parseBoolean(process.env.ALLOW_UNKNOWN_COUNTRY, false),

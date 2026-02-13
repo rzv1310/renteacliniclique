@@ -7,8 +7,6 @@ import geoip from "geoip-lite";
 
 import {
   ALLOWED_IMAGE_MIME_TYPES,
-  ALLOWED_IMAGE_SIZES,
-  DEFAULT_IMAGE_SIZE,
   DISALLOWED_PROMPT_PATTERNS,
   MAX_CUSTOM_PROMPT_LENGTH,
   MAX_IMAGE_SIZE,
@@ -351,11 +349,9 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
     return;
   }
 
-  const imageSize = ALLOWED_IMAGE_SIZES.has(config.imageSize) ? config.imageSize : DEFAULT_IMAGE_SIZE;
   const prompt = buildPrompt({
     implantType: implantType as ImplantType,
     implantSize,
-    imageSize,
     customPrompt,
     modelName: config.model,
   });
@@ -363,7 +359,6 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
 
   logInfo(`${logPrefix} gemini:request`, {
     model: config.model,
-    imageSize,
     promptLength: editPrompt.length,
     imageDataLength: base64Data.length,
     mimeType: normalizedMimeType,
@@ -380,21 +375,12 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
   }
 
   let data: GeminiResponse | null = null;
-  const compactPrompt = [
-    "Clinical breast augmentation simulation, non-erotic medical context.",
-    "Edit ONLY breast volume/shape according to settings, preserve identity, pose, lighting, background, framing, and all non-breast anatomy.",
-    `Implant type: ${implantType}. Implant size: ${implantSize}cc.`,
-    customPrompt ? `Additional clinical instruction: ${customPrompt}` : null,
-    "No blur halos, no smudging, no global restyling. Keep photorealistic texture.",
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   try {
     const payload: Parameters<typeof genAI.models.generateContent>[0] = {
       model: config.model,
       contents: [
-        { text: compactPrompt },
+        { text: editPrompt },
         {
           inlineData: {
             mimeType: normalizedMimeType,
@@ -409,14 +395,14 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
     };
 
     logInfo(`${logPrefix} gemini:attempt`, {
-      variant: "parts+compact_prompt+config_text_image_no_imagesize",
+      variant: "parts+json_prompt_from_prompt_ts+config_text_image_no_imagesize",
     });
 
     const geminiResponse = await genAI.models.generateContent(payload);
     data = geminiResponse as unknown as GeminiResponse;
 
     logInfo(`${logPrefix} gemini:attempt:ok`, {
-      variant: "parts+compact_prompt+config_text_image_no_imagesize",
+      variant: "parts+json_prompt_from_prompt_ts+config_text_image_no_imagesize",
     });
   } catch (error) {
     const status = getStatusFromError(error);
@@ -438,11 +424,13 @@ const handleGenerate = async (req: IncomingMessage, res: ServerResponse, ip: str
 
   if (!generatedImage) {
     const finishReason = data.candidates?.[0]?.finishReason || data.candidates?.[0]?.finish_reason;
-    logWarn(`${logPrefix} gemini:no-image`, { finishReason });
+    const safetyRatings = (data.candidates?.[0] as Record<string, unknown> | undefined)?.safetyRatings;
+    logWarn(`${logPrefix} gemini:no-image`, { finishReason, safetyRatings });
 
-    if (finishReason === "SAFETY") {
+    if (finishReason === "SAFETY" || finishReason === "IMAGE_SAFETY") {
       jsonResponse(req, res, 200, {
-        error: "Cererea a fost blocată de filtrele de siguranță. Folosiți doar instrucțiuni clinice, non-explicite.",
+        error:
+          "Generarea a fost blocată de filtrele de siguranță ale modelului (IMAGE_SAFETY). Folosiți o fotografie clinică non-explicită (ex: bustieră/sutien sport/top opac), lumină neutră și fără expunere areolară.",
         showTips: true,
       });
       return;
