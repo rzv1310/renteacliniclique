@@ -280,6 +280,22 @@ const normalizeImageToReferenceDimensions = async (
   return outputCanvas.toDataURL(outputMimeType, quality);
 };
 
+const readFileAsDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result === "string") {
+        resolve(result);
+        return;
+      }
+
+      reject(new Error("Fișierul încărcat nu a putut fi citit."));
+    };
+    reader.onerror = () => reject(new Error("Fișierul încărcat nu a putut fi citit."));
+    reader.readAsDataURL(file);
+  });
+
 const Simulator3DPage = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState<number>(1);
@@ -315,9 +331,11 @@ const Simulator3DPage = () => {
   const [cropSourceImage, setCropSourceImage] = useState<string | null>(null);
   const [cropRect, setCropRect] = useState<CropRect>(DEFAULT_CROP_RECT);
   const [cropActiveHandle, setCropActiveHandle] = useState<CropHandle | null>(null);
+  const [isImageZoneDragActive, setIsImageZoneDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
   const cropImageFrameRef = useRef<HTMLDivElement>(null);
+  const imageDropDepthRef = useRef(0);
   const cropDragStartRef = useRef<{
     handle: CropHandle;
     startClientX: number;
@@ -552,28 +570,110 @@ const Simulator3DPage = () => {
     };
   }, [cropActiveHandle]);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result;
-        if (typeof result === "string") {
-          setCropSourceImage(result);
-          setCropRect(DEFAULT_CROP_RECT);
-          setGeneratedImage(null);
-          setGeneratedVersions([]);
-          setCompareLeftSource(ORIGINAL_COMPARE_SOURCE_ID);
-          setCompareRightSource(ORIGINAL_COMPARE_SOURCE_ID);
-          setLastGenerationSignature(null);
-          setGeneratedVideoUrl(null);
-          setShowComparison(false);
-          setComparisonPosition(50);
-        }
-      };
-      reader.readAsDataURL(file);
-      event.target.value = "";
+  const prepareUploadedImage = useCallback(async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Te rugăm să încarci o imagine validă.");
+      return;
     }
+
+    try {
+      const imageDataUrl = await readFileAsDataUrl(file);
+      setCropSourceImage(imageDataUrl);
+      setCropRect(DEFAULT_CROP_RECT);
+      setGeneratedImage(null);
+      setGeneratedVersions([]);
+      setCompareLeftSource(ORIGINAL_COMPARE_SOURCE_ID);
+      setCompareRightSource(ORIGINAL_COMPARE_SOURCE_ID);
+      setLastGenerationSignature(null);
+      setGeneratedVideoUrl(null);
+      setShowComparison(false);
+      setComparisonPosition(50);
+      setSelectedAvatar(1);
+    } catch (error) {
+      console.error("Error reading uploaded image:", error);
+      toast.error("Nu am putut încărca imaginea.");
+    }
+  }, []);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    await prepareUploadedImage(file);
+  };
+
+  const hasDraggedFile = (dataTransfer: DataTransfer): boolean =>
+    Array.from(dataTransfer.types).includes("Files") ||
+    Array.from(dataTransfer.items).some((item) => item.kind === "file") ||
+    dataTransfer.files.length > 0;
+
+  const hasDraggedImageFile = (dataTransfer: DataTransfer): boolean =>
+    Array.from(dataTransfer.files).some((file) => file.type.startsWith("image/")) ||
+    Array.from(dataTransfer.items).some(
+      (item) => item.kind === "file" && item.type.startsWith("image/")
+    );
+
+  const handleImageZoneDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
+    if (!hasDraggedFile(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    imageDropDepthRef.current += 1;
+    setIsImageZoneDragActive(hasDraggedImageFile(event.dataTransfer));
+  };
+
+  const handleImageZoneDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    if (!hasDraggedFile(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+    setIsImageZoneDragActive(hasDraggedImageFile(event.dataTransfer));
+  };
+
+  const handleImageZoneDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    if (!hasDraggedFile(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    imageDropDepthRef.current = Math.max(0, imageDropDepthRef.current - 1);
+
+    if (imageDropDepthRef.current === 0) {
+      setIsImageZoneDragActive(false);
+    }
+  };
+
+  const handleImageZoneDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    if (!hasDraggedFile(event.dataTransfer)) {
+      return;
+    }
+
+    event.preventDefault();
+    imageDropDepthRef.current = 0;
+    setIsImageZoneDragActive(false);
+
+    if (!hasDraggedImageFile(event.dataTransfer)) {
+      toast.error("Te rugăm să tragi aici o imagine validă.");
+      return;
+    }
+
+    const droppedFile = Array.from(event.dataTransfer.files).find((file) =>
+      file.type.startsWith("image/")
+    );
+
+    if (!droppedFile) {
+      toast.error("Te rugăm să tragi aici o imagine validă.");
+      return;
+    }
+
+    await prepareUploadedImage(droppedFile);
   };
 
   const startCropDrag = (handle: CropHandle, event: React.PointerEvent<HTMLDivElement>) => {
@@ -1482,9 +1582,17 @@ const Simulator3DPage = () => {
                 {/* Visualization Area */}
                 <div 
                   ref={comparisonRef}
-                  className="relative aspect-[3/4] bg-muted rounded-xl overflow-hidden cursor-ew-resize"
+                  className={`relative aspect-[3/4] bg-muted rounded-xl overflow-hidden transition-colors ${
+                    uploadedImage ? "cursor-ew-resize" : "cursor-pointer"
+                  } ${
+                    isImageZoneDragActive ? "bg-rose-gold/10 ring-2 ring-rose-gold/60 ring-offset-2 ring-offset-background" : ""
+                  }`}
                   onMouseMove={canRenderComparison && !isGenerating ? handleComparisonMove : undefined}
                   onTouchMove={canRenderComparison && !isGenerating ? handleComparisonMove : undefined}
+                  onDragEnter={handleImageZoneDragEnter}
+                  onDragOver={handleImageZoneDragOver}
+                  onDragLeave={handleImageZoneDragLeave}
+                  onDrop={handleImageZoneDrop}
                 >
                   {uploadedImage ? (
                     <>
@@ -1561,10 +1669,19 @@ const Simulator3DPage = () => {
                       )}
                     </>
                   ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
-                      <User className="w-24 h-24 mb-4 opacity-30" />
-                      <p className="text-sm">Încarcă o fotografie pentru a începe</p>
-                    </div>
+                    <button
+                      type="button"
+                      className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground transition-colors hover:bg-background/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Upload className={`w-16 h-16 mb-4 transition-colors ${isImageZoneDragActive ? "text-rose-gold" : "opacity-50"}`} />
+                      <p className="text-base font-medium text-foreground">
+                        Apasă pentru a încărca o fotografie
+                      </p>
+                      <p className="mt-2 text-sm">
+                        sau trage și plasează imaginea aici
+                      </p>
+                    </button>
                   )}
 
                   {/* Loading Overlay */}
